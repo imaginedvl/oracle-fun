@@ -25,6 +25,7 @@ Oracle = (function (parent) {
     result.addUpdater = function(callback)
     {
         _themeUpdaters.push(callback);
+        callback();
     }
 
     const _defaultTheme =
@@ -172,6 +173,10 @@ Oracle = (function (parent) {
 
     result.apply = function(themeName)
     {
+        if(Oracle.isEmptyOrWhiteSpaces(themeName))
+        {
+            themeName = Oracle.Http.getQueryStringValue("theme");
+        }
         // We clear the actual styles before to apply the new theme
         const css = document.getElementById("OracleThemeRules") ;
         if(css)
@@ -235,8 +240,6 @@ Oracle = (function (parent) {
     {
         Oracle.Controls.Themes.addCSSRule('.oracle.control { background-color: var(--controlBackgroundColor); color: var(--controlTextColor); }');
     });
-
-    
 
     return parent;
 }(Oracle));

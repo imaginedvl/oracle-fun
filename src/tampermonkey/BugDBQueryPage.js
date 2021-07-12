@@ -1,7 +1,4 @@
 (function() {
-
-
-    Oracle.Controls.Themes.apply('default');
  
     const bugDbPage = new Oracle.BugDB.BugTablePage();
     bugDbPage.hide();
@@ -38,5 +35,7 @@
     tableElement.find("#main-view").append(title);
     tableElement.find("#main-view").append(table.element);
     $('body').prepend(tableElement);
+
+    Oracle.Controls.Themes.apply();
 
 })();
