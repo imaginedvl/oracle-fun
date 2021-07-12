@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		
+		}
+	],
+	"settings": {
+		// Always include all words from the current document.
+		"javascript.suggest.alwaysAllWords": true,
+		// Complete functions with their parameter signature.
+		"javascript.suggest.completeFunctionCalls": true,
+		"json.schemas": [
+		
+		],
+	}
+}
