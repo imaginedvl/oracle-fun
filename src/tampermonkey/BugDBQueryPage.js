@@ -1,7 +1,8 @@
 (function() {
 
-    $('body').css("font-family", '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";');
 
+    Oracle.Controls.Themes.apply('default');
+ 
     const bugDbPage = new Oracle.BugDB.BugTablePage();
     bugDbPage.hide();
 
@@ -32,6 +33,9 @@
     Oracle.HTML.addStyle("table td#main-view { } ");
     Oracle.HTML.addStyle("table td#side-view { width: 300px; } ");
     const tableElement = $("<table style='width:100%' border='0'><tbody><tr><td id='main-view'></td><td id='side-view'></td></tbody></table>");
+    const title = $('<h2>');
+    title.text(bugDbPage.title);
+    tableElement.find("#main-view").append(title);
     tableElement.find("#main-view").append(table.element);
     $('body').prepend(tableElement);
 

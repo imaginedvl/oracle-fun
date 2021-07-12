@@ -390,14 +390,32 @@ Oracle = (function (parent) {
     // ---------------------------------------------------------------------------------------------------------------- //
     // Formaters
     // ---------------------------------------------------------------------------------------------------------------- //
- 
-    Oracle.HTML.addStyle('table.oracle.control.grid tbody tr td.column-subject { font-size:90%  }');
-    Oracle.HTML.addStyle('table.oracle.control.grid tbody tr td.column-tags { font-size:80%  }');
 
-    Oracle.HTML.addStyle('.bugdb-date {  }');
-    Oracle.HTML.addStyle('.bugdb-date .day { color:#333 }');
-    Oracle.HTML.addStyle('.bugdb-date .month { font-weight:600; padding-right:4px; padding-left:4px;  }');
-    Oracle.HTML.addStyle('.bugdb-date .year { color:#333 }');
+    Oracle.Controls.Themes.addUpdater(() =>
+    { 
+        Oracle.Controls.Themes.addCSSRule('table.oracle.control.grid tbody tr td.column-subject { font-size:90%  }');
+        Oracle.Controls.Themes.addCSSRule('table.oracle.control.grid tbody tr td.column-tags { font-size:80%  }');
+        Oracle.Controls.Themes.addCSSRule('.bugdb-date {  }');
+        Oracle.Controls.Themes.addCSSRule('.bugdb-date .day { color: var(--controlTextColorLighten1); }');
+        Oracle.Controls.Themes.addCSSRule('.bugdb-date .month { font-weight:600; padding-right:4px; padding-left:4px;  }');
+        Oracle.Controls.Themes.addCSSRule('.bugdb-date .year { color: var(--controlTextColorLighten1); }');
+        Oracle.Controls.Themes.addCSSRule('.bugdb-customer { font-size:80%; }');
+        Oracle.Controls.Themes.addCSSRule('.bugdb-severity {  }');
+        Oracle.Controls.Themes.addCSSRule('.bugdb-severity.severity-2 { font-weight:600;  }');
+        Oracle.Controls.Themes.addCSSRule('.bugdb-severity.severity-4 { color: var(--controlTextColorLighten4);  }');
+        Oracle.Controls.Themes.addCSSRule('.bugdb-status { white-space:nowrap;  }');
+        Oracle.Controls.Themes.addCSSRule('.bugdb-status .bugdb-status-number { color: var(--controlTextColorLighten4); font-size:80%;  }');
+        Oracle.Controls.Themes.addCSSRule('.bugdb-number { white-space: nowrap; }');
+        Oracle.Controls.Themes.addCSSRule('.bugdb-number-action { padding-left:4px}');
+        Oracle.Controls.Themes.addCSSRule('.bugdb-tags { }');
+        Oracle.Controls.Themes.addCSSRule('.bugdb-tags .bugdb-tag { background-color:var(--controlBackgroundColorDarken1); border: 1px solid var(--controlBorderColor); border-radius:4px; padding:2px; white-space:nowrap; display:inline-block; margin:1px; }');
+        Oracle.Controls.Themes.addCSSRule('.bugdb-tags .bugdb-tag-p1 {  color: var(--errorTextColor); background-color: var(--errorBackgroundColor) }');
+        Oracle.Controls.Themes.addCSSRule('.bugdb-tags .bugdb-tag-p2 {  color: var(--warningTextColor); background-color: var(--warningBackgroundColor) }');
+        Oracle.Controls.Themes.addCSSRule('.bugdb-tags .bugdb-tag-hcmbronze { color: var(--warningTextColor); background-color: var(--warningBackgroundColor) }');
+        Oracle.Controls.Themes.addCSSRule('.bugdb-tags .bugdb-tag-hcmsilver { color: var(--errorTextColor); background-color: var(--errorBackgroundColor) }');
+        Oracle.Controls.Themes.addCSSRule('.bugdb-tags .bugdb-tag-regrn {  color: var(--warningTextColor); background-color: var(--warningBackgroundColor) }');
+    });
+
     Oracle.Formating.addFormater('BugDBDate', null, null, (value, settings) => {
         if (value) {
             const dateDay = value.getDate(), month = value.getMonth() + 1, year = value.getFullYear();
@@ -418,7 +436,6 @@ Oracle = (function (parent) {
         }
     });
 
-    Oracle.HTML.addStyle('.bugdb-customer { font-size:80%; }');
     Oracle.HTML.addFormater("BugDBCustomer", null, null, (value, settings) =>
     {
         if(settings.isHeader)
@@ -444,9 +461,6 @@ Oracle = (function (parent) {
         }
     });
 
-    Oracle.HTML.addStyle('.bugdb-severity {  }');
-    Oracle.HTML.addStyle('.bugdb-severity.severity-2 { font-weight:600;  }');
-    Oracle.HTML.addStyle('.bugdb-severity.severity-4 { color:#333;  }');
     Oracle.HTML.addFormater("BugDBSeverity", null, null, (value, settings) =>
     {
         if (value) {
@@ -456,9 +470,7 @@ Oracle = (function (parent) {
             return null;
         }
     });
-
-    Oracle.HTML.addStyle('.bugdb-status { white-space:nowrap;  }');
-    Oracle.HTML.addStyle('.bugdb-status .bugdb-status-number { color:#999; font-size:80%;  }');
+ 
     Oracle.HTML.addFormater("BugDBStatus", null, null, (value, settings) =>
     {
         if (value) {
@@ -479,9 +491,6 @@ Oracle = (function (parent) {
             return null;
         }
     });
-
-    Oracle.HTML.addStyle('.bugdb-number { white-space: nowrap; }');
-    Oracle.HTML.addStyle('.bugdb-number-action { padding-left:4px}');
     const _userHtmlFormater = function(value, settings) 
     {
         if (value) {
@@ -491,6 +500,7 @@ Oracle = (function (parent) {
             return null;
         }
     };
+
     Oracle.HTML.addFormater("BugDBNumber", null, null, _userHtmlFormater, 'html');
     Oracle.Formating.addFormater("BugDBNumber", null, null, (value, settings) =>
     {
@@ -506,8 +516,6 @@ Oracle = (function (parent) {
         }
     }, 'controls.grids');
 
-    Oracle.HTML.addStyle('.bugdb-status { white-space:nowrap;  }');
-    Oracle.HTML.addStyle('.bugdb-status .bugdb-status-number { color:#999; font-size:80%;  }');
     Oracle.HTML.addFormater("BugDBStatus", null, null, (value, settings) =>
     {
         if (value) {
@@ -528,11 +536,6 @@ Oracle = (function (parent) {
             return null;
         }
     });
-
-    Oracle.HTML.addStyle('.bugdb-tags { }');
-    Oracle.HTML.addStyle('.bugdb-tags .bugdb-tag { background-color:#FAFAFA; border: 1px solid #AAA; border-radius:4px; padding:1px; white-space:nowrap; display:inline-block; margin:1px; }');
-    Oracle.HTML.addStyle('.bugdb-tags .bugdb-tag-hcmbronze { background-color:#FFDDDD; }');
-    Oracle.HTML.addStyle('.bugdb-tags .bugdb-tag-p1 { background-color:#FFDDDD; }');
 
     Oracle.HTML.addFormater('BugDBTags', null, null, (value, settings) => { 
         const result = $("<div class='bugdb-tags'>")
