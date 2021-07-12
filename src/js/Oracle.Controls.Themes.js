@@ -4,6 +4,7 @@
 // Module: Oracle.Controls.Themes
 // ---------------------------------------------------------------------------------------------------------------- //
 Oracle = (function (parent) {
+    let _themeApplied = false;
     if (!parent.hasOwnProperty('Controls')) parent.Controls = {};
     if (!parent.Controls.hasOwnProperty('Themes')) parent.Controls.Themes = {};
     const result = parent.Controls.Themes;
@@ -173,9 +174,11 @@ Oracle = (function (parent) {
 
     result.apply = function(themeName)
     {
+        _themeApplied = true;
         if(Oracle.isEmptyOrWhiteSpaces(themeName))
         {
             themeName = Oracle.Http.getQueryStringValue("theme");
+            console.log(themeName);
         }
         // We clear the actual styles before to apply the new theme
         const css = document.getElementById("OracleThemeRules") ;
@@ -196,7 +199,9 @@ Oracle = (function (parent) {
                 Oracle.Logger.logWarning("Theme '" + themeName + "' not found, fallbacking to default");
             }
         }
-        else{
+        else
+        {
+            selectedTheme = _defaultTheme;
             Oracle.Logger.logDebug("Apply default theme");
         }
         const computedTheme = { variables: {}, css: {}, cssOverrides: {} };
