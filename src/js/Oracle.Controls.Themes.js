@@ -227,7 +227,6 @@ Oracle = (function (parent) {
         if(rules)
         {
             rules.remove();
-            delete rules;   
         }
         let selectedTheme = null;
         if(!Oracle.isEmpty(themeName) && themeName !== 'default')

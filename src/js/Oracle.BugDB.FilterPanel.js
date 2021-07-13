@@ -27,7 +27,7 @@ Oracle = (function (parent) {
             //const initializationSettings = { grid: controlSettings.grid };    
             //this.initializeColumns(controlSettings, initializationSettings);
             //this.initializeData(controlSettings, initializationSettings);
-            //this.element.text("Bug List Helper");
+            this.element.text("Bug List Helper");
             //this.element.text("Reported from");
             //this.element.text("Assignees:")
             Oracle.Logger.logDebug("FilterPanel initialized: ");
