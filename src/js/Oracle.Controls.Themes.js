@@ -9,25 +9,7 @@ Oracle = (function (parent) {
     if (!parent.Controls.hasOwnProperty('Themes')) parent.Controls.Themes = {};
     const result = parent.Controls.Themes;
 
-    const _themeUpdaters = [];
-
-    result.addCSSRule = function(css) {
-        const style = document.getElementById("OracleThemeRules") || (function() {
-            const style = document.createElement('style');
-            style.setAttribute("type", 'text/css');
-            style.id = "OracleThemeRules";
-            document.head.appendChild(style);
-            return style;
-        })();
-        const sheet = style.sheet;
-        sheet.insertRule(css, (sheet.rules || sheet.cssRules || []).length);
-    }
-
-    result.addUpdater = function(callback)
-    {
-        _themeUpdaters.push(callback);
-        callback();
-    }
+    const _fontList = '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"';
 
     const _defaultTheme =
     {
@@ -80,7 +62,7 @@ Oracle = (function (parent) {
             warningBackgroundColor: '#ffeb3b',
             warningTextColor: 'black',    
 
-            // Cleanup
+            // Info
             infoBackgroundColor: '#3ea6f0',
             infoTextColor: 'white',
 
@@ -88,7 +70,7 @@ Oracle = (function (parent) {
             successBackgroundColor: '#5cb85c',
             successTextColor: 'black',
     
-            // Success
+            // Hyperlink
             hyperlinkTextColor: 'blue',
 
             // Primary color, which is the main color of the theme (red, orange, etc...)
@@ -118,14 +100,18 @@ Oracle = (function (parent) {
             primaryTextColorLighten5: 'white'
         },
         css:
-        {            
-        },
-        cssOverrides:
-        {
-
-        }
+        [
+            'body { background-color: var(--bodyBackgroundColor); color: var(--bodyTextColor) width:100%; font-family: ' + _fontList + '; }',
+            '.oracle.control { width:100%; font-family: ' + _fontList + '; }',
+            'a { color: var(--hyperlinkTextColor); text-decoration: none',
+            '.oracle.control { background-color: var(--controlBackgroundColor); color: var(--controlTextColor); }'
+        ],
+        dynamicCss:
+        [            
+        ]
     }
-    
+
+
     const _darkTheme =
     {
         name: 'Dark',
@@ -144,11 +130,53 @@ Oracle = (function (parent) {
             // Warning
             warningBackgroundColor: '#333',
             warningTextColor: 'yellow',
-
         }
     }
 
     const _allThemes =     { default: _defaultTheme, dark: _darkTheme }
+
+    const _applyCSSRule = function(css)
+    {
+        const style = document.getElementById("OracleThemeRules") || (function() {
+            const style = document.createElement('style');
+            style.setAttribute("type", 'text/css');
+            style.id = "OracleThemeRules";
+            document.head.appendChild(style);
+            return style;
+        })();
+        const sheet = style.sheet;
+        sheet.insertRule(css, (sheet.cssRules || sheet.rules || []).length);
+    }
+
+    const _addCSSRule = function(css, themeName, dynamic = false) {
+        _applyCSSRule(css);        
+        let theme = _defaultTheme;
+        if(!Oracle.isEmpty(themeName) || themeName === 'default')
+        {
+            theme = _allThemes[themeName]
+        }
+        if(!Oracle.isEmpty(theme))
+        {
+            if(dynamic)
+            {
+                theme.dynamicCss.push(css);
+            }
+            else{
+                theme.css.push(css);
+            }
+        }
+        else{
+            Oracle.Logger.logWarning("Cannot add CSS rule to theme '" + themeName + "'. Theme not found.");
+        }
+    }
+    
+    result.addStaticCSSRule = function(css, themeName) {
+        _addCSSRule(css, themeName, false);
+    }
+
+    result.addDynamciCSSRule = function(css, themeName) {
+        _addCSSRule(css, themeName, true);
+    }
 
     const _isReservedName = function(name)
     {
@@ -176,6 +204,17 @@ Oracle = (function (parent) {
         }
     }
 
+    const _pushMembers = function(source, destination)
+    {
+        if(!Oracle.isEmpty(source) && !Oracle.isEmpty(destination))
+        {
+            for(let i = 0; i < source.length; i++)
+            {
+                destination.push(source[i]);
+            }
+        }
+    }
+
     result.apply = function(themeName)
     {
         _themeApplied = true;
@@ -188,7 +227,6 @@ Oracle = (function (parent) {
         if(rules)
         {
             rules.remove();
-            delete rules;   
         }
         let selectedTheme = null;
         if(!Oracle.isEmpty(themeName) && themeName !== 'default')
@@ -196,25 +234,25 @@ Oracle = (function (parent) {
             const theme = _allThemes[themeName];
             if(!Oracle.isEmpty(theme))
             {
-                Oracle.Logger.logDebug("Apply Theme: " + themeName);
                 selectedTheme = theme;
             }
             else{
                 Oracle.Logger.logWarning("Theme '" + themeName + "' not found, fallbacking to default");
+                themeName = 'default';
             }
         }
         else
         {
+            themeName = 'default';
             selectedTheme = _defaultTheme;
-            Oracle.Logger.logDebug("Apply default theme");
         }
-        const computedTheme = { variables: {}, css: {}, cssOverrides: {} };
-        _copyMembers(selectedTheme?.variables, computedTheme?.variables);
-        _copyMembers(selectedTheme?.css, computedTheme?.css);
-        _copyMembers(selectedTheme?.cssOverrides, computedTheme?.cssOverrides);
-        _copyMembers(_defaultTheme?.variables, computedTheme?.variables);
-        _copyMembers(_defaultTheme?.css, computedTheme?.css);
-        _copyMembers(_defaultTheme?.cssOverrides, computedTheme?.cssOverrides);
+        const computedTheme = { variables: {}, css: [], dynamicCss: [] };
+        _copyMembers(selectedTheme?.variables, computedTheme.variables);
+        _pushMembers(selectedTheme?.css, computedTheme.css);
+        _pushMembers(selectedTheme?.dynamicCss, computedTheme.dynamicCss);
+        _copyMembers(_defaultTheme?.variables, computedTheme.variables);
+        _pushMembers(_defaultTheme?.css, computedTheme.css);
+        _pushMembers(_defaultTheme?.dynamicCss, computedTheme.dynamicCss);
 
         // Now that we have a compute them, let's create the real cheese!
         let rootRule = ":root {";
@@ -222,33 +260,28 @@ Oracle = (function (parent) {
             rootRule += ' --' + key + ": " + value + ";";
         }
         rootRule += "}";
-        Oracle.Controls.Themes.addCSSRule(rootRule);
 
-        // Global Styles
-        const _fontList = '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"';
-        Oracle.Controls.Themes.addCSSRule('body { background-color: var(--bodyBackgroundColor); color: var(--bodyTextColor) width:100%; font-family: ' + _fontList + '; }');
-        Oracle.Controls.Themes.addCSSRule('.oracle.control { width:100%; font-family: ' + _fontList + '; }');
-        Oracle.Controls.Themes.addCSSRule('a { color: var(--hyperlinkTextColor); text-decoration: none');
+        Oracle.Logger.logDebug("Applying Theme", {name: themeName, theme: selectedTheme, rootRule: rootRule } );
+
+        _applyCSSRule(rootRule);
 
         // Then specific theme styles (before)
         for (const [key, value] of Object.entries(computedTheme.css)) {
-            Oracle.Controls.Themes.addCSSRule(value);
+            _applyCSSRule(value);
         }
-        _themeUpdaters.forEach(updater => {
-            updater();
-        });
-        // Then specific theme styles (after)
-        for (const [key, value] of Object.entries(computedTheme.cssOverrides)) {
-            Oracle.Controls.Themes.addCSSRule(value);
+
+        for (const [key, value] of Object.entries(computedTheme.dynamicCss)) {
+            if(Oracle.isFunction(value))
+            {
+                _applyCSSRule(value());
+            }
+            else{
+                _applyCSSRule(value);
+            }
         }
         result.currentTheme = selectedTheme;
     }
 
-    // Base Controls Styles
-    Oracle.Controls.Themes.addUpdater(() =>
-    {
-        Oracle.Controls.Themes.addCSSRule('.oracle.control { background-color: var(--controlBackgroundColor); color: var(--controlTextColor); }');
-    });
 
     return parent;
 }(Oracle));

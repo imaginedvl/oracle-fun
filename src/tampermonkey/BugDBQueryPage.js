@@ -27,6 +27,11 @@
             noItemsMessage: "No bugs are matching the criteria. I strongly suggest to spend some time creating a custom query to check if Joel is not hidding any bug with a missing or past due date!"
         });
 
+    const filterPanel = new Oracle.BugDB.FilterPanel(
+        {
+            grid: table
+        });
+
     Oracle.HTML.addStyle("table td#main-view { } ");
     Oracle.HTML.addStyle("table td#side-view { width: 300px; } ");
     const tableElement = $("<table style='width:100%' border='0'><tbody><tr><td id='main-view'></td><td id='side-view'></td></tbody></table>");
@@ -34,6 +39,7 @@
     title.text(bugDbPage.title);
     tableElement.find("#main-view").append(title);
     tableElement.find("#main-view").append(table.element);
+    tableElement.find("#side-view").append(filterPanel.element);
     $('body').prepend(tableElement);
 
     Oracle.Controls.Themes.apply();

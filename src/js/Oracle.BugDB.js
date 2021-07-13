@@ -426,32 +426,29 @@ Oracle = (function (parent) {
     // Formaters
     // ---------------------------------------------------------------------------------------------------------------- //
 
-    Oracle.Controls.Themes.addUpdater(() =>
-    { 
-        Oracle.Controls.Themes.addCSSRule('table.oracle.control.grid tbody tr td.column-subject { font-size:90%  }');
-        Oracle.Controls.Themes.addCSSRule('table.oracle.control.grid tbody tr td.column-tags { font-size:80%  }');
-        Oracle.Controls.Themes.addCSSRule('.bugdb-date {  }');
-        Oracle.Controls.Themes.addCSSRule('.bugdb-date .day { color: var(--controlTextColorLighten1); }');
-        Oracle.Controls.Themes.addCSSRule('.bugdb-date .month { font-weight:600; padding-right:4px; padding-left:4px;  }');
-        Oracle.Controls.Themes.addCSSRule('.bugdb-date .year { color: var(--controlTextColorLighten1); }');
-        Oracle.Controls.Themes.addCSSRule('.bugdb-customer { font-size:80%; }');
-        Oracle.Controls.Themes.addCSSRule('.bugdb-severity { white-space:nowrap; }');
-        Oracle.Controls.Themes.addCSSRule('.bugdb-severity .bugdb-severity-number { color: var(--controlTextColorLighten4); font-size:80%;  }');
-        Oracle.Controls.Themes.addCSSRule('.bugdb-severity.severity-2 { font-weight:600;  }');
-        Oracle.Controls.Themes.addCSSRule('.bugdb-severity.severity-4 { color: var(--controlTextColorLighten4);  }');
-        Oracle.Controls.Themes.addCSSRule('.bugdb-status { white-space:nowrap;  }');
-        Oracle.Controls.Themes.addCSSRule('.bugdb-status .bugdb-status-number { color: var(--controlTextColorLighten4); font-size:80%;  }');
-        Oracle.Controls.Themes.addCSSRule('.bugdb-number { white-space: nowrap; }');
-        Oracle.Controls.Themes.addCSSRule('.bugdb-number-action { padding-left:4px}');
-        Oracle.Controls.Themes.addCSSRule('.bugdb-tags { }');
-        Oracle.Controls.Themes.addCSSRule('.bugdb-tags .bugdb-tag { color: var(--controlTextColor); background-color:var(--controlBackgroundColorDarken1); border: 1px solid var(--controlBorderColor); border-radius:4px; padding:2px; white-space:nowrap; display:inline-block; margin:1px; }');
-        Oracle.Controls.Themes.addCSSRule('.bugdb-tags .bugdb-tag-p1 {  color: var(--errorTextColor); background-color: var(--errorBackgroundColor) }');
-        Oracle.Controls.Themes.addCSSRule('.bugdb-tags .bugdb-tag-p2 {  color: var(--warningTextColor); background-color: var(--warningBackgroundColor) }');
-        Oracle.Controls.Themes.addCSSRule('.bugdb-tags .bugdb-tag-hcmbronze { color: var(--warningTextColor); background-color: var(--warningBackgroundColor) }');
-        Oracle.Controls.Themes.addCSSRule('.bugdb-tags .bugdb-tag-hcmsilver { color: var(--errorTextColor); background-color: var(--errorBackgroundColor) }');
-        Oracle.Controls.Themes.addCSSRule('.bugdb-tags .bugdb-tag-regrn {  color: var(--warningTextColor); background-color: var(--warningBackgroundColor) }');
-        Oracle.Controls.Themes.addCSSRule('.bugdb-tags .bugdb-tag-frce-sql-cleanup {  color: var(--infoTextColor); background-color: var(--infoBackgroundColor) }');
-    });
+    Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid tbody tr td.column-subject { font-size:90%  }');
+    Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid tbody tr td.column-tags { font-size:80%  }');
+    Oracle.Controls.Themes.addStaticCSSRule('.bugdb-date {  }');
+    Oracle.Controls.Themes.addStaticCSSRule('.bugdb-date .day { color: var(--controlTextColorLighten1); }');
+    Oracle.Controls.Themes.addStaticCSSRule('.bugdb-date .month { font-weight:600; padding-right:4px; padding-left:4px;  }');
+    Oracle.Controls.Themes.addStaticCSSRule('.bugdb-date .year { color: var(--controlTextColorLighten1); }');
+    Oracle.Controls.Themes.addStaticCSSRule('.bugdb-customer { font-size:80%; }');
+    Oracle.Controls.Themes.addStaticCSSRule('.bugdb-severity { white-space:nowrap; }');
+    Oracle.Controls.Themes.addStaticCSSRule('.bugdb-severity .bugdb-severity-number { color: var(--controlTextColorLighten4); font-size:80%;  }');
+    Oracle.Controls.Themes.addStaticCSSRule('.bugdb-severity.severity-2 { font-weight:600;  }');
+    Oracle.Controls.Themes.addStaticCSSRule('.bugdb-severity.severity-4 { color: var(--controlTextColorLighten4);  }');
+    Oracle.Controls.Themes.addStaticCSSRule('.bugdb-status { white-space:nowrap;  }');
+    Oracle.Controls.Themes.addStaticCSSRule('.bugdb-status .bugdb-status-number { color: var(--controlTextColorLighten4); font-size:80%;  }');
+    Oracle.Controls.Themes.addStaticCSSRule('.bugdb-number { white-space: nowrap; }');
+    Oracle.Controls.Themes.addStaticCSSRule('.bugdb-number-action { padding-left:4px}');
+    Oracle.Controls.Themes.addStaticCSSRule('.bugdb-tags { }');
+    Oracle.Controls.Themes.addStaticCSSRule('.bugdb-tags .bugdb-tag { color: var(--controlTextColor); background-color:var(--controlBackgroundColorDarken1); border: 1px solid var(--controlBorderColor); border-radius:4px; padding:2px; white-space:nowrap; display:inline-block; margin:1px; }');
+    Oracle.Controls.Themes.addStaticCSSRule('.bugdb-tags .bugdb-tag-p1 {  color: var(--errorTextColor); background-color: var(--errorBackgroundColor) }');
+    Oracle.Controls.Themes.addStaticCSSRule('.bugdb-tags .bugdb-tag-p2 {  color: var(--warningTextColor); background-color: var(--warningBackgroundColor) }');
+    Oracle.Controls.Themes.addStaticCSSRule('.bugdb-tags .bugdb-tag-hcmbronze { color: var(--warningTextColor); background-color: var(--warningBackgroundColor) }');
+    Oracle.Controls.Themes.addStaticCSSRule('.bugdb-tags .bugdb-tag-hcmsilver { color: var(--errorTextColor); background-color: var(--errorBackgroundColor) }');
+    Oracle.Controls.Themes.addStaticCSSRule('.bugdb-tags .bugdb-tag-regrn {  color: var(--warningTextColor); background-color: var(--warningBackgroundColor) }');
+    Oracle.Controls.Themes.addStaticCSSRule('.bugdb-tags .bugdb-tag-frce-sql-cleanup {  color: var(--infoTextColor); background-color: var(--infoBackgroundColor) }');
 
     Oracle.Formating.addFormater('BugDBDate', null, null, (value, settings) => {
         if (value) {

@@ -238,12 +238,9 @@ Oracle = (function (parent) {
     };
     Oracle.Formating.addFormater("User", null, Oracle.KnownClasses.User, _userFormater);
 
-    Oracle.Controls.Themes.addUpdater(() =>
-    {
-        Oracle.Controls.Themes.addCSSRule('.oracle-user { }');
-        Oracle.Controls.Themes.addCSSRule('.oracle-user.internal { font-weight:600;  }');
-        Oracle.Controls.Themes.addCSSRule('.oracle-user.group { color: var(--controlTextColorLighten4); }');
-    });
+    Oracle.Controls.Themes.addStaticCSSRule('.oracle-user { }');
+    Oracle.Controls.Themes.addStaticCSSRule('.oracle-user.internal { font-weight:600;  }');
+    Oracle.Controls.Themes.addStaticCSSRule('.oracle-user.group { color: var(--controlTextColorLighten4); }');
 
     Oracle.HTML.addFormater("User", null, Oracle.KnownClasses.User, (value, settings) => {
         if (value) {
