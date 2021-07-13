@@ -80,6 +80,10 @@ Oracle = (function (parent) {
             warningBackgroundColor: '#ffeb3b',
             warningTextColor: 'black',    
 
+            // Cleanup
+            cleanupBackgroundColor: '#3ea6f0',
+            cleanupTextColor: 'white',
+
             // Success
             successBackgroundColor: '#5cb85c',
             successTextColor: 'black',

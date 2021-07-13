@@ -11,7 +11,7 @@
                 { id:'number', title: 'Number', formater: 'BugDBNumber',  },
                 { id:'dateReported', title: 'Creation', formater: 'BugDBDate' },                        
                 { id:'severity', title: 'Severity', formater: 'BugDBSeverity', groupable: true },
-                 { id: 'status', title: 'Status', formater: 'BugDBStatus', groupable: true },
+                { id:'status', title: 'Status', formater: 'BugDBStatus', groupable: true },
                 { id:'assignee', title: 'Assignee', groupable: true}, 
                 { id:'fixEta', title: 'Fix ETA', formater: 'BugDBDate' },         
                 { id:'component', title: 'Component', groupable: true },         

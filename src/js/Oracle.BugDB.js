@@ -29,7 +29,26 @@ Oracle = (function (parent) {
 
     parent.BugDB.Statuses = 
     {
-        11: 'Open'
+        11: 'Open',
+        30: 'More Info Requested',
+        33: 'Suspended',
+        36: 'Duplicate Bug',
+        37: 'Merged',
+        39: 'Waiting For Codeline',
+        40: 'Waiting',
+        80: 'Ready To Validate',
+        90: 'Closed',
+        91: 'Closed',
+        92: 'Closed',
+        93: 'Closed'
+    }
+
+    parent.BugDB.Severity = 
+    {
+        1: 'Complete',
+        2: 'Severe',
+        3: 'Minimal',
+        4: 'Minor'
     }
 
     parent.BugDB.Fields = {
@@ -49,15 +68,15 @@ Oracle = (function (parent) {
     }
 
     const _fieldLookups = {
-        number: 'Bug Number',
+        number: 'Num', // non-custom bugdb report use Num as number header, works for Laurent's custom report too
         assignee: 'Assignee',
-        severity: 'Severity',
+        severity: 'Sev', // non-custom bugdb report use Sev as severity header, works for Laurent's custom report too
         component: 'Component',
-        status: 'Status',
+        status: 'St', // non-custom bugdb report use St as status header, works for Laurent's custom report too
         fixEta: 'Fix Eta',
         tags: 'Tag',
         customer: 'Customer',
-        dateReported: 'Date Reported',
+        dateReported: 'Reported', // non-custom bugdb report use Reported as reported header, works for Laurent's custom report too
         subject: 'Subject',
         selection: '#select_all_option',
         lineNumber: 'Sl No.',
@@ -164,7 +183,8 @@ Oracle = (function (parent) {
                 bug[Oracle.BugDB.Fields.Severity] = row.getAsNumber(Oracle.BugDB.Fields.Severity);
                 bug[Oracle.BugDB.Fields.Subject] = row.getAsString(Oracle.BugDB.Fields.Subject);
                 bug[Oracle.BugDB.Fields.Customer] = row.getAsString(Oracle.BugDB.Fields.Customer);
-                if(bug[Oracle.BugDB.Fields.Customer].startsWith("INTERNAL"))
+                if(!Oracle.isEmpty(bug[Oracle.BugDB.Fields.Customer]) 
+                   && bug[Oracle.BugDB.Fields.Customer].startsWith("INTERNAL"))
                 {
                     bug[Oracle.BugDB.Fields.Customer] = null;
                 }
@@ -232,7 +252,6 @@ Oracle = (function (parent) {
             this.cells = {};
         }
 
-
         getAsTags(fieldName)
         {
             let result = [];
@@ -243,11 +262,19 @@ Oracle = (function (parent) {
                 if(!Oracle.isEmptyOrWhiteSpaces(value))
                 {
                     const result = [];
-                    const parsed = value.split(' ');
-                    parsed.forEach(element => {
+                    // depending of the type of bugdb report, the tags can be 
+                    // rendered as separate links or one space-separated text
+                    const lineParsed = value.split('\n');
+                    lineParsed.forEach(element => {
                         if(!Oracle.isEmptyOrWhiteSpaces(element))
                         {
-                            result.push(element);
+                            const spaceParsed = element.split(' ');
+                            spaceParsed.forEach(element => {
+                                if(!Oracle.isEmptyOrWhiteSpaces(element))
+                                {
+                                    result.push(element);
+                                }
+                            });
                         }
                     });
 
@@ -289,7 +316,6 @@ Oracle = (function (parent) {
                 return null;
             }
         }
-
 
         getAsLink(fieldName)
         {
@@ -400,7 +426,8 @@ Oracle = (function (parent) {
         Oracle.Controls.Themes.addCSSRule('.bugdb-date .month { font-weight:600; padding-right:4px; padding-left:4px;  }');
         Oracle.Controls.Themes.addCSSRule('.bugdb-date .year { color: var(--controlTextColorLighten1); }');
         Oracle.Controls.Themes.addCSSRule('.bugdb-customer { font-size:80%; }');
-        Oracle.Controls.Themes.addCSSRule('.bugdb-severity {  }');
+        Oracle.Controls.Themes.addCSSRule('.bugdb-severity { white-space:nowrap; }');
+        Oracle.Controls.Themes.addCSSRule('.bugdb-severity .bugdb-severity-number { color: var(--controlTextColorLighten4); font-size:80%;  }');
         Oracle.Controls.Themes.addCSSRule('.bugdb-severity.severity-2 { font-weight:600;  }');
         Oracle.Controls.Themes.addCSSRule('.bugdb-severity.severity-4 { color: var(--controlTextColorLighten4);  }');
         Oracle.Controls.Themes.addCSSRule('.bugdb-status { white-space:nowrap;  }');
@@ -414,6 +441,7 @@ Oracle = (function (parent) {
         Oracle.Controls.Themes.addCSSRule('.bugdb-tags .bugdb-tag-hcmbronze { color: var(--warningTextColor); background-color: var(--warningBackgroundColor) }');
         Oracle.Controls.Themes.addCSSRule('.bugdb-tags .bugdb-tag-hcmsilver { color: var(--errorTextColor); background-color: var(--errorBackgroundColor) }');
         Oracle.Controls.Themes.addCSSRule('.bugdb-tags .bugdb-tag-regrn {  color: var(--warningTextColor); background-color: var(--warningBackgroundColor) }');
+        Oracle.Controls.Themes.addCSSRule('.bugdb-tags .bugdb-tag-frce-sql-cleanup {  color: var(--cleanupTextColor); background-color: var(--cleanupBackgroundColor) }');
     });
 
     Oracle.Formating.addFormater('BugDBDate', null, null, (value, settings) => {
@@ -464,7 +492,17 @@ Oracle = (function (parent) {
     Oracle.HTML.addFormater("BugDBSeverity", null, null, (value, settings) =>
     {
         if (value) {
-            return $(`<span class='bugdb-severity severity-${value}'>${value}</span>`);
+            const result = $("<span class='bugdb-severity severity-" + value + "'>" + value + "</span>");
+            if(Oracle.BugDB.Severity.hasOwnProperty(value)) {
+                if(settings.isHeader !== true)
+                {
+                    result.html(Oracle.BugDB.Severity[value] + " <span class='bugdb-severity-number'>(" + value + ")<span>")
+                }
+                else {
+                    result.html(Oracle.BugDB.Severity[value] + " (" + value + ")")
+                }
+            }
+            return result;
         }
         else {
             return null;
