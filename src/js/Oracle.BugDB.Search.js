@@ -1,12 +1,12 @@
 'use strict';
 
 // ---------------------------------------------------------------------------------------------------------------- //
-// Module: Oracle.BugSearch
+// Module: Oracle.BugDB.Search
 // ---------------------------------------------------------------------------------------------------------------- //
 Oracle = (function (parent) {
-    if (!parent.hasOwnProperty('BugSearch')) parent.BugSearch = {};
-
-    const result = parent.BugSearch;
+    if (!parent.hasOwnProperty('BugDB')) parent.BugDB = {};
+    if (!parent.BugDB.hasOwnProperty('Search')) parent.BugDB.Search = {};
+    const result = parent.BugDB.Search;
 
     result.getSearchByTagLink = function(tag) {
         const orc_product = "2421";

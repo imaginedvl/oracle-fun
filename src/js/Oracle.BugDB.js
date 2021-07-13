@@ -587,7 +587,7 @@ Oracle = (function (parent) {
         {
             for(let i = 0; i < value.length; i++)            
             {
-                result.append("<a href='" + Oracle.BugSearch.getSearchByTagLink(value[i]) + "'><div class='bugdb-tag bugdb-tag-" +  value[i].toLowerCase() + "' >" + value[i] + "</div></a> ");
+                result.append("<a href='" + Oracle.BugDB.Search.getSearchByTagLink(value[i]) + "'><div class='bugdb-tag bugdb-tag-" +  value[i].toLowerCase() + "' >" + value[i] + "</div></a> ");
             }
         }
         result.append("</div>");
