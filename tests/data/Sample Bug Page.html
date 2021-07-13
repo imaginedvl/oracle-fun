@@ -1,0 +1,1312 @@
+
+<!-- saved from url=(1802)https://bug.oraclecorp.com/pls/bug/webbug_reports.do_custom_report?select_stmt=h.fix_avail_date+as+FIX_ETA%2C%0D%0Ah.SUPPORT_CONTACT%2C%0D%0A+++++++++++++++h.programmer%2C%0D%0A+++++++++++++++h.cs_priority%2C%0D%0A+++++++++++++++h.status%2C%0D%0A+++++++++++++++h.category%2C%0D%0A+++++++++++++++h.rptdate+as+DATE_REPORTED%2C%0D%0A+++++++++++++++%28select+BT.tags+from+BUG_TAGS+BT+where+BT.rptno+%3D+h.RPTNO%29+as+TAG%2C%0D%0A+++++++++++++++h.subject%2C%0D%0Ah.test_name%2C%0D%0Ah.customer&where_stmt=h.product_id+in+%282421%29%0D%0A+++++++++++and+%28%28h.status+%3E+10%0D%0A+++++++++++and+h.category+%3C%3E+%27OPPTMKT%27%0D%0A+++++++++++and+h.status+%3C+40%29%0D%0A+++++++++++and+h.status+not+in+%2815%2C+30%2C+31%2C+32%2C+33%2C+35%2C+36%2C+37%2C+39%29%29%0D%0A+++++++++++AND+%28h.programmer+IN%0D%0A+++++++++++++++%28SELECT+bug_username%0D%0A++++++++++++++++++FROM+BUG_USER%0D%0A+++++++++++++++++WHERE+STATUS+%3D+%27A%27%0D%0A+++++++++++++++++++AND+upper%28full_email%29+%7C%7C+%27%40ORACLE.COM%27+IN%0D%0A+++++++++++++++++++++++%28SELECT+upper%28email_address%29%0D%0A++++++++++++++++++++++++++FROM+hr_user_hierarchy_vw%0D%0A+++++++++++++++++++++++++START+WITH+email_address+%3D%0D%0A++++++++++++++++++++++++++++++++++++upper%28%27laurent.devigne%40ORACLE.COM%27%29%0D%0A++++++++++++++++++++++++CONNECT+BY+PRIOR+email_address+%3D+manager_email%29%29+or+h.programmer+%3D+%27LDEVITRG%27%29%0D%0A+++++++++++AND+CATEGORY+not+like+%27ADETXN%27%0D%0A+++++++++++and+h.RPTD_BY+%21%3D+%28%27TLDSHREP%27%29%0D%0A+++++++++++and+rownum+%3C+20000&order_stmt=&rpt_title=Laurent+Team+Bugs&tot_cols=11&col_head=Fix+Eta&col_head=Support+Contact&col_head=Assignee&col_head=Severity&col_head=Status&col_head=Component&col_head=Date+Reported&col_head=Tag&col_head=Subject&col_head=Test+Name%2FDoc+Field&col_head=Customer -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script>
+server_html_path = "/bug-static/"
+server_lists_path = "/bug-lists/"
+server_img_path = "/bug-imgs/"
+server_help_path = "/bug-help/"
+server_edit_package_path = "/pls/bug/webbug_edit."
+gkeywordlistarr = ["^CSI"," CSI","TAR ","TAR#","TAR:","SR ","SR#","SR:","^PHONE"," PHONE","FAX","\\.GOV","ALTERNATE CONTACT","CUSTOMER CONTACT","HTTPS:","RTFM","DIAL-UP","IP ADDRESS","FTP","LOGIN","LOGON","PASSWORD","PASSWD","PASSCODE","PW","LTD","VULNERAB","SECURITY","USERNAME","ATTACK","DOS","ACCESS CONTROL","BUFFER OVERFLOW","DENIAL OF SERVICE"]; 
+</script>
+<script src="./Sample Bug Page_files/top_utils.js.download">
+</script>
+<script>
+query_id = 805700
+details_window = null;
+function OpenDetails(url)
+{
+      window.open(url, "_blank");
+}
+//define the table search as an object, which can implement both functions and properties
+      window.tableSearch = {};
+      //initialize the search, setup the current object
+      tableSearch.init = function() {
+          //define the properties I want on the tableSearch object
+          this.Rows = document.getElementById('data').getElementsByTagName('TR');
+          this.RowsLength = tableSearch.Rows.length;
+          this.RowsText = [];
+          //loop through the table and add the data to
+          for (var i = 0; i < tableSearch.RowsLength; i++) {
+              this.RowsText[i] = (tableSearch.Rows[i].innerText) ? tableSearch.Rows[i].innerText.toUpperCase() : tableSearch.Rows[i].textContent.toUpperCase();
+          }
+      }
+      //onlys shows the relevant rows as determined by the search string
+      tableSearch.runSearch = function() {
+                      tableSearch.init();
+          //get the search term
+          this.Term = document.getElementById('textBoxSearch').value.toUpperCase();
+          
+          //loop through the rows and hide rows that do not match the search query
+       if (this.Term != '') {
+        top.SetChecks(0); }
+          else {  top.SetChecks(1);  }
+        var count_bugs = 0;
+        var j = 0;
+          for (var i = 0, row; row = this.Rows[i], rowText = this.RowsText[i]; i++) {
+         if ( row.parentNode.parentNode.id == 'SummaryTab' ) {
+           if ((this.Term.indexOf("!") == 0) && (this.Term.length > 1))
+            {  row.style.display = (rowText.indexOf(this.Term.substring(1,this.Term.length)) == -1) ? '' : 'none'; }
+       else {  row.style.display = ((rowText.indexOf(this.Term) != -1) || this.Term === '') ? '' : 'none'; }
+           if ((this.Term.indexOf("!") == 0) && (this.Term.length > 1) && (rowText.indexOf(this.Term.substring(1,this.Term.length)) == -1)) {
+             count_bugs = count_bugs + 1 ;} 
+ 		else {
+          if ((rowText.indexOf(this.Term) != -1) || this.Term == '') {
+             count_bugs = count_bugs + 1 ;} }
+            try { 
+              row.cells[0].innerHTML = count_bugs+'.' ; }
+catch(err) {   continue;} 
+          }
+          }
+       if (count_bugs == 0 && this.Term == '' ) {
+       document.getElementById("selectedbugsbottom").innerHTML = '('+self.document.results.elements.length+' records)'; }
+       else if (count_bugs > 0) {
+       document.getElementById("selectedbugsbottom").innerHTML = '('+count_bugs+' records)';  }
+          else {  document.getElementById("selectedbugsbottom").innerHTML = '(No records)'; } 
+      }
+      //runs the search
+</script>
+<script type="text/javascript" src="./Sample Bug Page_files/sorttable.js.download"></script>
+<script src="./Sample Bug Page_files/top_utils.js.download"></script>
+<script src="./Sample Bug Page_files/jquery-3.2.1.min.js.download"></script>
+<script src="./Sample Bug Page_files/jquery-ui.js.download"></script>
+<link rel="stylesheet" href="./Sample Bug Page_files/jquery.qtip.css">
+<link rel="stylesheet" href="./Sample Bug Page_files/table_style.css">
+<script src="./Sample Bug Page_files/jquery.qtip.js.download"></script>
+<script src="./Sample Bug Page_files/create01.js.download"></script>
+
+
+<title>Custom Report: Laurent Team Bugs</title>
+</head><body bgcolor="white" onload="tableSearch.init();">
+<h2 align="CENTER">Laurent Team Bugs</h2>
+<table>
+</table>
+<table class="nolinesLeftAligned"><tbody><tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:10pt;font-weight:bold;text-align:center;color:#336699;cursor:hand;">
+                <td>
+                   <label>Search: </label>
+                    <input type="text" size="30" maxlength="1000" value="" id="textBoxSearch" onkeyup="tableSearch.runSearch();"></td>
+                </tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:10pt;font-weight:bold;text-align:center;color:#336699;cursor:hand;"><td>
+<img src="./Sample Bug Page_files/tipicon_status.gif" width="15" height="13" border="0" alt="Tip"><span class="OraTipLabel">TIP</span> <span class="OraTipText">: <font size="2"><em>!abc</em> excludes records containing the keyword <em>abc</em></font></span>
+                </td>
+</tr></tbody></table>
+<form action="javascript: return false;" method="GET" name="results">
+<center>
+<table id="SummaryTab" border="" class="summary sortable"><thead><tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:10pt;font-weight:bold;text-align:center;background-color:#cccc99;color:#336699;cursor:hand">
+<th class="sorttable_nosort">Sl No.</th>
+<th class="sorttable_nosort"><input type="checkbox" id="select_all_option" title="Select records" checked="" onclick="javascript:selectRecords();"></th>
+<th>Bug Number</th>
+<th class="sorttable_nosort">Show Bug</th>
+<th>Fix Eta</th>
+<th>Support Contact</th>
+<th>Assignee</th>
+<th>Severity</th>
+<th>Status</th>
+<th>Component</th>
+<th>Date Reported</th>
+<th>Tag</th>
+<th>Subject</th>
+<th>Test Name/Doc Field</th>
+<th>Customer</th>
+</tr></thead>
+<tbody id="data">
+
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>1.</td>
+<td><input type="CHECKBOX" name="rptnos" value="33035908" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=33035908" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=33035908&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=1&amp;query_id=805700&#39;);return false;">33035908</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=33035908" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="20210714">
+14-JUL-21
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of katarzyna.halama@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=KAHALAMA">KAHALAMA</a>
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of sebastien.labarre@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=SLABARRE">SLABARRE</a>
+</td>
+<td>2</td>
+<td>11</td>
+<td>REST</td>
+<td sorttable_customkey="20210623">
+23-JUN-21
+</td>
+<td>HCMBRONZE EXTENDEDP1 REGRN</td>
+<td>BRZ: INCORRECT SEARCH BEHAVIOR WHEN CANDIDATE SEARCH FOR PHRASE WITHOUT ""</td>
+<td>FRCE-3303</td>
+<td>INTERNAL</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>2.</td>
+<td><input type="CHECKBOX" name="rptnos" value="33019471" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=33019471" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=33019471&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=2&amp;query_id=805700&#39;);return false;">33019471</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=33019471" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="20210716">
+16-JUL-21
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of laurie.belcher@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=LBELCHER">LBELCHER</a>
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of kiran.chandra.chintakindi@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=KICHINTA">KICHINTA</a>
+</td>
+<td>2</td>
+<td>11</td>
+<td>HIRING</td>
+<td sorttable_customkey="20210622">
+22-JUN-21
+</td>
+<td>2421_TRIAGED</td>
+<td>CONDITIONAL PRESCREENING QUESTION NOT LOADING ON APPLICATION</td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>THE CHARLOTTE-MECKLENBURG HOSPITAL AUTHORITY D/B/A ATRIUM HEALTH</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>3.</td>
+<td><input type="CHECKBOX" name="rptnos" value="33052857" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=33052857" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=33052857&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=3&amp;query_id=805700&#39;);return false;">33052857</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=33052857" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of csongor.takacs@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=CTAKACS">CTAKACS</a>
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of vincent.hamel@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=VHAMEL">VHAMEL</a>
+</td>
+<td>2</td>
+<td>11</td>
+<td>REST</td>
+<td sorttable_customkey="20210628">
+28-JUN-21
+</td>
+<td>2421_TRIAGED, 2421_ESCALATION</td>
+<td>REQUISITIONS NOT SHOWING ON CX SITE IF MULTIPLE LOCATIONS ARE SELECTED</td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>FIRST SOLAR INC</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>4.</td>
+<td><input type="CHECKBOX" name="rptnos" value="33104224" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=33104224" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=33104224&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=4&amp;query_id=805700&#39;);return false;">33104224</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=33104224" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="20210716">
+16-JUL-21
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of yogaraj.kannan@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=YOKANNAN">YOKANNAN</a>
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of sudheer.dasari@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=SUDASARI">SUDASARI</a>
+</td>
+<td>2</td>
+<td>11</td>
+<td>HIRING</td>
+<td sorttable_customkey="20210712">
+12-JUL-21
+</td>
+<td>HCMBRONZE P1</td>
+<td>BRZ:GETTING ERROR IN SKILL SUGGESTIONS IN TYPEHEAD FUNCTIONALITY</td>
+<td>FRCE-66330 - REMAINING WORK FOR SKILLS ON REQUISITIONS</td>
+<td>INTERNAL</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>5.</td>
+<td><input type="CHECKBOX" name="rptnos" value="33064460" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=33064460" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=33064460&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=5&amp;query_id=805700&#39;);return false;">33064460</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=33064460" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="20210712">
+12-JUL-21
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of steeve.chamberland@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=STCHAMBE">STCHAMBE</a>
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of frederic.dorval@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=FDORVAL">FDORVAL</a>
+</td>
+<td>3</td>
+<td>11</td>
+<td>HIRING</td>
+<td sorttable_customkey="20210630">
+30-JUN-21
+</td>
+<td>HCMBRONZE DEV_IMPACT</td>
+<td>BRZ: REMOVE TOTALJOBSCOUNT FROM SEARCHREQUEST ATTRIBUTE LIST - REDO LOGGING IN RESTSEARCHFACADE GETPARAMETERS METHOD</td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>INTERNAL</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>6.</td>
+<td><input type="CHECKBOX" name="rptnos" value="33093905" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=33093905" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=33093905&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=6&amp;query_id=805700&#39;);return false;">33093905</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=33093905" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="20210712">
+12-JUL-21
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of ninad.deshpande@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=NINDESHP">NINDESHP</a>
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of frederic.dorval@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=FDORVAL">FDORVAL</a>
+</td>
+<td>2</td>
+<td>11</td>
+<td>HIRING</td>
+<td sorttable_customkey="20210708">
+08-JUL-21
+</td>
+<td>HCMBRONZE P1 REGRN NEW</td>
+<td>BRZ: GETTING ERROR WHILE CREATING A STANDALONE REQUISITION TEMPLATE</td>
+<td>FRCE-3303</td>
+<td>INTERNAL</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>7.</td>
+<td><input type="CHECKBOX" name="rptnos" value="33040635" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=33040635" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=33040635&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=7&amp;query_id=805700&#39;);return false;">33040635</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=33040635" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="20210714">
+14-JUL-21
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of przemyslaw.wilkutowski@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=PWILKUTO">PWILKUTO</a>
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of b.prasad@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=BRPRASAD">BRPRASAD</a>
+</td>
+<td>3</td>
+<td>11</td>
+<td>SETUP</td>
+<td sorttable_customkey="20210624">
+24-JUN-21
+</td>
+<td>HCMBRONZE DEV_IMPACT </td>
+<td>JOB REQUISITION TEMPLATE TRANSLATION IS COPIED INCORECTLY FOR DUPLICATED REQ</td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>INTERNAL</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>8.</td>
+<td><input type="CHECKBOX" name="rptnos" value="33095532" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=33095532" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=33095532&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=8&amp;query_id=805700&#39;);return false;">33095532</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=33095532" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="20210713">
+13-JUL-21
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of sahil.s.sharma@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=SAHISHAR">SAHISHAR</a>
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of francois.collins@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=FCOLLIN2">FCOLLIN2</a>
+</td>
+<td>2</td>
+<td>11</td>
+<td>HIRING</td>
+<td sorttable_customkey="20210708">
+08-JUL-21
+</td>
+<td>HCMBRONZE P1 REGRN</td>
+<td>APPLICATION COUNT IS 0 EVEN IF ACTIVE JAS ARE AVAILABLE</td>
+<td>FRCE-13247</td>
+<td>INTERNAL -- FUSIONAPPS</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>9.</td>
+<td><input type="CHECKBOX" name="rptnos" value="33094903" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=33094903" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=33094903&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=9&amp;query_id=805700&#39;);return false;">33094903</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=33094903" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of gay.pierre@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=GPIERRE">GPIERRE</a>
+</td>
+<td>
+LDEVITRG
+</td>
+<td>2</td>
+<td>11</td>
+<td>HIRING</td>
+<td sorttable_customkey="20210708">
+08-JUL-21
+</td>
+<td>2421_TRIAGED</td>
+<td>RECRUITERS USING AOR ARE NOT ABLE TO SEE REQUISITIONS AFTER 21B</td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>MARRIOTT INTERNATIONAL ADMINISTRATIVE SERVICES, INC.</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>10.</td>
+<td><input type="CHECKBOX" name="rptnos" value="33000575" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=33000575" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=33000575&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=10&amp;query_id=805700&#39;);return false;">33000575</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=33000575" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="20210716">
+16-JUL-21
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of magdalena.lincner-skiba@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=MLINCNER">MLINCNER</a>
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of kiran.chandra.chintakindi@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=KICHINTA">KICHINTA</a>
+</td>
+<td>2</td>
+<td>11</td>
+<td>CANDEXP</td>
+<td sorttable_customkey="20210614">
+14-JUN-21
+</td>
+<td>HCMBRONZE EXTENDEDP1</td>
+<td>BRZ: EMPTY SKILL ELEMENT UNDER SKILL CONTENT SECTION IS DISPLAYED</td>
+<td>FRCE-52269 ADD SKILLS TO REQUISITIONS</td>
+<td>INTERNAL</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>11.</td>
+<td><input type="CHECKBOX" name="rptnos" value="33104488" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=33104488" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=33104488&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=11&amp;query_id=805700&#39;);return false;">33104488</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=33104488" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of yogaraj.kannan@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=YOKANNAN">YOKANNAN</a>
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of frederic.dorval@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=FDORVAL">FDORVAL</a>
+</td>
+<td>2</td>
+<td>11</td>
+<td>HIRING</td>
+<td sorttable_customkey="20210712">
+12-JUL-21
+</td>
+<td>HCMBRONZE P1</td>
+<td>BRZ:GETTING ERROR WHEN TRYING TO ACCESS ENTERPRISE RECRUITING AND CANDIDATE EXPERIENCE INFORMATION TASK IN FSM</td>
+<td>FRCE-66330 - REMAINING WORK FOR SKILLS ON REQUISITIONS</td>
+<td>INTERNAL</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>12.</td>
+<td><input type="CHECKBOX" name="rptnos" value="33094670" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=33094670" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=33094670&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=12&amp;query_id=805700&#39;);return false;">33094670</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=33094670" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of suresh.babu@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=SBABU">SBABU</a>
+</td>
+<td>
+LDEVITRG
+</td>
+<td>3</td>
+<td>11</td>
+<td>APPROVALS</td>
+<td sorttable_customkey="20210708">
+08-JUL-21
+</td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>APPROVALS - JOB REQUISITIONS DOES NOT HAVE A CATEGORY</td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>INTERNAL</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>13.</td>
+<td><input type="CHECKBOX" name="rptnos" value="33094258" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=33094258" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=33094258&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=13&amp;query_id=805700&#39;);return false;">33094258</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=33094258" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="20210716">
+16-JUL-21
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of kiran.chandra.chintakindi@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=KICHINTA">KICHINTA</a>
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of kiran.chandra.chintakindi@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=KICHINTA">KICHINTA</a>
+</td>
+<td>3</td>
+<td>11</td>
+<td>HIRING</td>
+<td sorttable_customkey="20210708">
+08-JUL-21
+</td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>JUNIT TRACKING BUG FOR HCMRECHIRINGDISQUALPUBLICMODELSERVICETESTS</td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>INTERNAL</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>14.</td>
+<td><input type="CHECKBOX" name="rptnos" value="33041097" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=33041097" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=33041097&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=14&amp;query_id=805700&#39;);return false;">33041097</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=33041097" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="20210713">
+13-JUL-21
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of przemyslaw.wilkutowski@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=PWILKUTO">PWILKUTO</a>
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of francois.collins@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=FCOLLIN2">FCOLLIN2</a>
+</td>
+<td>3</td>
+<td>11</td>
+<td>HIRING</td>
+<td sorttable_customkey="20210624">
+24-JUN-21
+</td>
+<td>HCMBRONZE DEV_IMPACT</td>
+<td>ALERTS LINK 'VIEW THE EXTERNAL JOB POSTING' IS RESOLVING TO BLANK CX PAGE</td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>INTERNAL</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>15.</td>
+<td><input type="CHECKBOX" name="rptnos" value="33092014" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=33092014" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=33092014&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=15&amp;query_id=805700&#39;);return false;">33092014</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=33092014" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of manasa.j.janarajupalli@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=MAJANARA">MAJANARA</a>
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of veronique.denechaud-lafond@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=VDENECHA">VDENECHA</a>
+</td>
+<td>2</td>
+<td>11</td>
+<td>HIRING</td>
+<td sorttable_customkey="20210708">
+08-JUL-21
+</td>
+<td>HCMIRC EXTENDEDP1</td>
+<td>IRC: LOAD MORE ITEMS LINK IS NOT RESPONDING</td>
+<td>FRCE-66324 - IQ BATCH COLLECT FEEDBACK ACTION</td>
+<td>INTERNAL</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>16.</td>
+<td><input type="CHECKBOX" name="rptnos" value="30838923" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=30838923" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=30838923&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=16&amp;query_id=805700&#39;);return false;">30838923</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=30838923" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of sebastien.labarre@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=SLABARRE">SLABARRE</a>
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of veronique.denechaud-lafond@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=VDENECHA">VDENECHA</a>
+</td>
+<td>3</td>
+<td>11</td>
+<td>HIRING</td>
+<td sorttable_customkey="20200131">
+31-JAN-20
+</td>
+<td>2421_CS_TODO 2421_TRAIGED</td>
+<td>IMPACT ANALYSIS IN REQUISITION TEMPLATE FLOW WITH LARGE ORGANIZATION TREE</td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>INTERNAL</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>17.</td>
+<td><input type="CHECKBOX" name="rptnos" value="32597760" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=32597760" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=32597760&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=17&amp;query_id=805700&#39;);return false;">32597760</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=32597760" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of yogaraj.kannan@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=YOKANNAN">YOKANNAN</a>
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of guy.picard@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=GPICARD">GPICARD</a>
+</td>
+<td>2</td>
+<td>11</td>
+<td>SETUP</td>
+<td sorttable_customkey="20210308">
+08-MAR-21
+</td>
+<td>2421_TRIAGED Apr15triage Customer_Impact Dev_Reviewed REL13PATCH Apr29triage pmor_cke</td>
+<td>SHORT DESCRIPTION COPY PASTE NOT WORKING IN CONTENT LIBRARY</td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>FIRST WEST CREDIT UNION</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>18.</td>
+<td><input type="CHECKBOX" name="rptnos" value="32747702" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=32747702" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=32747702&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=18&amp;query_id=805700&#39;);return false;">32747702</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=32747702" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="20210716">
+16-JUL-21
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of michelle.finocchio@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=MFINOCCH">MFINOCCH</a>
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of sohit.kaushik@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=SOKAUSHI">SOKAUSHI</a>
+</td>
+<td>2</td>
+<td>11</td>
+<td>ICE</td>
+<td sorttable_customkey="20210421">
+21-APR-21
+</td>
+<td>2421_TRIAGED</td>
+<td>INTERNAL CANDIDATE'S QUESTION RESPONSES NOT VISIBLE IN UI</td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>JPMORGAN CHASE BANK, N.A.</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>19.</td>
+<td><input type="CHECKBOX" name="rptnos" value="32448203" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=32448203" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=32448203&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=19&amp;query_id=805700&#39;);return false;">32448203</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=32448203" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of danny.gilbert@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=DANGILBE">DANGILBE</a>
+</td>
+<td>
+LDEVITRG
+</td>
+<td>3</td>
+<td>11</td>
+<td>LIFECYCLE</td>
+<td sorttable_customkey="20210201">
+01-FEB-21
+</td>
+<td>FRCE-NO-EPIC FRCE-SQL-CLEANUP</td>
+<td>TRACKING: 22.B SQL CLEANUP IN FILE IRC_TXN_UPG_HCMRECPROCESSLIFECYCLE.SQL (CLEANUP OF SYNCHRONIZE AVAILABILITY CONTEXT V2)</td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>INTERNAL</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>20.</td>
+<td><input type="CHECKBOX" name="rptnos" value="32762023" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=32762023" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=32762023&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=20&amp;query_id=805700&#39;);return false;">32762023</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=32762023" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of babacar.fall@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=BFALL">BFALL</a>
+</td>
+<td>
+LDEVITRG
+</td>
+<td>3</td>
+<td>11</td>
+<td>HIRING</td>
+<td sorttable_customkey="20210412">
+12-APR-21
+</td>
+<td>FRCE-NO-EPIC FRCE-SQL-CLEANUP</td>
+<td>TRACKING: 22B - CLEANUP HCM/IRC/DB/SQL/DATAFIX/IRC_TXN_UPG_HCMRECHIRINGREQSCORE.SQL</td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>INTERNAL</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>21.</td>
+<td><input type="CHECKBOX" name="rptnos" value="31380546" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=31380546" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=31380546&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=21&amp;query_id=805700&#39;);return false;">31380546</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=31380546" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="20200525">
+25-MAY-20
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of el.hadji.thiam@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=ETHIAM">ETHIAM</a>
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of prashanth.gajjela@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=PGAJJELA">PGAJJELA</a>
+</td>
+<td>2</td>
+<td>11</td>
+<td>HIRING</td>
+<td sorttable_customkey="20200520">
+20-MAY-20
+</td>
+<td>HCMBRONZE EXTENDEDP1</td>
+<td>BRZ: SEND MESSAGE TO TEAM - BELL NOTIFICATION DOES NOT REFLECT THE RTE FORMATTING</td>
+<td>FRCE-39616 - AD-HOC P2P COMMUNICATIONS (ON REQS/JAS)</td>
+<td>INTERNAL</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>22.</td>
+<td><input type="CHECKBOX" name="rptnos" value="32555156" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=32555156" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=32555156&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=22&amp;query_id=805700&#39;);return false;">32555156</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=32555156" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of danny.gilbert@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=DANGILBE">DANGILBE</a>
+</td>
+<td>
+LDEVITRG
+</td>
+<td>3</td>
+<td>11</td>
+<td>SETUP</td>
+<td sorttable_customkey="20210225">
+25-FEB-21
+</td>
+<td>FRCE-NO-EPIC FRCE-SQL-CLEANUP</td>
+<td>TRACKING: 22.B SQL CLEANUP IN FILE IRC_IDX_REQUISITIONS_TL_U1 AND  SCRIPT_MANIFEST.JSON</td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>INTERNAL</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>23.</td>
+<td><input type="CHECKBOX" name="rptnos" value="32440455" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=32440455" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=32440455&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=23&amp;query_id=805700&#39;);return false;">32440455</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=32440455" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of danny.gilbert@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=DANGILBE">DANGILBE</a>
+</td>
+<td>
+LDEVITRG
+</td>
+<td>3</td>
+<td>11</td>
+<td>HIRING</td>
+<td sorttable_customkey="20210129">
+29-JAN-21
+</td>
+<td>FRCE-NO-EPIC FRCE-SQL-CLEANUP</td>
+<td>TRACKING: 22.B CLEANUP IN FILE IRC_TXN_FIX_HCMRECRUITINGSETUP.SQL (CLEANUP OF DROP AVAILABILITY CONTEXT V2 CONSTRAINT)</td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>INTERNAL</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>24.</td>
+<td><input type="CHECKBOX" name="rptnos" value="32947948" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=32947948" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=32947948&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=24&amp;query_id=805700&#39;);return false;">32947948</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=32947948" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of danny.gilbert@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=DANGILBE">DANGILBE</a>
+</td>
+<td>
+LDEVITRG
+</td>
+<td>3</td>
+<td>11</td>
+<td>LIFECYCLE</td>
+<td sorttable_customkey="20210531">
+31-MAY-21
+</td>
+<td>FRCE-NO-EPIC FRCE-SQL-CLEANUP</td>
+<td>TRACKING: 22.C SQL CLEANUP IN FILE IRC_TXN_UPG_HCMRECPROCESSLIFECYCLE.SQL (DELETE ACTION USAGE TRANSLATION ON INSTANCES)</td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>INTERNAL</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>25.</td>
+<td><input type="CHECKBOX" name="rptnos" value="32993532" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=32993532" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=32993532&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=25&amp;query_id=805700&#39;);return false;">32993532</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=32993532" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of guy.picard@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=GPICARD">GPICARD</a>
+</td>
+<td>
+LDEVITRG
+</td>
+<td>3</td>
+<td>11</td>
+<td>HIRING</td>
+<td sorttable_customkey="20210611">
+11-JUN-21
+</td>
+<td>FRCE-NO-EPIC FRCE-SQL-CLEANUP</td>
+<td>TRACKING: 22.C SQL CLEANUP IN FILE IRC_TXN_UPG_HCMRECRUITINGHIRING.SQL</td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>INTERNAL</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>26.</td>
+<td><input type="CHECKBOX" name="rptnos" value="32856892" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=32856892" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=32856892&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=26&amp;query_id=805700&#39;);return false;">32856892</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=32856892" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of danny.gilbert@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=DANGILBE">DANGILBE</a>
+</td>
+<td>
+LDEVITRG
+</td>
+<td>3</td>
+<td>11</td>
+<td>LIFECYCLE</td>
+<td sorttable_customkey="20210506">
+06-MAY-21
+</td>
+<td>FRCE-NO-EPIC FRCE-SQL-CLEANUP</td>
+<td>TRACKING: 22.C SQL CLEANUP IN FILE IRC_TXN_UPG_HCMRECPROCESSLIFECYCLE.SQL (CLEANUP OF UPDATE SUB_PROCESS STATUS_CODE)</td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>INTERNAL</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>27.</td>
+<td><input type="CHECKBOX" name="rptnos" value="32980064" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=32980064" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=32980064&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=27&amp;query_id=805700&#39;);return false;">32980064</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=32980064" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of amelia.cabuang@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=ACABUANG">ACABUANG</a>
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of sebastien.labarre@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=SLABARRE">SLABARRE</a>
+</td>
+<td>3</td>
+<td>11</td>
+<td>HIRING</td>
+<td sorttable_customkey="20210610">
+10-JUN-21
+</td>
+<td>2421_TRIAGED</td>
+<td>PRIMARY LOCATION NOT POPULATED WHEN CREATING REQUISITION FROM POSITION</td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>IFM INVESTORS PTY LTD</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>28.</td>
+<td><input type="CHECKBOX" name="rptnos" value="32862244" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=32862244" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=32862244&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=28&amp;query_id=805700&#39;);return false;">32862244</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=32862244" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of sue.lin.poh@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=SUPOH">SUPOH</a>
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of sebastien.labarre@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=SLABARRE">SLABARRE</a>
+</td>
+<td>3</td>
+<td>11</td>
+<td>HIRING</td>
+<td sorttable_customkey="20210507">
+07-MAY-21
+</td>
+<td>2421_TRIAGED</td>
+<td>PRIMARY LOCATION DOES NOT POPULATE WITH USER'S LOCATION WHEN CREATING REQ</td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>R+L CARRIERS SHARED SERVICES, LLC</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>29.</td>
+<td><input type="CHECKBOX" name="rptnos" value="32902711" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=32902711" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=32902711&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=29&amp;query_id=805700&#39;);return false;">32902711</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=32902711" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="20210713">
+13-JUL-21
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of simon.labarre@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=SILABARR">SILABARR</a>
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of babacar.fall@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=BFALL">BFALL</a>
+</td>
+<td>3</td>
+<td>11</td>
+<td>SETUP</td>
+<td sorttable_customkey="20210519">
+19-MAY-21
+</td>
+<td>HCMBRONZE DEV_IMPACT</td>
+<td>MESSAGE CONTENT UMS STATUS AND ERROR ARE CONCATENATED</td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>INTERNAL -- FUSIONAPPS</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>30.</td>
+<td><input type="CHECKBOX" name="rptnos" value="32912331" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=32912331" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=32912331&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=30&amp;query_id=805700&#39;);return false;">32912331</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=32912331" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="20210716">
+16-JUL-21
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of pardhasaradhirao.veluguleti@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=PVELUGUL">PVELUGUL</a>
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of rajdeep.chaudhary@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=RSCHAUDH">RSCHAUDH</a>
+</td>
+<td>2</td>
+<td>11</td>
+<td>HIRING</td>
+<td sorttable_customkey="20210521">
+21-MAY-21
+</td>
+<td>HCMBRONZE P1</td>
+<td>DATE TYPE VALIDATIONS SKIPPED BY ORC RESULTING IN DATA CORRUPTION AND INCORRECT DATA</td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>INTERNAL</td>
+</tr>
+<tr style="font-family:Arial,Helvetica,Geneva,sans-serif;font-size:9pt;">
+<td>31.</td>
+<td><input type="CHECKBOX" name="rptnos" value="32878842" checked=""></td>
+<td><a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=32878842" onclick="javascript:OpenDetails(&#39;/pls/bug/webbug_edit.edit_info_top?rptno=32878842&amp;report_title=Laurent%20Team%20Bugs&amp;rptno_count=31&amp;pos=31&amp;query_id=805700&#39;);return false;">32878842</a></td>
+<td align="center"><a href="https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=32878842" target="_blank"><img src="./Sample Bug Page_files/view_ena.png" alt="Show bug" border="0"></a></td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>
+<a style="color:black" target="_blank" title="View Profile of danny.gilbert@oracle.com" href="https://bug.oraclecorp.com/pls/bug/WEBBUG_EDIT.User_Profile?p_username=DANGILBE">DANGILBE</a>
+</td>
+<td>
+LDEVITRG
+</td>
+<td>3</td>
+<td>11</td>
+<td>LIFECYCLE</td>
+<td sorttable_customkey="20210512">
+12-MAY-21
+</td>
+<td>FRCE-NO-EPIC FRCE-SQL-CLEANUP</td>
+<td>TRACKING: 22.C SQL CLEANUP IN FILE IRC_TXN_UPG_HCMRECPROCESSLIFECYCLE.SQL (CLEANUP OF FIX INCORRECT ROUTING STEPS CODE)</td>
+<td sorttable_customkey="">
+&nbsp;
+</td>
+<td>INTERNAL</td>
+</tr>
+</tbody>
+<tfoot></tfoot></table>
+
+<br>
+<span id="selectedbugsbottom">(31 records)</span>
+<br>
+<br>
+<form action="https://bug.oraclecorp.com/pls/bug/webbug_reports.custom_report" method="GET">
+<br>
+<br>
+<input type="hidden" name="select_stmt" value="h.fix_avail_date as FIX_ETA,
+h.SUPPORT_CONTACT,
+               h.programmer,
+               h.cs_priority,
+               h.status,
+               h.category,
+               h.rptdate as DATE_REPORTED,
+               (select BT.tags from BUG_TAGS BT where BT.rptno = h.RPTNO) as TAG,
+               h.subject,
+h.test_name,
+h.customer">
+<input type="hidden" name="where_stmt" value="h.product_id in (2421)
+           and ((h.status &gt; 10
+           and h.category &lt;&gt; &#39;OPPTMKT&#39;
+           and h.status &lt; 40)
+           and h.status not in (15, 30, 31, 32, 33, 35, 36, 37, 39))
+           AND (h.programmer IN
+               (SELECT bug_username
+                  FROM BUG_USER
+                 WHERE STATUS = &#39;A&#39;
+                   AND upper(full_email) || &#39;@ORACLE.COM&#39; IN
+                       (SELECT upper(email_address)
+                          FROM hr_user_hierarchy_vw
+                         START WITH email_address =
+                                    upper(&#39;laurent.devigne@ORACLE.COM&#39;)
+                        CONNECT BY PRIOR email_address = manager_email)) or h.programmer = &#39;LDEVITRG&#39;)
+           AND CATEGORY not like &#39;ADETXN&#39;
+           and h.RPTD_BY != (&#39;TLDSHREP&#39;)
+           and rownum &lt; 20000">
+<input type="hidden" name="order_stmt" value="">
+<input type="hidden" name="rpt_title" value="Laurent Team Bugs">
+<input type="hidden" name="col_head" value="Fix Eta">
+<input type="hidden" name="col_head" value="Support Contact">
+<input type="hidden" name="col_head" value="Assignee">
+<input type="hidden" name="col_head" value="Severity">
+<input type="hidden" name="col_head" value="Status">
+<input type="hidden" name="col_head" value="Component">
+<input type="hidden" name="col_head" value="Date Reported">
+<input type="hidden" name="col_head" value="Tag">
+<input type="hidden" name="col_head" value="Subject">
+<input type="hidden" name="col_head" value="Test Name/Doc Field">
+<input type="hidden" name="col_head" value="Customer">
+<input type="hidden" name="tot_cols" value="11">
+<table class="nolines">
+<tbody><tr align="CENTER">
+<td><input type="BUTTON" value="Select All" onclick="top.SetChecks(1)"></td>
+<td><input type="BUTTON" value="Unselect All" onclick="top.SetChecks(0)"></td>
+<td><input type="submit" value="Edit Query Criteria"></td>
+</tr>
+</tbody></table>
+<table class="nolines">
+<tbody><tr align="CENTER">
+<td><input type="BUTTON" value="Detailed Report For Selected Records" onclick="top.DetailedReport(self.document.results, &#39;/pls/bug/webbug_reports.do_edit_detailed_report&#39;)"></td>
+<td><input type="BUTTON" value="Detailed Report Using Query Criteria" onclick="top.ChangeBugformAction(this.form, &#39;/pls/bug/webbug_reports.do_detailed_report&#39;)"></td>
+</tr>
+</tbody></table>
+<table class="nolines">
+<tbody><tr align="CENTER">
+<td><input type="BUTTON" value="Mass Update For Selected Records" onclick=" if(top.AtLeastOneCheck()){top.ChangeBugformAction(self.document.results, &#39;/pls/bug/webbug_edit.enter_mass_update_info_top&#39;) }"></td>
+</tr>
+</tbody></table>
+</form>
+<script language="javascript">
+function selectRecords() {
+            if(document.getElementById("select_all_option").checked)
+              top.SetChecks(1);
+            else
+              top.SetChecks(0);
+          }
+        
+var xmlHttp;
+function checkIDAvailability()
+{ 
+   xmlHttp=top.GetXmlHttpObject();
+   if (xmlHttp==null)
+   {
+      alert ("Your browser does not support AJAX!");
+      return;
+   } 
+   var p_id=encodeURI(document.getElementById("queryid").value); 
+   var b_for_mobile = document.getElementById("for_mobile").checked;
+   var p_for_mobile;
+   if(b_for_mobile) {
+      p_for_mobile = "Y";
+   }else {
+      p_for_mobile = "N";
+   }
+   var p_url=document.URL; 
+  var URLsplit = p_url.split('/'); 
+  var host = URLsplit[0] + "//" + URLsplit[2] ; 
+  p_url = p_url.replace(host, ''); 
+   var url;
+   if (p_id.length > 0)
+   {
+       url="WEBBUG_REPORTS.Check_Tiny_ID_Availability?p_query_id="+p_id;
+       xmlHttp.onreadystatechange=confirmAvailability;
+   }
+   else
+   {
+       url="WEBBUG_REPORTS.Create_Tiny_URL?p_query_id="+p_id+"&p_url="+escape(p_url);
+       url=url+"&p_rand="+Math.random();
+       url=url+"&p_for_mobile="+ p_for_mobile;
+       xmlHttp.onreadystatechange=showTinyURL;
+   }
+   xmlHttp.open("GET",url,true);
+   xmlHttp.send(null);
+}
+
+function confirmAvailability() 
+{ 
+   if (xmlHttp.readyState==4)
+   { 
+      if (xmlHttp.responseText.indexOf("NOT AVAILABLE") != -1)
+      { 
+         if (confirm("The ID is already in use. Press Cancel to enter a different ID, or Press OK to let BugDB generate a unique ID."))
+             createTinyURL();
+         else
+         {
+             document.getElementById("queryid").focus();
+             return;
+         }
+      }
+      else
+         createTinyURL();
+   }
+}
+
+
+function createTinyURL()
+{ 
+   xmlHttp=top.GetXmlHttpObject();
+   if (xmlHttp==null)
+   {
+      alert ("Your browser does not support AJAX!");
+      return;
+   } 
+   var p_id=encodeURI(document.getElementById("queryid").value); 
+   var b_for_mobile = document.getElementById("for_mobile").checked;
+   var p_for_mobile;
+   if(b_for_mobile) {
+      p_for_mobile = "Y";
+   }else {
+      p_for_mobile = "N";
+   }
+   var p_url=document.URL; 
+  var URLsplit = p_url.split('/'); 
+  var host = URLsplit[0] + "//" + URLsplit[2] ; 
+  p_url = p_url.replace(host, ''); 
+   var url="WEBBUG_REPORTS.Create_Tiny_URL?p_query_id="+p_id+"&p_url="+escape(p_url);
+   url=url+"&p_rand="+Math.random();
+   url=url+"&p_for_mobile="+ p_for_mobile;
+   xmlHttp.onreadystatechange=showTinyURL;
+   xmlHttp.open("GET",url,true);
+   xmlHttp.send(null);
+}
+
+function showTinyURL() 
+{ 
+   var bugURL;
+   if (xmlHttp.readyState==4)
+   { 
+      txt=document.getElementById("queryid");
+      document.getElementById("qlabel").innerHTML="Short URL to this report:";
+      var idx = document.URL.indexOf("webbug_reports");
+      if (idx != -1)
+      { 
+           bugURL = document.URL.substring(0,idx+15);
+      }
+      IDStr = xmlHttp.responseText.replace(/(\r\n|\n|\r)/gm,"");
+      txt.value=bugURL+"Saved_Search?id="+escape(IDStr);
+      txt.style.width="600";
+      txt.select();
+      var rptitle=document.title;
+      document.getElementById("mailtospan").innerHTML="<a href=\"mailto:?subject=Short URL to "+rptitle+"&body=Short URL: "+txt.value+"\"><img src=\"/bug-imgs/mailto.gif\" align=\"BOTTOM\" title=\"E-mail this Short URL\" border=0 /></a>";
+   if (xmlHttp.responseText!="ERROR")
+   {   document.getElementById("saveQueryButton").style.display="none";
+                  document.getElementById("labelspan").innerHTML="";
+                  document.getElementById("for_mobile").style.display="none";
+                  document.getElementById("moblabel").style.display="none";
+          
+      return;
+      }
+    document.getElementById("SearchDiv").style.display="none";
+      HideShowSearch();
+      return;
+   }
+}
+
+function HideShowSearch()
+{
+    s=document.getElementById("SearchDiv");
+    l=document.getElementById("ShowSearch");
+    if (s.style.display=="inline")
+    {
+        s.style.display="none";
+        l.innerHTML="Show Short URLs";
+    }
+    else
+    {
+        s.style.display="inline";
+        l.innerHTML="Hide Short URLs";
+        showsearch();
+    }
+}
+function showsearch()
+{ 
+  xmlsearch=top.GetXmlHttpObject();
+   if (xmlsearch==null)
+   {
+      alert ("Your browser does not support AJAX!");
+      return;
+   } 
+   var url="webbug_reports.saved_searches_table";
+   //url=url+"&sid="+Math.random();
+   xmlsearch.onreadystatechange=stateChangedsearch;
+   xmlsearch.open("GET",url,true);
+   xmlsearch.send(null);
+}
+function stateChangedsearch() 
+{ 
+    l=document.getElementById("ShowSearch");
+   if (xmlsearch.readyState==4)
+   { 
+        l.innerHTML="Hide Short URLs";
+      document.getElementById("SearchDiv").innerHTML=xmlsearch.responseText;
+      search.init();
+   }
+   else
+   { 
+      document.getElementById("SearchDiv").innerHTML="Retrieving URLs...";
+   }
+}
+var xmldelete;
+function calldelete(query_id)
+{xmldelete=top.GetXmlHttpObject();
+   if (xmldelete==null)
+   {
+      alert ("Your browser does not support AJAX!");
+      return;
+   } 
+   if (query_id=="All")
+   {
+if(confirm('Are you sure you want to delete all your Short URLs?'))
+   { 
+   var url="webbug_reports.save_search_action?p_query_id="+query_id+"&upd_del=ALL";
+   document.getElementById("saveQueryButton").style.display="inline";
+   document.getElementById("labelspan").innerHTML="<b>Create Short URL for this report</b>";
+                    document.getElementById("queryid").style.width="300";
+                    document.getElementById("queryid").value="";
+                    document.getElementById("qlabel").innerHTML="Short URL name (optional):";
+                    document.getElementById("for_mobile").style.display="inline";
+                    document.getElementById("moblabel").style.display="inline";
+                    document.getElementById("mailtospan").innerHTML="";
+                
+    }
+    }
+   else
+   { 
+if(confirm('Are you sure you want to delete this Short URL?'))
+   { 
+   var url="webbug_reports.save_search_action?p_query_id="+query_id+"&upd_del=DELETE";
+    }
+    }
+   //url=url+"&sid="+Math.random();
+   xmldelete.onreadystatechange=stateChangedDelete;
+   xmldelete.open("GET",url,true);
+   xmldelete.send(null);
+}
+function stateChangedDelete() 
+{ 
+   if (xmldelete.readyState==4)
+   { 
+      showsearch();
+   }
+}
+var xmlsaveas;
+function callsaveas(query_id)
+{if(confirm('Are you sure you want to overwrite this Short URL with the link to the current Summary Report?'))
+{xmlsaveas=top.GetXmlHttpObject();
+   if (xmlsaveas==null)
+   {
+      alert ("Your browser does not support AJAX!");
+      return;
+   } 
+   var query_url=document.URL;
+   var url="webbug_reports.save_search_action?p_query_id="+query_id+"&upd_del=UPDATE&p_query_url="+escape(query_url);
+   //url=url+"&sid="+Math.random();
+   xmlsaveas.onreadystatechange=stateChangedsaveas;
+   xmlsaveas.open("GET",url,true);
+   xmlsaveas.send(null);
+}}
+function stateChangedsaveas() 
+{ 
+   if (xmlsaveas.readyState==4)
+   { 
+      showsearch();
+   }
+}
+   function WhenEnterPressed(e) {
+          //checks if the user pressed the enter key, and if they did then run the search
+              checkIDAvailability();
+          var keycode;
+          if (window.event) { keycode = window.event.keyCode; }
+          else if (e) { keycode = e.which; }
+          else { return false; }
+          if (keycode == 13) {
+              checkIDAvailability();
+              return false;
+          }
+          else { return false; }
+      }
+function geturl()
+{
+    s=window.location.href;
+ s = s.toLowerCase();
+    l=s.substring(0,s.indexOf("/webbug"));
+return l;
+}
+</script>
+<form name="TinyURLForm" onsubmit="javascript:return WhenEnterPressed(event);">
+<table class="nolinesLeftAligned" style="font-family:Arial,Helvetica;font-size:10pt;">
+<tbody><tr>
+<td><span id="labelspan"><b>Create Short URL for this report</b></span></td>
+</tr>
+<tr>
+<td><label id="qlabel" for="queryid">Short URL name (optional)</label>&nbsp;<input type="text" id="queryid" name="query_id" size="30" maxlength="30"><input type="checkbox" id="for_mobile" title="Enable for Mobile"><label id="moblabel" for="for_mobile">Enable for Mobile</label></td>
+<td><span id="mailtospan"></span></td>
+<td><input type="button" id="saveQueryButton" value="Generate Short URL" onclick="javascript:checkIDAvailability();"></td>
+</tr>
+<tr>
+<td><a id="ShowSearch" name="ShowSearch" href="https://bug.oraclecorp.com/pls/bug/webbug_reports.do_custom_report?select_stmt=h.fix_avail_date+as+FIX_ETA%2C%0D%0Ah.SUPPORT_CONTACT%2C%0D%0A+++++++++++++++h.programmer%2C%0D%0A+++++++++++++++h.cs_priority%2C%0D%0A+++++++++++++++h.status%2C%0D%0A+++++++++++++++h.category%2C%0D%0A+++++++++++++++h.rptdate+as+DATE_REPORTED%2C%0D%0A+++++++++++++++%28select+BT.tags+from+BUG_TAGS+BT+where+BT.rptno+%3D+h.RPTNO%29+as+TAG%2C%0D%0A+++++++++++++++h.subject%2C%0D%0Ah.test_name%2C%0D%0Ah.customer&amp;where_stmt=h.product_id+in+%282421%29%0D%0A+++++++++++and+%28%28h.status+%3E+10%0D%0A+++++++++++and+h.category+%3C%3E+%27OPPTMKT%27%0D%0A+++++++++++and+h.status+%3C+40%29%0D%0A+++++++++++and+h.status+not+in+%2815%2C+30%2C+31%2C+32%2C+33%2C+35%2C+36%2C+37%2C+39%29%29%0D%0A+++++++++++AND+%28h.programmer+IN%0D%0A+++++++++++++++%28SELECT+bug_username%0D%0A++++++++++++++++++FROM+BUG_USER%0D%0A+++++++++++++++++WHERE+STATUS+%3D+%27A%27%0D%0A+++++++++++++++++++AND+upper%28full_email%29+%7C%7C+%27%40ORACLE.COM%27+IN%0D%0A+++++++++++++++++++++++%28SELECT+upper%28email_address%29%0D%0A++++++++++++++++++++++++++FROM+hr_user_hierarchy_vw%0D%0A+++++++++++++++++++++++++START+WITH+email_address+%3D%0D%0A++++++++++++++++++++++++++++++++++++upper%28%27laurent.devigne%40ORACLE.COM%27%29%0D%0A++++++++++++++++++++++++CONNECT+BY+PRIOR+email_address+%3D+manager_email%29%29+or+h.programmer+%3D+%27LDEVITRG%27%29%0D%0A+++++++++++AND+CATEGORY+not+like+%27ADETXN%27%0D%0A+++++++++++and+h.RPTD_BY+%21%3D+%28%27TLDSHREP%27%29%0D%0A+++++++++++and+rownum+%3C+20000&amp;order_stmt=&amp;rpt_title=Laurent+Team+Bugs&amp;tot_cols=11&amp;col_head=Fix+Eta&amp;col_head=Support+Contact&amp;col_head=Assignee&amp;col_head=Severity&amp;col_head=Status&amp;col_head=Component&amp;col_head=Date+Reported&amp;col_head=Tag&amp;col_head=Subject&amp;col_head=Test+Name%2FDoc+Field&amp;col_head=Customer#BA" style="cursor:hand" onclick="javascript:HideShowSearch();">Manage Short URLs</a>&nbsp;<a href="https://bug.oraclecorp.com/bug-help/Manage_Searches_Help.html" style="cursor:hand">?</a></td>
+</tr>
+<tr>
+<td><br><br><span align="center" id="SearchDiv" width="100%" style="padding : 0px; margin: 0px;"></span></td>
+</tr>
+</tbody></table>
+</form>
+<div style="width:200px; font-family=arial, helvetica; text-align:center; position:relative; left:0; right:0; margin-left:auto; margin-right:auto;">
+Logged in as LDEVIGNE
+</div>
+<div class="bug-ui-search" style="float:right">
+</div>
+<br><br>
+<center>
+<font face="arial, helvetica" size="2">
+<a href="https://bug.oraclecorp.com/pls/bug/webbug_create.create_issue_top" title="Enter Bug, Enhancement Request or Doc. Issue" target="_top" style="color:#663300">Create Request</a>
+&nbsp;&nbsp;|&nbsp;&nbsp;
+<a href="https://bug.oraclecorp.com/pls/bug/webbug_reports.simple_query_up" target="_top" style="color:#663300">Simple Query</a>
+&nbsp;&nbsp;|&nbsp;&nbsp;
+<a href="https://bug.oraclecorp.com/pls/bug/webbug_reports.detailed_query_up" target="_top" style="color:#663300">Detailed Query</a>
+&nbsp;&nbsp;|&nbsp;&nbsp;
+<a href="https://bug.oraclecorp.com/pls/bug/webbug_reports.rptnos_query_up" target="_top" style="color:#663300">Number Query</a>
+&nbsp;&nbsp;|&nbsp;&nbsp;
+<a href="https://bug.oraclecorp.com/pls/bug/webbug_reports.custom_report?col_head=" target="_top" style="color:#663300">SQL Query</a>
+&nbsp;&nbsp;|&nbsp;&nbsp;
+<a href="https://bug.oraclecorp.com/bug_maintenance.html" target="_top" style="color:#663300">Maintenance</a>
+&nbsp;&nbsp;|&nbsp;&nbsp;
+<a href="https://bug.oraclecorp.com/pls/bug/portal_logout" target="_top" style="color:#663300">Sign out</a>
+&nbsp;&nbsp;|&nbsp;&nbsp;
+<a href="https://bug.oraclecorp.com/index.html" target="_top" style="color:#663300">Bug Home</a>
+</font>
+</center>
+
+
+</center></form></body></html>

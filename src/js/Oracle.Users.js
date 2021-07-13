@@ -200,6 +200,10 @@ Oracle = (function (parent) {
     _addUser({ globalId: 'SOKAUSHI', emailAddress: 'sohit.kaushik@oracle.com', flags: _flags.Internal });
     _addUser({ globalId: 'KICHINTA', emailAddress: 'kiran.chandra.chintakindi@oracle.com', flags: _flags.Internal });
     _addUser({ globalId: 'SAVGARG', emailAddress: 'savi.garg@oracle.com', flags: _flags.Internal });
+    _addUser({ globalId: 'SUDASARI', emailAddress: 'sudheer.dasari@oracle.com', flags: _flags.Internal });
+    _addUser({ globalId: 'PGAJJELA', emailAddress: 'prashanth.gajjela@oracle.com', flags: _flags.Internal });
+    _addUser({ globalId: 'GPICARD', emailAddress: 'guy.picard@oracle.com', flags: _flags.Internal });
+    _addUser({ globalId: 'BRPRASAD', firstName: 'B', lastName: 'Prasad', displayName: 'Prasad', fullName: 'Prasad', emailAddress: 'b.prasad@oracle.com', flags: _flags.Internal });
 
     Oracle.Logger.logDebug("Users initialized", { byGlobalId: _userByGlobalId, byEmailAddress: _userByEmailAddress });
 
