@@ -128,8 +128,7 @@ Oracle = (function (parent) {
             }
             this.initializeIndexes();
             this.initializeRows();
-            this.getMaxReportedDate();
-            this.getMaxReportedDate();
+            this.setMinMaxReportedDate();
         }
 
         initializeIndexes()
@@ -249,27 +248,20 @@ Oracle = (function (parent) {
             }
         }
 
-        getMinReportedDate() {
+        setMinMaxReportedDate() {
             let minDateForRange = new Date();
+            let maxDateForRange = new Date();
             for(let i = 0; i < this.bugs.length; i++)
             {
                 let dateReported = this.bugs[i].dateReported;
                 if(dateReported < minDateForRange){
                     minDateForRange = dateReported;           
                 }
-            }
-            this.minDateForRange = minDateForRange;
-        }
-
-        getMaxReportedDate() {
-            let maxDateForRange = new Date();
-            for(let i = 0; i < this.bugs.length; i++)
-            {
-                let dateReported = this.bugs[i].dateReported;
                 if(dateReported > maxDateForRange){
                     maxDateForRange = dateReported;           
                 }
             }
+            this.minDateForRange = minDateForRange;
             this.maxDateForRange = maxDateForRange;
         }
     };
