@@ -9,31 +9,28 @@ Oracle = (function (parent) {
     const result = parent.Controls.Grids;
     const _formaterCollection = 'controls.grids';
 
-    Oracle.Controls.Themes.addUpdater(() =>
-    {
-        Oracle.Controls.Themes.addCSSRule('table.oracle.control.grid { border-collapse: collapse; width:100%; box-sizing: border-box; }');
-        Oracle.Controls.Themes.addCSSRule('table.oracle.control.grid thead tr th:last-child { border-right:1px solid rgba(0, 0, 0, 0); }');
-        Oracle.Controls.Themes.addCSSRule('table.oracle.control.grid thead tr th { box-sizing: border-box; user-select:none; background-color: var(--primaryBackgroundColor); color: var(--primaryTextColor); padding-top:8px; padding-bottom: 8px; padding-right: 8px; padding-left: 8px; font-weight: 500; font-size: 100%; }');
-        Oracle.Controls.Themes.addCSSRule('table.oracle.control.grid thead tr th.sortable { padding-right:30px; background-repeat: no-repeat; background-position:right center ; cursor:pointer; margin:0px;background-color: var(--primaryBackgroundColorLighten1); }');
-        Oracle.Controls.Themes.addCSSRule('table.oracle.control.grid thead tr th.sortable.sorted { background-color: var(--primaryBackgroundColor);background-image: url("https://zooktel.blob.core.windows.net/oracle/icons/sort_down.png"); }');
-        Oracle.Controls.Themes.addCSSRule('table.oracle.control.grid thead tr th.sortable.sorted.ascending { background-image: url("https://zooktel.blob.core.windows.net/oracle/icons/sort_up.png"); }');
-        Oracle.Controls.Themes.addCSSRule('table.oracle.control.grid thead tr th.sortable:hover { background-color: var(--primaryBackgroundColorLighten2); }');
-        Oracle.Controls.Themes.addCSSRule('table.oracle.control.grid tbody tr td { padding-top:8px; padding-bottom: 8px; padding-right: 8px; padding-left: 8px; }');
-        Oracle.Controls.Themes.addCSSRule('table.oracle.control.grid tbody tr:first-child td { border-top: none }');
-        Oracle.Controls.Themes.addCSSRule('table.oracle.control.grid tbody tr td.sorted { background-color: var(--controlEmphasisBackgroundColor); }');
-        Oracle.Controls.Themes.addCSSRule('table.oracle.control.grid tbody tr.empty-row td{ padding:40px; text-align:center; }');
-        Oracle.Controls.Themes.addCSSRule('table.oracle.control.grid tbody tr td { border:1px solid var(--controlBorderColor); }');
+    Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid { border-collapse: collapse; width:100%; box-sizing: border-box; }');
+    Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid thead tr th:last-child { border-right:1px solid rgba(0, 0, 0, 0); }');
+    Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid thead tr th { box-sizing: border-box; user-select:none; background-color: var(--primaryBackgroundColor); color: var(--primaryTextColor); padding-top:8px; padding-bottom: 8px; padding-right: 8px; padding-left: 8px; font-weight: 500; font-size: 100%; }');
+    Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid thead tr th.sortable { padding-right:30px; background-repeat: no-repeat; background-position:right center ; cursor:pointer; margin:0px;background-color: var(--primaryBackgroundColorLighten1); }');
+    Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid thead tr th.sortable.sorted { background-color: var(--primaryBackgroundColor);background-image: url("https://zooktel.blob.core.windows.net/oracle/icons/sort_down.png"); }');
+    Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid thead tr th.sortable.sorted.ascending { background-image: url("https://zooktel.blob.core.windows.net/oracle/icons/sort_up.png"); }');
+    Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid thead tr th.sortable:hover { background-color: var(--primaryBackgroundColorLighten2); }');
+    Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid tbody tr td { padding-top:8px; padding-bottom: 8px; padding-right: 8px; padding-left: 8px; }');
+    Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid tbody tr:first-child td { border-top: none }');
+    Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid tbody tr td.sorted { background-color: var(--controlEmphasisBackgroundColor); }');
+    Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid tbody tr.empty-row td{ padding:40px; text-align:center; }');
+    Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid tbody tr td { border:1px solid var(--controlBorderColor); }');
 
-        // Groups
-        Oracle.Controls.Themes.addCSSRule('table.oracle.control.grid tbody tr.group td {background-color: var(--primaryBackgroundColorLighten4); var(--primaryTextColorLighten4); padding-top:2px; padding-bottom:4px; text-align:left; }');
-        Oracle.Controls.Themes.addCSSRule('table.oracle.control.grid tbody tr.group td span.group-title {}');
-        Oracle.Controls.Themes.addCSSRule('table.oracle.control.grid tbody tr.group td span.group-title::after { content: ": " }');
-        Oracle.Controls.Themes.addCSSRule('table.oracle.control.grid tbody tr.group td span.group-value { font-weight:600; }');
-        Oracle.Controls.Themes.addCSSRule('table.oracle.control.grid tbody tr.group td span.group-count {  font-weight:200;}');
-        Oracle.Controls.Themes.addCSSRule('table.oracle.control.grid tbody tr.group td span.group-count::before { content: " (" }');
-        Oracle.Controls.Themes.addCSSRule('table.oracle.control.grid tbody tr.group td span.group-count::after { content: ")" }');
-        Oracle.Controls.Themes.addCSSRule('table.oracle.control.grid tbody tr.group td { border: 1px solid var(--controlBorderColor); } ')
-    });
+    // Groups
+    Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid tbody tr.group td {background-color: var(--primaryBackgroundColorLighten4); var(--primaryTextColorLighten4); padding-top:2px; padding-bottom:4px; text-align:left; }');
+    Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid tbody tr.group td span.group-title {}');
+    Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid tbody tr.group td span.group-title::after { content: ": " }');
+    Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid tbody tr.group td span.group-value { font-weight:600; }');
+    Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid tbody tr.group td span.group-count {  font-weight:200;}');
+    Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid tbody tr.group td span.group-count::before { content: " (" }');
+    Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid tbody tr.group td span.group-count::after { content: ")" }');
+    Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid tbody tr.group td { border: 1px solid var(--controlBorderColor); } ')
 
     // ---------------------------------------------------------------------------------------------------------------- //
     // Class: Grid
