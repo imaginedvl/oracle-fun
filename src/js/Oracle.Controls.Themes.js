@@ -14,7 +14,7 @@ Oracle = (function (parent) {
     result.addCSSRule = function(css) {
         const style = document.getElementById("OracleThemeRules") || (function() {
             const style = document.createElement('style');
-            style.type = 'text/css';
+            style.setAttribute("type", 'text/css');
             style.id = "OracleThemeRules";
             document.head.appendChild(style);
             return style;
@@ -184,10 +184,11 @@ Oracle = (function (parent) {
             themeName = Oracle.Http.getQueryStringValue("theme");
         }
         // We clear the actual styles before to apply the new theme
-        const css = document.getElementById("OracleThemeRules") ;
-        if(css)
+        const rules = document.getElementById("OracleThemeRules");
+        if(rules)
         {
-            css.innerHTML = "";
+            rules.remove();
+            delete rules;   
         }
         let selectedTheme = null;
         if(!Oracle.isEmpty(themeName) && themeName !== 'default')
