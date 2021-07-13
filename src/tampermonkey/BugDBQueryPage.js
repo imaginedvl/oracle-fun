@@ -29,7 +29,8 @@
 
     const filterPanel = new Oracle.BugDB.FilterPanel(
         {
-            grid: table
+            grid: table,
+            data: bugDbPage.bugs
         });
 
     Oracle.HTML.addStyle("table td#main-view { } ");

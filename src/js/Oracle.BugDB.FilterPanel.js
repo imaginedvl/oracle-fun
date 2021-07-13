@@ -7,7 +7,7 @@ Oracle = (function (parent) {
     if (!parent.hasOwnProperty('BugDB')) parent.BugDB = {};
     const result = parent.BugDB;
 
-    Oracle.Controls.Themes.addStaticCSSRule('table.bugdbFilterpanel { background-color: red; min-height: 200px; width:100%; }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterpanel { background-color: red; min-height: 200px; width:100%; }');
     
     // ---------------------------------------------------------------------------------------------------------------- //
     // Class: FilterPanel
@@ -17,121 +17,83 @@ Oracle = (function (parent) {
         constructor(controlSettings) {
             if (Oracle.isEmpty(controlSettings)) controlSettings = {};
             controlSettings.type = 'bugdbFilterpanel';
-            controlSettings.elementType = 'table';
+            controlSettings.elementType = 'div';
             super(controlSettings);
             // controlSettings.grid..
             if(Oracle.isEmpty(controlSettings.grid))
             {
                 Oracle.Logger.logWarning("Target grid is not provided...");                
             }        
-            //const initializationSettings = { grid: controlSettings.grid };    
-            //this.initializeColumns(controlSettings, initializationSettings);
-            //this.initializeData(controlSettings, initializationSettings);
-            this.element.text("Bug List Helper");
-            //this.element.text("Reported from");
-            //this.element.text("Assignees:")
+            this.sections = [];
+            const initializationSettings = { grid: controlSettings.grid }; 
+            
+            initializationSettings.text = "Bug List Helper"  
+            let section = new Oracle.BugDB.FilterPanelSection(initializationSettings);
+            this.sections.push(section);
+            
+            initializationSettings.text = "Reported from:" + controlSettings.data.maxDateForRange;
+            section = new Oracle.BugDB.FilterPanelSection(initializationSettings);
+            this.sections.push(section);
+            
+            initializationSettings.text = "Severity:"  
+            section = new Oracle.BugDB.FilterPanelSection(initializationSettings);
+            this.sections.push(section);
+
+            initializationSettings.text = "Components:"  
+            section = new Oracle.BugDB.FilterPanelSection(initializationSettings);
+            this.sections.push(section);
+
+            initializationSettings.text = "Tags:"  
+            section = new Oracle.BugDB.FilterPanelSection(initializationSettings);
+            this.sections.push(section);
+
+            this.populateSections();
             Oracle.Logger.logDebug("FilterPanel initialized: ");
         }
 
-        initializeColumns(controlSettings, initializationSettings) {
-            this.columns = [];
-            this.columnsById = {};
-            initializationSettings.columnIndex = 0;
-            this.theadElement = $('<thead>');
-            const tr = $('<tr>');
-            if (!Oracle.isEmpty(controlSettings.columns)) {
-                this.theadElement.append(tr);
-                const column = new Oracle.BugDB.FilterPanel.FilterPanelColumn(initializationSettings);
-                this.columns.push(column);
-                if(!Oracle.isEmpty(column.id))
-                {
-                    this.columnsById[column.id] = column;
-                }
-            }
-            //tr.attr("data-column-count", this.columns.length)
-            this.element.append(this.theadElement);
-        }
-
-        populateRows()
+        populateSections()
         {
-            let index = 0;
-            this.tbodyElement.children().remove();
-            for(let i = 0; i < this.rows.length; i++)
+            for(let i = 0; i < this.sections.length; i++)
             {
-                const row = this.rows[i];
-                if(row.isHidden !== true)
-                {
-                    if(row.isNewGroup && this.sortColumn)
-                    {
-                        if(lastGroup !== null)
-                        {
-                            lastGroup.find("span.group-count").text(groupRowCount);
-                        }
-                        groupRowCount = 1;
-                        lastGroup = row.createGroupRow(this.sortColumn);
-                        this.tbodyElement.append(lastGroup)
-                    }
-                    else
-                    {
-                        groupRowCount++; 
-                    }
-                    row.update(i);
-                    this.tbodyElement.append(row.element);
-                    index++;
-                }
-                if(lastGroup !== null)
-                {
-                    lastGroup.find("span.group-count").text(groupRowCount);
-                }
+                const row = this.sections[i];
+                this.element.append(row.element);
             }
-            if(this.tbodyElement.children().length === 0)
+            if(this.element.children().length === 0)
             {
-                this.tbodyElement.append(this.emptyRow);
+                this.element.append(this.emptyRow);
             }
-        }
-
-        initializeData(controlSettings, initializationSettings) {
-            initializationSettings.rowIndex = -1;
-            this.tbodyElement = $('<tbody>');
-            this.data = controlSettings.data;
-            if(Oracle.isEmpty(controlSettings.data))
-            {
-                this.data = [];
-            }
-            this.rows = [];
-            for(let i = 0; i < this.data.length; i++)
-            {
-                initializationSettings.data = this.data[i];
-                initializationSettings.dataIndex = i;
-                const row = new Oracle.BugDB.FilterPanel.FilterPanelRow(initializationSettings);
-                this.rows.push(row);
-            }
-            this.element.append(this.tbodyElement);
         }
     }
 
     // ---------------------------------------------------------------------------------------------------------------- //
-    // Class: FilterPanelColumn
+    // Class: FilterPanelSection
     // ---------------------------------------------------------------------------------------------------------------- //
-    result.FilterPanelColumn = class {
+    result.FilterPanelSection = class {
 
         constructor(initializationSettings) {
             this.grid = initializationSettings.grid;
-            this.index = initializationSettings.columnIndex;
-            this.id = Oracle.toNullableValue(initializationSettings.columnDefinition.id);
-            this.element = $("<th data-column-index='" + this.index + "' class='column-" + this.id  + "' >");
+            //this.cells = [];
+            //this.data = initializationSettings.data;
+            this.element = $("<div id='monkeyDivHeader' style='width:100%; font-size:12px; text-align:center;'><h3>" + initializationSettings.text + "</h3></div>");
+            /*for (let c = 0; c < this.grid.columns.length; c++) {
+                const column = this.grid.columns[c];
+                initializationSettings.columnIndex = c;
+                const td = $("<td data-column-index='" + c + "' class='column-" + column.id  + "' >");
+                let value = Oracle.getMemberValueByPath(this.data, column.path);
+                value = Oracle.Formating.formatValue(value, { entity: this.data, element: td, formater: column.formater },  _formaterCollection );
+                td.setContent(value);
+                this.element.append(td);
+            }*/
         }
-    }
 
     // ---------------------------------------------------------------------------------------------------------------- //
     // Class: FilterPanelRow
     // ---------------------------------------------------------------------------------------------------------------- //
-    result.FilterPanelRow = class {
+    /*result.FilterPanelRow = class {
 
         constructor(initializationSettings) {
             this.grid = initializationSettings.grid;
             this.cells = [];
-            this.isNewGroup = false;
             this.data = initializationSettings.data;
             this.dataIndex = initializationSettings.dataIndex;
             this.element = $("<tr data-row-index='" + this.index + "' data-index='" + this.dataIndex + "' >");
@@ -145,6 +107,19 @@ Oracle = (function (parent) {
                 this.element.append(td);
             }
         }
+
+        update(rowIndex)
+        {
+            this.element.attr("data-row-index", rowIndex);
+            this.element.attr("data-row-new-group", this.isNewGroup);
+            if(this.isNewGroup)
+            {
+                this.element.addClass("new-group");
+            }
+            else{
+                this.element.removeClass("new-group");
+            }
+        }*/
     }
 
     return parent;
