@@ -32,6 +32,7 @@ Makes use of the Grease Monkey browser plugin provide a better user experience w
 // @require      file://C:\{your_folder_path}\src\js\Oracle.Controls.Grids.js
 // @require      file://C:\{your_folder_path}\src\js\Oracle.Users.js
 // @require      file://C:\{your_folder_path}\src\js\Oracle.BugDB.js
+// @require      file://C:\{your_folder_path}\src\js\Oracle.BugSearch.js
 // @require      file://C:\{your_folder_path}\src\tampermonkey\BugDBQueryPage.js
 
 // ==/UserScript== 

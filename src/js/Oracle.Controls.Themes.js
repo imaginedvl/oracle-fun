@@ -60,8 +60,8 @@ Oracle = (function (parent) {
             controlBorderColorLigten1: '#EEEEEE',
             controlBorderColorLigten2: '#FEFEFE',
             // Control borders (inline, like row/cell borders)
-            controlBackgroundColor: 'white',
-            controlTextColor: 'black',
+            controlBorderBackgroundColor: 'white',
+            controlBorderTextColor: 'black',
     
             // Emphasis should be used for stuff like the sorted column in a grid (not the header but the cell row)
             controlEmphasisBackgroundColor: '#FAFAFA',

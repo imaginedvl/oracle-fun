@@ -30,17 +30,26 @@ Oracle = (function (parent) {
     parent.BugDB.Statuses = 
     {
         11: 'Open',
+        15: 'Enhancement Request',
         30: 'More Info Requested',
+        32: 'Not a Bug',
         33: 'Suspended',
         36: 'Duplicate Bug',
         37: 'Merged',
         39: 'Waiting For Codeline',
         40: 'Waiting',
+        41: 'Base Bug fixed',
+        71: 'Closed, data fix',
+        72: 'Closed, data fix',
+        78: 'Closed Environment Issue',
         80: 'Ready To Validate',
-        90: 'Closed',
-        91: 'Closed',
-        92: 'Closed',
-        93: 'Closed'
+        84: 'Closed, not feasible to fix',
+        90: 'Closed, Verified by Filer',
+        91: 'Closed, Could Not Reproduce',
+        92: 'Closed, Not a Bug',
+        93: 'Closed, Not Verified by Filer',
+        95: 'Closed Vendor OS/Software/Framework Prob',
+        96: 'Closed As Duplicate'
     }
 
     parent.BugDB.Severity = 
@@ -435,7 +444,7 @@ Oracle = (function (parent) {
         Oracle.Controls.Themes.addCSSRule('.bugdb-number { white-space: nowrap; }');
         Oracle.Controls.Themes.addCSSRule('.bugdb-number-action { padding-left:4px}');
         Oracle.Controls.Themes.addCSSRule('.bugdb-tags { }');
-        Oracle.Controls.Themes.addCSSRule('.bugdb-tags .bugdb-tag { background-color:var(--controlBackgroundColorDarken1); border: 1px solid var(--controlBorderColor); border-radius:4px; padding:2px; white-space:nowrap; display:inline-block; margin:1px; }');
+        Oracle.Controls.Themes.addCSSRule('.bugdb-tags .bugdb-tag { color: var(--controlTextColor); background-color:var(--controlBackgroundColorDarken1); border: 1px solid var(--controlBorderColor); border-radius:4px; padding:2px; white-space:nowrap; display:inline-block; margin:1px; }');
         Oracle.Controls.Themes.addCSSRule('.bugdb-tags .bugdb-tag-p1 {  color: var(--errorTextColor); background-color: var(--errorBackgroundColor) }');
         Oracle.Controls.Themes.addCSSRule('.bugdb-tags .bugdb-tag-p2 {  color: var(--warningTextColor); background-color: var(--warningBackgroundColor) }');
         Oracle.Controls.Themes.addCSSRule('.bugdb-tags .bugdb-tag-hcmbronze { color: var(--warningTextColor); background-color: var(--warningBackgroundColor) }');
@@ -581,9 +590,10 @@ Oracle = (function (parent) {
         {
             for(let i = 0; i < value.length; i++)            
             {
-                result.append("<div class='bugdb-tag bugdb-tag-" +  value[i].toLowerCase() + "' >" + value[i] + "</div> ");
+                result.append("<a href='" + Oracle.BugSearch.getSearchByTagLink(value[i]) + "'><div class='bugdb-tag bugdb-tag-" +  value[i].toLowerCase() + "' >" + value[i] + "</div></a> ");
             }
         }
+        result.append("</div>");
         return result;
      });
 
