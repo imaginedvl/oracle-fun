@@ -10,7 +10,7 @@ Makes use of the Grease Monkey browser plugin provide a better user experience w
 3) Paste the below template and adjust the path to folder where you haved downloaded the modules and "File / Save"
 
 ```
-// ==UserScript==
+// ==UserScript== 
 // @name         Oracle-Fun (BugDB tool)
 // @namespace    http://tampermonkey.net/
 // @version      1.0
@@ -34,7 +34,7 @@ Makes use of the Grease Monkey browser plugin provide a better user experience w
 // @require      file://C:\{your_folder_path}\src\js\Oracle.BugDB.js
 // @require      file://C:\{your_folder_path}\src\tampermonkey\BugDBQueryPage.js
 
-// ==/UserScript==
+// ==/UserScript== 
 ```
 
 
