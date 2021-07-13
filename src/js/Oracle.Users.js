@@ -204,7 +204,10 @@ Oracle = (function (parent) {
     _addUser({ globalId: 'PGAJJELA', emailAddress: 'prashanth.gajjela@oracle.com', flags: _flags.Internal });
     _addUser({ globalId: 'GPICARD', emailAddress: 'guy.picard@oracle.com', flags: _flags.Internal });
     _addUser({ globalId: 'BRPRASAD', firstName: 'B', lastName: 'Prasad', displayName: 'Prasad', fullName: 'Prasad', emailAddress: 'b.prasad@oracle.com', flags: _flags.Internal });
+    _addUser({ globalId: 'SILABARR', emailAddress: 'simon.labarre@oracle.com', flags: _flags.Internal });
 
+
+    
     Oracle.Logger.logDebug("Users initialized", { byGlobalId: _userByGlobalId, byEmailAddress: _userByEmailAddress });
 
     const _compareUser = function (a, b) {
