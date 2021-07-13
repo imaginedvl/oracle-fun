@@ -16,7 +16,7 @@ Makes use of the Grease Monkey browser plugin provide a better user experience w
 // @version      1.0
 // @description  Bug DB - Custom Report helper
 // @author       Laurent Devigne / 2021-07-05
-// @match        https://bug.oraclecorp.com/pls/bug/webbug_reports.do_custom_report?select_stmt*
+// @match        https://bug.oraclecorp.com/pls/bug/webbug_reports.do_custom_report*
 // @match        https://bug.oraclecorp.com/pls/bug/WEBBUG_REPORTS.do_edit_report*
 // @match        file:///*Oracle-Fun/tests/data*
 // @grant        none
@@ -28,6 +28,7 @@ Makes use of the Grease Monkey browser plugin provide a better user experience w
 // @require      file://C:\{your_folder_path}\src\js\Oracle.Formating.js
 // @require      file://C:\{your_folder_path}\src\js\Oracle.HTML.js
 // @require      file://C:\{your_folder_path}\src\js\Oracle.Controls.js
+// @require      file://C:\{your_folder_path}\src\js\Oracle.Controls.Themes.js
 // @require      file://C:\{your_folder_path}\src\js\Oracle.Controls.Grids.js
 // @require      file://C:\{your_folder_path}\src\js\Oracle.Users.js
 // @require      file://C:\{your_folder_path}\src\js\Oracle.BugDB.js

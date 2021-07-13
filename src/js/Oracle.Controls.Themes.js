@@ -178,7 +178,6 @@ Oracle = (function (parent) {
         if(Oracle.isEmptyOrWhiteSpaces(themeName))
         {
             themeName = Oracle.Http.getQueryStringValue("theme");
-            console.log(themeName);
         }
         // We clear the actual styles before to apply the new theme
         const css = document.getElementById("OracleThemeRules") ;
