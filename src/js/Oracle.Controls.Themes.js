@@ -81,8 +81,8 @@ Oracle = (function (parent) {
             warningTextColor: 'black',    
 
             // Cleanup
-            cleanupBackgroundColor: '#3ea6f0',
-            cleanupTextColor: 'white',
+            infoBackgroundColor: '#3ea6f0',
+            infoTextColor: 'white',
 
             // Success
             successBackgroundColor: '#5cb85c',

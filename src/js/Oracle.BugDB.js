@@ -441,7 +441,7 @@ Oracle = (function (parent) {
         Oracle.Controls.Themes.addCSSRule('.bugdb-tags .bugdb-tag-hcmbronze { color: var(--warningTextColor); background-color: var(--warningBackgroundColor) }');
         Oracle.Controls.Themes.addCSSRule('.bugdb-tags .bugdb-tag-hcmsilver { color: var(--errorTextColor); background-color: var(--errorBackgroundColor) }');
         Oracle.Controls.Themes.addCSSRule('.bugdb-tags .bugdb-tag-regrn {  color: var(--warningTextColor); background-color: var(--warningBackgroundColor) }');
-        Oracle.Controls.Themes.addCSSRule('.bugdb-tags .bugdb-tag-frce-sql-cleanup {  color: var(--cleanupTextColor); background-color: var(--cleanupBackgroundColor) }');
+        Oracle.Controls.Themes.addCSSRule('.bugdb-tags .bugdb-tag-frce-sql-cleanup {  color: var(--infoTextColor); background-color: var(--infoBackgroundColor) }');
     });
 
     Oracle.Formating.addFormater('BugDBDate', null, null, (value, settings) => {
