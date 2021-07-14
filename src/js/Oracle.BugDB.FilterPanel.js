@@ -7,7 +7,8 @@ Oracle = (function (parent) {
     if (!parent.hasOwnProperty('BugDB')) parent.BugDB = {};
     const result = parent.BugDB;
 
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterpanel { background-color:red; width:100%; border: 1px solid var(--controlBorderColor);  }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterpanel { border: 1px solid var(--controlBorderColor);  }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterpanel.oracle.control div { border: 1px solid var(--controlBorderColor);  }');
     
     // ---------------------------------------------------------------------------------------------------------------- //
     // Class: FilterPanel
@@ -25,35 +26,50 @@ Oracle = (function (parent) {
                 Oracle.Logger.logWarning("Target grid is not provided...");                
             }        
 
-            
             this.summary = new Oracle.BugDB.BugSummary(controlSettings.data);
             
-            
-
-
             this.sections = [];
             const initializationSettings = { grid: controlSettings.grid }; 
             
-            initializationSettings.text = "Bug List Helper"  
+            let texts = [];
+            texts.push("Bug List Helper");
+            initializationSettings.texts = texts
+            initializationSettings.textAlign  = "center";
             let section = new Oracle.BugDB.FilterPanelSection(initializationSettings);
             this.sections.push(section);
             
-            initializationSettings.text = "Reported from:" + this.summary.getMinimum(Oracle.BugDB.Fields.DateReported);;
+            texts = [];
+            texts.push("Reported from:");
+            texts.push(this.summary.getMinimum(Oracle.BugDB.Fields.DateReported));
+            texts.push("to");
+            texts.push(this.summary.getMaximum(Oracle.BugDB.Fields.DateReported));
+            initializationSettings.texts = texts
+            initializationSettings.textAlign  = "left";
             section = new Oracle.BugDB.FilterPanelSection(initializationSettings);
             this.sections.push(section);
             
-            initializationSettings.text = "Severity:"  
+            texts = [];
+            texts.push("Severity:");
+            initializationSettings.texts = texts
+            initializationSettings.textAlign  = "left";
             section = new Oracle.BugDB.FilterPanelSection(initializationSettings);
             this.sections.push(section);
 
-            initializationSettings.text = "Components:"  
+            texts = [];
+            texts.push("Components:");
+            initializationSettings.texts = texts
+            initializationSettings.textAlign  = "left";
             section = new Oracle.BugDB.FilterPanelSection(initializationSettings);
             this.sections.push(section);
 
-            initializationSettings.text = "Tags:"  
+            texts = [];
+            texts.push("Tags:");
+            initializationSettings.texts = texts
+            initializationSettings.textAlign  = "left";
             section = new Oracle.BugDB.FilterPanelSection(initializationSettings);
             this.sections.push(section);
 
+            texts = [];
             this.populateSections();
             Oracle.Logger.logDebug("FilterPanel initialized: ");
         }
@@ -62,8 +78,11 @@ Oracle = (function (parent) {
         {
             for(let i = 0; i < this.sections.length; i++)
             {
-                const row = this.sections[i];
-                this.element.append(row.element);
+                const section = this.sections[i];
+                for(let c = 0; c < section.rows.length; c++)
+                {
+                    this.element.append(section.rows[c]);
+                }
             }
             if(this.element.children().length === 0)
             {
@@ -79,18 +98,13 @@ Oracle = (function (parent) {
 
         constructor(initializationSettings) {
             this.grid = initializationSettings.grid;
-            //this.cells = [];
-            //this.data = initializationSettings.data;
-            this.element = $("<div id='monkeyDivHeader' style='width:100%; font-size:12px; text-align:center;'><h3>" + initializationSettings.text + "</h3></div>");
-            /*for (let c = 0; c < this.grid.columns.length; c++) {
-                const column = this.grid.columns[c];
-                initializationSettings.columnIndex = c;
-                const td = $("<td data-column-index='" + c + "' class='column-" + column.id  + "' >");
-                let value = Oracle.getMemberValueByPath(this.data, column.path);
-                value = Oracle.Formating.formatValue(value, { entity: this.data, element: td, formater: column.formater },  _formaterCollection );
-                td.setContent(value);
-                this.element.append(td);
-            }*/
+            this.texts = initializationSettings.texts;
+            this.textAlign = initializationSettings.textAlign;
+            this.rows = [];
+            
+            for(let c = 0; c < this.texts.length; c++) {
+                this.rows.push($("<div style='width:100%; font-size:12px; text-align:" + this.textAlign + ";'><h3>" + this.texts[c] + "</h3></div>"));
+            }
         }
     }
 
