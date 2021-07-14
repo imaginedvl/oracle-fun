@@ -72,14 +72,13 @@ Oracle = (function (parent) {
         subject: { headerTitle: 'Subject' }, 
         selection: { headerTitle: '#select_all_option' }, 
         lineNumber: { headerTitle: 'Sl No.' }, 
-        productNumber: { headerTitle: 'X'},
+        productNumber: { headerTitle: 'Product ID'},
         supportContact: { headerTitle: 'Support Contact' },
         testName: { headerTitle: 'Test Name/Doc Field'}
     }
 
     result.UrlManager = 
     {
-
         getBugEditUrl: function(bug)
         {
             return "https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=" + bug.number;
@@ -90,31 +89,16 @@ Oracle = (function (parent) {
             return "https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=" + bug.number;
         },
 
-        getSearchByTagUrl: function(bug, tag, productNumber) {
-            if(!Oracle.isEmptyOrWhiteSpaces(bug?.productNumber))
-            {
+        getSearchByTagUrl: function(tag, bug, productNumber) {
+            if (!Oracle.isEmptyOrWhiteSpaces(bug?.productNumber)) {
                 productNumber = bug.productNumber;
             }
-            /*if(Oracle.isEmpty(productNumber))
-            {
-
+            else if (Oracle.isEmptyOrWhiteSpaces(productNumber)) {
+                productNumber = "2421"; // ORC
             }
-                productNumber = 'xxxx'
-            }
-            if(!Oracle.isEmptyOrWhiteSpaces(bug?.productNumber))
-            {
-                productNumber = bug.productNumber;
-            }
-            else {
-
-            }*/
-
-            const search_title = "Tag search results for Product ID: " + productid + " and Tag: " + tag;
-            return "https://bug.oraclecorp.com/pls/bug/WEBBUG_REPORTS.do_edit_report?cid_arr=2&cid_arr=3&cid_arr=9&cid_arr=8&cid_arr=7&cid_arr=11&cid_arr=13&cid_arr=72&c_count=8&query_type=2&fid_arr=1&fcont_arr=" + productid + "&fid_arr=125&fcont_arr=" + tag + "&f_count=2&rpt_title=" + search_title + "'";
+            const search_title = "Tag search results for Product ID: " + productNumber + " and Tag: " + tag;
+            return "https://bug.oraclecorp.com/pls/bug/WEBBUG_REPORTS.do_edit_report?cid_arr=2&cid_arr=3&cid_arr=9&cid_arr=8&cid_arr=7&cid_arr=11&cid_arr=13&cid_arr=72&c_count=8&query_type=2&fid_arr=1&fcont_arr=" + productNumber + "&fid_arr=125&fcont_arr=" + tag + "&f_count=2&rpt_title=" + search_title + "'";
         }
-    
-        
-
     }
 
     // ---------------------------------------------------------------------------------------------------------------- //
@@ -701,7 +685,7 @@ Oracle = (function (parent) {
         {
             for(let i = 0; i < value.length; i++)            
             {
-                result.append("<a href='" + Oracle.BugDB.Search.getSearchByTagLink(value[i]) + "'><div class='bugdb-tag bugdb-tag-" +  value[i].toLowerCase() + "' >" + value[i] + "</div></a> ");
+                result.append("<a href='" + Oracle.BugDB.UrlManager.getSearchByTagUrl(value[i], settings.entity) + "'><div class='bugdb-tag bugdb-tag-" +  value[i].toLowerCase() + "' >" + value[i] + "</div></a> ");
             }
         }
         result.append("</div>");
