@@ -531,7 +531,7 @@ Oracle = (function (parent) {
     Oracle.Controls.Themes.addStaticCSSRule('.bugdb-customer { font-size:80%; }');
     Oracle.Controls.Themes.addStaticCSSRule('.bugdb-severity { white-space:nowrap; }');
     Oracle.Controls.Themes.addStaticCSSRule('.bugdb-severity .bugdb-severity-number { color: var(--controlTextColorLighten4); font-size:80%;  }');
-    Oracle.Controls.Themes.addStaticCSSRule('.bugdb-severity.severity-2 { font-weight:600;  }');
+    Oracle.Controls.Themes.addStaticCSSRule('.bugdb-severity.severity-1, .bugdb-severity.severity-2 { font-weight:600;  }');
     Oracle.Controls.Themes.addStaticCSSRule('.bugdb-severity.severity-4 { color: var(--controlTextColorLighten4);  }');
     Oracle.Controls.Themes.addStaticCSSRule('.bugdb-status { white-space:nowrap;  }');
     Oracle.Controls.Themes.addStaticCSSRule('.bugdb-status .bugdb-status-number { color: var(--controlTextColorLighten4); font-size:80%;  }');
