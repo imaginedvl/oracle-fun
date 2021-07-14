@@ -122,31 +122,30 @@ Oracle = (function (parent) {
             this.data = {};
 
             // Contruire la liste des champs
-            // for (const [key, value] of Object.entries(Oracle.BugDB.Fields)) { ... }
-            // Lister
+            for (const [key, value] of Object.entries(Oracle.BugDB.Fields)) 
+            { 
+                this.computeFieldSummary(bugs, value);
+            }
         }
 
         computeFieldSummary(bugs, fieldName)
         {
-            // bug.reportDate   même chose que  bug[reportDate]  
-            // Oracle.isEmpty()
-
-            const newArray = [];
-
-            newArray.sort((a,b) =>
-            {
-                return Oracle.compare(a, b); 
-            });
-
-            //Oracle.compare(a, b) -1, 0, 1
-
-            // X- compute values
             const result = {
-                minimum: 0,
-                maximum: 1,
-                distinct: [],
-                count: 1                
+                minimum: null,
+                maximum: null,
+                distinct: {}
             };
+
+            const newArray = bugs.sort((a,b) =>
+            {
+                return Oracle.compare(a[fieldName], b[fieldName]); 
+            });
+            result.minimum = newArray[0][fieldName];
+            result.maximum = newArray[newArray.length-1][fieldName];
+            newArray.forEach(el => {
+                result.distinct[el[fieldName]] = (result.distinct[el[fieldName]] || 0) + 1;
+            })
+
             this.data[fieldName] = result;
         }
 
@@ -157,21 +156,18 @@ Oracle = (function (parent) {
 
         getMinimum(fieldName)
         {
-            return this.getFieldSummary(fieldName).minimum;
+            return this.getFieldSummary(fieldName)?.minimum;
         }
 
         getMaximum(fieldName)
         {
-        }
-
-        getCount(fieldName)
-        {
+            return this.getFieldSummary(fieldName)?.maximum;
         }
 
         getDistincts(fieldName)
         {
+            return this.getFieldSummary(fieldName)?.distinct;
         }
-
     };
 
     const _setBugValue = function(bug, field, value, defaultValue)
