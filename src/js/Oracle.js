@@ -78,16 +78,16 @@ var Oracle = (function () {
         Array: 'Array'
     }
 
-    const _addKnownClass = function(className, predicateCallback, compareCallback, generateHashCallback)
+    const _addKnownClass = function(className, actualClass, compareCallback, generateHashCallback)
     {
         _knownClasses[className] = className;
-        _knownClassSettings[className] = { className: className,  predicateCallback: predicateCallback, compareCallback: compareCallback, generateHashCallback: generateHashCallback };
+        _knownClassSettings[className] = { className: className,  class: actualClass, compareCallback: compareCallback, generateHashCallback: generateHashCallback };
     }
     
     const _getKnownClassSettings = function(value)
     {
         for (const [key, settings] of Object.entries(_knownClassSettings)) {
-            if(settings.predicateCallback && settings.predicateCallback(value) === true)
+            if(settings.predicateCallback && value instanceof settings.actualClass)
             {
                 return settings;
             }
@@ -108,11 +108,13 @@ var Oracle = (function () {
     result.distinct = function(items)
     {
         const result = [];
-        if(!Oracle.isEmpty(items))
+        if(!Oracle.isEmpty(items) && Array.isArray(items))
         {
+            items.sort((a, b) => Oracle.compare(a, b));
+            
             for(let i = 0; i < items.length; i++)
             {
-                //     
+
             }
         }
         return result;
@@ -167,8 +169,8 @@ var Oracle = (function () {
     result.getKnownClass = _getKnownClass;
     result.KnownClasses = _knownClasses;
 
-    _addKnownClass("Date", (value) => value instanceof Date);
-    _addKnownClass("Array", (value) => value instanceof Array);
+    _addKnownClass("Date", Date);
+    _addKnownClass("Array", Array);
 
     // ------------------------------------------------------------------------------------------------
     // Type checks
