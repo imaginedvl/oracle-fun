@@ -4,12 +4,11 @@
 // Module: Oracle.Controls.Themes
 // ---------------------------------------------------------------------------------------------------------------- //
 Oracle = (function (parent) {
-    let _themeApplied = false;
+    
+    let _initialized = false;
     if (!parent.hasOwnProperty('Controls')) parent.Controls = {};
     if (!parent.Controls.hasOwnProperty('Themes')) parent.Controls.Themes = {};
     const result = parent.Controls.Themes;
-
-    const _fontList = '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"';
 
     const _defaultTheme =
     {
@@ -101,16 +100,12 @@ Oracle = (function (parent) {
         },
         css:
         [
-            'body { background-color: var(--bodyBackgroundColor); color: var(--bodyTextColor) width:100%; font-family: ' + _fontList + '; }',
-            '.oracle.control { width:100%; font-family: ' + _fontList + '; }',
-            'a { color: var(--hyperlinkTextColor); text-decoration: none',
-            '.oracle.control { background-color: var(--controlBackgroundColor); color: var(--controlTextColor); }'
+           
         ],
         dynamicCss:
         [            
         ]
     }
-
 
     const _darkTheme =
     {
@@ -134,6 +129,9 @@ Oracle = (function (parent) {
     }
 
     const _allThemes =     { default: _defaultTheme, dark: _darkTheme }
+    result.currentTheme = _defaultTheme;
+
+    let _ruleNumber = 0;
 
     const _applyCSSRule = function(css)
     {
@@ -144,20 +142,29 @@ Oracle = (function (parent) {
             document.head.appendChild(style);
             return style;
         })();
+        _ruleNumber++;
         const sheet = style.sheet;
-        sheet.insertRule(css, (sheet.cssRules || sheet.rules || []).length);
+        const index = (sheet.cssRules || sheet.rules || []).length;
+        sheet.insertRule(css, index);
+        Oracle.Logger.logDebug("CSS Rule Applied (#" + _ruleNumber + ").", { number: _ruleNumber, index: index, css: css } );
     }
 
-    const _addCSSRule = function(css, themeName, dynamic = false) {
-        _applyCSSRule(css);        
+    const _addCSSRule = function(css, themeName = null, dynamic = false) {
         let theme = _defaultTheme;
-        if(!Oracle.isEmpty(themeName) || themeName === 'default')
+        if(!Oracle.isEmpty(themeName) && themeName !== 'default')
         {
             theme = _allThemes[themeName]
         }
+        else{
+            theme = _defaultTheme;
+        }
         if(!Oracle.isEmpty(theme))
         {
-            if(dynamic)
+            if(theme === Oracle.Controls.Themes.currentTheme && _initialized)
+            {
+                _applyCSSRule(css);
+            }
+            if(dynamic === true)
             {
                 theme.dynamicCss.push(css);
             }
@@ -170,13 +177,19 @@ Oracle = (function (parent) {
         }
     }
     
-    result.addStaticCSSRule = function(css, themeName) {
+    result.addStaticCSSRule = function(css, themeName = null) {
         _addCSSRule(css, themeName, false);
     }
 
-    result.addDynamciCSSRule = function(css, themeName) {
+    result.addDynamciCSSRule = function(css, themeName = null) {
         _addCSSRule(css, themeName, true);
     }
+
+    const _fontList = '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"';
+    _addCSSRule('body { background-color: var(--bodyBackgroundColor); color: var(--bodyTextColor) width:100%; font-family: ' + _fontList + '; }');
+    _addCSSRule('.oracle.control { width:100%; font-family: ' + _fontList + '; }');
+    _addCSSRule('a { color: var(--hyperlinkTextColor); text-decoration: none');
+    _addCSSRule('.oracle.control { background-color: var(--controlBackgroundColor); color: var(--controlTextColor); }');
 
     const _isReservedName = function(name)
     {
@@ -189,14 +202,12 @@ Oracle = (function (parent) {
         }
     }
 
-    result.currentTheme = null;
-
     const _copyMembers = function(source, destination)
     {
         if(!Oracle.isEmpty(source) && !Oracle.isEmpty(destination))
         {
             for (const [key, value] of Object.entries(source)) {
-                if(!_isReservedName(key) && !destination.hasOwnProperty(key))
+                if(!_isReservedName(key))
                 {
                     destination[key] = value;
                 }
@@ -228,6 +239,7 @@ Oracle = (function (parent) {
         {
             rules.remove();
         }
+        _ruleNumber = 0;
         let selectedTheme = null;
         if(!Oracle.isEmpty(themeName) && themeName !== 'default')
         {
@@ -246,13 +258,18 @@ Oracle = (function (parent) {
             themeName = 'default';
             selectedTheme = _defaultTheme;
         }
+
         const computedTheme = { variables: {}, css: [], dynamicCss: [] };
-        _copyMembers(selectedTheme?.variables, computedTheme.variables);
-        _pushMembers(selectedTheme?.css, computedTheme.css);
-        _pushMembers(selectedTheme?.dynamicCss, computedTheme.dynamicCss);
-        _copyMembers(_defaultTheme?.variables, computedTheme.variables);
-        _pushMembers(_defaultTheme?.css, computedTheme.css);
-        _pushMembers(_defaultTheme?.dynamicCss, computedTheme.dynamicCss);
+
+        _copyMembers(_defaultTheme.variables, computedTheme.variables);
+        _pushMembers(_defaultTheme.css, computedTheme.css);
+        _pushMembers(_defaultTheme.dynamicCss, computedTheme.dynamicCss);
+        if(selectedTheme !== _defaultTheme)
+        {
+            _copyMembers(selectedTheme?.variables, computedTheme.variables);
+            _pushMembers(selectedTheme?.css, computedTheme.css);
+            _pushMembers(selectedTheme?.dynamicCss, computedTheme.dynamicCss);
+        }
 
         // Now that we have a compute them, let's create the real cheese!
         let rootRule = ":root {";
@@ -260,10 +277,9 @@ Oracle = (function (parent) {
             rootRule += ' --' + key + ": " + value + ";";
         }
         rootRule += "}";
-
-        Oracle.Logger.logDebug("Applying Theme", {name: themeName, theme: selectedTheme, rootRule: rootRule } );
-
         _applyCSSRule(rootRule);
+
+        Oracle.Logger.logDebug("Applying Theme", {name: themeName, selectedTheme: selectedTheme, computedTheme: computedTheme, rootRule: rootRule } );
 
         // Then specific theme styles (before)
         for (const [key, value] of Object.entries(computedTheme.css)) {
@@ -282,6 +298,8 @@ Oracle = (function (parent) {
         result.currentTheme = selectedTheme;
     }
 
+    result.apply();
+    _initialized = true;
 
     return parent;
 }(Oracle));

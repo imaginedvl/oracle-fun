@@ -1,5 +1,5 @@
 (function() {
- 
+     
     const bugDbPage = new Oracle.BugDB.BugTablePage();
     bugDbPage.hide();
 

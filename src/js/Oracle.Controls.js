@@ -20,7 +20,7 @@ Oracle = (function (parent) {
         constructor(settings) {
             this.id = Oracle.generateId(25);
             if (Oracle.isEmpty(settings.target)) {
-                this.element = $("<" + settings.elementType + " class='oracle control " + settings.type + "' data-control-id='" + this.id + "' data-control-type='" + settings.type + "'  >");
+                this.element = $("<" + settings.elementType + " class='" + settings.type + " oracle control' data-control-id='" + this.id + "' data-control-type='" + settings.type + "'  >");
             }
             else {
                 this.element = $(settings.target);
