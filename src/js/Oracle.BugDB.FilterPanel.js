@@ -7,7 +7,7 @@ Oracle = (function (parent) {
     if (!parent.hasOwnProperty('BugDB')) parent.BugDB = {};
     const result = parent.BugDB;
 
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterpanel { width:100%; border: 1px solid var(--controlBorderColor);  }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterpanel { background-color:red; width:100%; border: 1px solid var(--controlBorderColor);  }');
     
     // ---------------------------------------------------------------------------------------------------------------- //
     // Class: FilterPanel

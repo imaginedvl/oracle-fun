@@ -51,6 +51,7 @@ Oracle = (function (parent) {
         FixEta: 'fixEta',
         Subject: 'subject',
         Tags: 'tags',
+        ProductNumber: 'productNumber',
         Customer: 'customer',
         //Selection: 'selection',
         //LineNumber: 'lineNumber',
@@ -71,8 +72,49 @@ Oracle = (function (parent) {
         subject: { headerTitle: 'Subject' }, 
         selection: { headerTitle: '#select_all_option' }, 
         lineNumber: { headerTitle: 'Sl No.' }, 
+        productNumber: { headerTitle: 'X'},
         supportContact: { headerTitle: 'Support Contact' },
         testName: { headerTitle: 'Test Name/Doc Field'}
+    }
+
+    result.UrlManager = 
+    {
+
+        getBugEditUrl: function(bug)
+        {
+            return "https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=" + bug.number;
+        },
+
+        getBugViewUrl: function(bug)
+        {
+            return "https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=" + bug.number;
+        },
+
+        getSearchByTagUrl: function(bug, tag, productNumber) {
+            if(!Oracle.isEmptyOrWhiteSpaces(bug?.productNumber))
+            {
+                productNumber = bug.productNumber;
+            }
+            /*if(Oracle.isEmpty(productNumber))
+            {
+
+            }
+                productNumber = 'xxxx'
+            }
+            if(!Oracle.isEmptyOrWhiteSpaces(bug?.productNumber))
+            {
+                productNumber = bug.productNumber;
+            }
+            else {
+
+            }*/
+
+            const search_title = "Tag search results for Product ID: " + productid + " and Tag: " + tag;
+            return "https://bug.oraclecorp.com/pls/bug/WEBBUG_REPORTS.do_edit_report?cid_arr=2&cid_arr=3&cid_arr=9&cid_arr=8&cid_arr=7&cid_arr=11&cid_arr=13&cid_arr=72&c_count=8&query_type=2&fid_arr=1&fcont_arr=" + productid + "&fid_arr=125&fcont_arr=" + tag + "&f_count=2&rpt_title=" + search_title + "'";
+        }
+    
+        
+
     }
 
     // ---------------------------------------------------------------------------------------------------------------- //
@@ -83,15 +125,6 @@ Oracle = (function (parent) {
         constructor() {
         }
 
-        getEditLink()
-        {
-            return "https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=" + this.number;
-        }
-
-        getViewLink()
-        {
-            return "https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=" + this.number;
-        }
     };
 
     // ---------------------------------------------------------------------------------------------------------------- //
@@ -327,6 +360,7 @@ Oracle = (function (parent) {
             this.minDateForRange = minDateForRange;
             this.maxDateForRange = maxDateForRange;
         }
+
     };
 
     // ---------------------------------------------------------------------------------------------------------------- //
@@ -618,7 +652,7 @@ Oracle = (function (parent) {
     const _userHtmlFormater = function(value, settings) 
     {
         if (value) {
-            return "<a class='bugdb-number' href='" + settings.entity.getViewLink() + "' target='_view_" + value + "'>" + value + "</a>";
+            return "<a class='bugdb-number' href='" + Oracle.BugDB.UrlManager.getBugViewUrl(settings.entity) + "' target='_view_" + value + "'>" + value + "</a>";
         }
         else {
             return null;
@@ -631,7 +665,7 @@ Oracle = (function (parent) {
         if (value) {
             const result = $("<span style='white-space: nowrap; display: flex; justify-content: center; align-items: center; '>");
             result.append(_userHtmlFormater(value, settings));
-            result.append("<a class='bugdb-number-action' href='" + settings.entity.getEditLink() + "'  target='_edit_" + value + "'><img src='https://zooktel.blob.core.windows.net/oracle/icons/edit.png' alt='Edit bug' /></a>");
+            result.append("<a class='bugdb-number-action' href='" + Oracle.BugDB.UrlManager.getBugEditUrl(settings.entity) + "'  target='_edit_" + value + "'><img src='https://zooktel.blob.core.windows.net/oracle/icons/edit.png' alt='Edit bug' /></a>");
             //return $(&nbsp;");
             return result;
         }
