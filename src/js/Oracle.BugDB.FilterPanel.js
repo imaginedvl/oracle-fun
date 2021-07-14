@@ -25,10 +25,10 @@ Oracle = (function (parent) {
                 Oracle.Logger.logWarning("Target grid is not provided...");                
             }        
 
-            /*
-            this.summary = Oracle.BugDB.BugSummary(controlSettings.data);
-            this.summary.getMaximum(Oracle.BugDB.Fields.DateReported);
-            */
+            
+            this.summary = new Oracle.BugDB.BugSummary(controlSettings.data);
+            
+            
 
 
             this.sections = [];
@@ -38,7 +38,7 @@ Oracle = (function (parent) {
             let section = new Oracle.BugDB.FilterPanelSection(initializationSettings);
             this.sections.push(section);
             
-            initializationSettings.text = "Reported from:"; // + controlSettings.data.maxDateForRange;
+            initializationSettings.text = "Reported from:" + this.summary.getMinimum(Oracle.BugDB.Fields.DateReported);;
             section = new Oracle.BugDB.FilterPanelSection(initializationSettings);
             this.sections.push(section);
             
@@ -92,41 +92,6 @@ Oracle = (function (parent) {
                 this.element.append(td);
             }*/
         }
-
-    // ---------------------------------------------------------------------------------------------------------------- //
-    // Class: FilterPanelRow
-    // ---------------------------------------------------------------------------------------------------------------- //
-    /*result.FilterPanelRow = class {
-
-        constructor(initializationSettings) {
-            this.grid = initializationSettings.grid;
-            this.cells = [];
-            this.data = initializationSettings.data;
-            this.dataIndex = initializationSettings.dataIndex;
-            this.element = $("<tr data-row-index='" + this.index + "' data-index='" + this.dataIndex + "' >");
-            for (let c = 0; c < this.grid.columns.length; c++) {
-                const column = this.grid.columns[c];
-                initializationSettings.columnIndex = c;
-                const td = $("<td data-column-index='" + c + "' class='column-" + column.id  + "' >");
-                let value = Oracle.getMemberValueByPath(this.data, column.path);
-                value = Oracle.Formating.formatValue(value, { entity: this.data, element: td, formater: column.formater },  _formaterCollection );
-                td.setContent(value);
-                this.element.append(td);
-            }
-        }
-
-        update(rowIndex)
-        {
-            this.element.attr("data-row-index", rowIndex);
-            this.element.attr("data-row-new-group", this.isNewGroup);
-            if(this.isNewGroup)
-            {
-                this.element.addClass("new-group");
-            }
-            else{
-                this.element.removeClass("new-group");
-            }
-        }*/
     }
 
     return parent;
