@@ -8,11 +8,12 @@ Oracle = (function (parent) {
 
     const result = parent.BugDB;
     
-    parent.BugDB.Statuses = 
+    result.Statuses = 
     {
         11: 'Open',
         15: 'Enhancement Request',
         30: 'More Info Requested',
+        31: 'Could Not Reproduce',
         32: 'Not a Bug',
         33: 'Suspended',
         36: 'Duplicate Bug',
@@ -33,7 +34,7 @@ Oracle = (function (parent) {
         96: 'Closed As Duplicate'
     }
 
-    parent.BugDB.Severity = 
+    result.Severity = 
     {
         1: 'Complete',
         2: 'Severe',
@@ -41,7 +42,7 @@ Oracle = (function (parent) {
         4: 'Minor'
     }
 
-    parent.BugDB.Fields = {
+    result.Fields = {
         DateReported: 'dateReported',
         Number: 'number',
         Assignee: 'assignee',
@@ -89,7 +90,8 @@ Oracle = (function (parent) {
             return "https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=" + bug.number;
         },
 
-        getSearchByTagUrl: function(tag, bug, productNumber) {
+        getSearchByTagUrl: function(tag, bug, productNumber)
+        {
             if (!Oracle.isEmptyOrWhiteSpaces(bug?.productNumber)) {
                 productNumber = bug.productNumber;
             }
