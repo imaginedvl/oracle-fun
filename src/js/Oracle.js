@@ -105,6 +105,19 @@ var Oracle = (function () {
         return null;
     }
 
+    result.distinct = function(items)
+    {
+        const result = [];
+        if(!Oracle.isEmpty(items))
+        {
+            for(let i = 0; i < items.length; i++)
+            {
+                //     
+            }
+        }
+        return result;
+    }
+
     result.compare = function(a, b)
     {
         if (a === null || a === undefined)
@@ -128,10 +141,6 @@ var Oracle = (function () {
             {
                 return 0;
             }
-        }
-        if(typeof(a) === 'string')
-        {
-            return a.localeCompare(b);
         }
         if(Oracle.isObject(a) && Oracle.isObject(b))
         {

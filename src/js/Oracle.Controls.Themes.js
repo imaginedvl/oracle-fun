@@ -228,7 +228,6 @@ Oracle = (function (parent) {
 
     result.apply = function(themeName)
     {
-        _themeApplied = true;
         if(Oracle.isEmptyOrWhiteSpaces(themeName))
         {
             themeName = Oracle.Http.getQueryStringValue("theme");

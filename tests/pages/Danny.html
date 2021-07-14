@@ -21,15 +21,29 @@
         <script src='../../src/js/Oracle.Users.js'></script>
         <script src='../../src/js/Oracle.BugDB.js'></script>
         <script src='../../src/js/Oracle.BugDB.FilterPanel.js'></script>
+        <script src='../../src/js/Oracle.BugDB.Search.js'></script>
         <script src='../../src/js/Oracle.Tests.js'></script>
+
+
+
+
+        <div id='testDiv'></div>
 
         <script>
 
-const filterPanel = new Oracle.BugDB.FilterPanel(
+        const filterPanel = new Oracle.BugDB.FilterPanel(
         {
-            grid: null
+            grid: null,
+            bugs: 
+            [
+                { number: 1, subject: '',  },
+                { number: 1, subject: '',  },
+                { number: 1, subject: '',  },
+                { number: 1, subject: '',  },
+            ]
         });
 
+        $('#testDiv').append(filterPanel.element);
 
         </script>
 

@@ -33,15 +33,17 @@
             data: bugDbPage.bugs
         });
 
+
     Oracle.HTML.addStyle("table td#main-view { } ");
-    Oracle.HTML.addStyle("table td#side-view { width: 300px; } ");
+    Oracle.HTML.addStyle("table td#side-view { width: 300px; vertical-align:top } ");
     const tableElement = $("<table style='width:100%' border='0'><tbody><tr><td id='main-view'></td><td id='side-view'></td></tbody></table>");
-    const title = $('<h2>');
-    title.text(bugDbPage.title);
-    tableElement.find("#main-view").append(title);
     tableElement.find("#main-view").append(table.element);
     tableElement.find("#side-view").append(filterPanel.element);
     $('body').prepend(tableElement);
+
+    const title = $('<h2>');
+    title.text(bugDbPage.title);
+    $('body').prepend(title);
 
     Oracle.Controls.Themes.apply();
 

@@ -7,26 +7,7 @@ Oracle = (function (parent) {
     if (!parent.hasOwnProperty('BugDB')) parent.BugDB = {};
 
     const result = parent.BugDB;
-
-    // ---------------------------------------------------------------------------------------------------------------- //
-    // Class: Bug
-    // ---------------------------------------------------------------------------------------------------------------- //
-    result.Bug = class{
-
-        constructor() {
-        }
-
-        getEditLink()
-        {
-            return "https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=" + this.number;
-        }
-
-        getViewLink()
-        {
-            return "https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=" + this.number;
-        }
-    };
-
+    
     parent.BugDB.Statuses = 
     {
         11: 'Open',
@@ -73,24 +54,106 @@ Oracle = (function (parent) {
         Customer: 'customer',
         //Selection: 'selection',
         //LineNumber: 'lineNumber',
+        TestName: 'testName',
         SupportContact: 'supportContact'
     }
 
-    const _fieldLookups = {
-        number: 'Num', // non-custom bugdb report use Num as number header, works for Laurent's custom report too
-        assignee: 'Assignee',
-        severity: 'Sev', // non-custom bugdb report use Sev as severity header, works for Laurent's custom report too
-        component: 'Component',
-        status: 'St', // non-custom bugdb report use St as status header, works for Laurent's custom report too
-        fixEta: 'Fix Eta',
-        tags: 'Tag',
-        customer: 'Customer',
-        dateReported: 'Reported', // non-custom bugdb report use Reported as reported header, works for Laurent's custom report too
-        subject: 'Subject',
-        selection: '#select_all_option',
-        lineNumber: 'Sl No.',
-        supportContact: 'Support Contact'
+    const _fieldProperties = {
+        number: { headerTitle: 'Num', type: 'number', formater: 'BugDBNumber', groupable: false }, 
+        assignee: { headerTitle: 'Assignee' }, 
+        severity: { headerTitle: 'Sev' }, 
+        component: { headerTitle: 'Component' }, 
+        status: { headerTitle: 'St' }, 
+        fixEta: { headerTitle: 'Fix Eta' }, 
+        tags: { headerTitle: 'Tag' }, 
+        customer: { headerTitle: 'Customer' }, 
+        dateReported: { headerTitle: 'Reported' }, 
+        subject: { headerTitle: 'Subject' }, 
+        selection: { headerTitle: '#select_all_option' }, 
+        lineNumber: { headerTitle: 'Sl No.' }, 
+        supportContact: { headerTitle: 'Support Contact' },
+        testName: { headerTitle: 'Test Name/Doc Field'}
     }
+
+    // ---------------------------------------------------------------------------------------------------------------- //
+    // Class: Bug
+    // ---------------------------------------------------------------------------------------------------------------- //
+    result.Bug = class{
+
+        constructor() {
+        }
+
+        getEditLink()
+        {
+            return "https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=" + this.number;
+        }
+
+        getViewLink()
+        {
+            return "https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=" + this.number;
+        }
+    };
+
+    // ---------------------------------------------------------------------------------------------------------------- //
+    // Class: BugSummary
+    // ---------------------------------------------------------------------------------------------------------------- //
+    result.BugSummary = class{
+
+        constructor(bugs) {
+            this.data = {};
+
+            // Contruire la liste des champs
+            // for (const [key, value] of Object.entries(Oracle.BugDB.Fields)) { ... }
+            // Lister
+        }
+
+        computeFieldSummary(bugs, fieldName)
+        {
+            // bug.reportDate   même chose que  bug[reportDate]  
+            // Oracle.isEmpty()
+
+            const newArray = [];
+
+            newArray.sort((a,b) =>
+            {
+                return Oracle.compare(a, b); 
+            });
+
+            //Oracle.compare(a, b) -1, 0, 1
+
+            // X- compute values
+            const result = {
+                minimum: 0,
+                maximum: 1,
+                distinct: [],
+                count: 1                
+            };
+            this.data[fieldName] = result;
+        }
+
+        getFieldSummary(fieldName)
+        {
+            return this.data[fieldName];
+        }
+
+        getMinimum(fieldName)
+        {
+            return this.getFieldSummary(fieldName).minimum;
+        }
+
+        getMaximum(fieldName)
+        {
+        }
+
+        getCount(fieldName)
+        {
+        }
+
+        getDistincts(fieldName)
+        {
+        }
+
+    };
 
     const _setBugValue = function(bug, field, value, defaultValue)
     {
@@ -136,7 +199,7 @@ Oracle = (function (parent) {
             this.indexes = {};
             this.fields = [];
             for (const [key, value] of Object.entries(Oracle.BugDB.Fields)) {
-                const lookup = _fieldLookups[value];
+                const lookup = _fieldProperties[value].headerTitle;
                 if(!Oracle.isEmpty(lookup))
                 {
                     if(lookup.startsWith('#'))

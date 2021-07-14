@@ -7,7 +7,7 @@ Oracle = (function (parent) {
     if (!parent.hasOwnProperty('BugDB')) parent.BugDB = {};
     const result = parent.BugDB;
 
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterpanel { width:100%; border: 1px solid var(--controlBorderColor);  }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterpanel { background-color: red; min-height: 200px; width:100%; }');
     
     // ---------------------------------------------------------------------------------------------------------------- //
     // Class: FilterPanel
@@ -38,7 +38,7 @@ Oracle = (function (parent) {
             let section = new Oracle.BugDB.FilterPanelSection(initializationSettings);
             this.sections.push(section);
             
-            initializationSettings.text = "Reported from:"; // + controlSettings.data.maxDateForRange;
+            initializationSettings.text = "Reported from:" + controlSettings.data.maxDateForRange;
             section = new Oracle.BugDB.FilterPanelSection(initializationSettings);
             this.sections.push(section);
             
