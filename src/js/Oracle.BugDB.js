@@ -142,10 +142,21 @@ Oracle = (function (parent) {
             });
             result.minimum = newArray[0][fieldName];
             result.maximum = newArray[newArray.length-1][fieldName];
-            newArray.forEach(el => {
-                result.distinct[el[fieldName]] = (result.distinct[el[fieldName]] || 0) + 1;
-            })
-
+            if(fieldName !== Oracle.BugDB.Fields.Tags) {
+                newArray.forEach(el => {
+                    result.distinct[el[fieldName]] = (result.distinct[el[fieldName]] || 0) + 1;
+                })
+            }
+            else {
+                let tags = [];
+                for(let i = 0; i < newArray.length; i++)
+                {
+                    tags = tags.concat(newArray[i][fieldName]);  
+                }
+                tags.forEach(el => {
+                    result.distinct[el] = (result.distinct[el] || 0) + 1;
+                })
+            }
             this.data[fieldName] = result;
         }
 
@@ -206,7 +217,6 @@ Oracle = (function (parent) {
             }
             this.initializeIndexes();
             this.initializeRows();
-            this.setMinMaxReportedDate();
         }
 
         initializeIndexes()
@@ -325,24 +335,6 @@ Oracle = (function (parent) {
                  this.rows[i].element.find("td:eq(" + index + ")").hide();
             }
         }
-
-        setMinMaxReportedDate() {
-            let minDateForRange = new Date();
-            let maxDateForRange = new Date();
-            for(let i = 0; i < this.bugs.length; i++)
-            {
-                let dateReported = this.bugs[i].dateReported;
-                if(dateReported < minDateForRange){
-                    minDateForRange = dateReported;           
-                }
-                if(dateReported > maxDateForRange){
-                    maxDateForRange = dateReported;           
-                }
-            }
-            this.minDateForRange = minDateForRange;
-            this.maxDateForRange = maxDateForRange;
-        }
-
     };
 
     // ---------------------------------------------------------------------------------------------------------------- //
