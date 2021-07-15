@@ -9,25 +9,15 @@ Oracle = (function (parent) {
 
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterpanel { border: 1px solid var(--controlBorderColor);  }');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterpanel > *:not(:first-child):not(.FilterPanelSectionTitle) { padding:8px;}');
-
-
     Oracle.Controls.Themes.addStaticCSSRule('.FilterPanelSection { border-bottom: 1px solid var(--controlBorderColor) } ');
     Oracle.Controls.Themes.addStaticCSSRule('.FilterPanelSection:first-child { border-top: 1px solid var(--controlBorderColor) } ');
-    //
-    //Oracle.Controls.Themes.addStaticCSSRule('.FilterPanelTitle { padding:8px; color: var(--primaryTextColor); background-color: var(--primaryBackgroundColor); font-weight: 600;  } ');
     Oracle.Controls.Themes.addStaticCSSRule('.FilterPanelTitle { padding:8px; color: var(--primaryTextColor); background-color: var(--primaryBackgroundColor); font-weight: 600;  } ');
-    // 
     Oracle.Controls.Themes.addStaticCSSRule('.FilterPanelSectionTitle { background-color: var(--primaryBackgroundColorLighten4); var(--primaryTextColorLighten4); } ');
     Oracle.Controls.Themes.addStaticCSSRule('.FilterPanelSectionTitle { font-weight: 600; padding-bottom:16px; } ');
     Oracle.Controls.Themes.addStaticCSSRule('span.FilterPanelSectionFilterItem {cursor: pointer;}'); //  white-space:nowrap
     Oracle.Controls.Themes.addStaticCSSRule('span.FilterPanelSectionFilterItem:not(:last-child)::after { color: var(--controlTextColorLighten3); content: ", "}');
-
     Oracle.Controls.Themes.addStaticCSSRule('span.FilterPanelSectionFilterItem span.value{ font-weight: 600}');
     Oracle.Controls.Themes.addStaticCSSRule('span.FilterPanelSectionFilterItem span.count { padding-left:4px; color: var(--controlTextColorLighten3)}');
-
-    /*
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterpanel.oracle.control div { border: 1px solid var(--controlBorderColor);  }');
-    */
 
     // ---------------------------------------------------------------------------------------------------------------- //
     // Class: FilterPanel
@@ -85,8 +75,8 @@ Oracle = (function (parent) {
 
             if (!Oracle.isEmpty(filterObj)) {
                 const properties = Oracle.BugDB.getFieldProperties(filterObj);
-                const filterSection = $("<div  id=  '" + this.id + "-filter' class='FilterPanelSection'>");
-                filterSection.append($("<div id=  '" + this.id + "-filter'  class='FilterPanelSectionTitle'>").append(properties.filterTitle + ":"));
+                const filterSection = $("<div  id='" + this.id + "-filter' class='FilterPanelSection'>");
+                filterSection.append($("<div id='" + this.id + "-filter'  class='FilterPanelSectionTitle'>").append(properties.filterTitle + ":"));
 
                 // TODO .. for now we simply use distint for all fields 
                 const distinctMetrics = this.summary.getDistinctMetrics(filterObj);
@@ -98,11 +88,8 @@ Oracle = (function (parent) {
                         const filterItem = $("<span class='FilterPanelSectionFilterItem'>");
                         filterItem.attr("data-filter-field", filterObj);
                         filterItem.data("data-filter-value", metrics.value);
-
                         const valueSpan = $('<span class="value">');
                         const countSpan = $('<span class="count">');
-
-
                         if (properties.lookup) {
                             valueSpan.text(properties.lookup[metrics.value].filterTitle);
                         }
@@ -110,21 +97,15 @@ Oracle = (function (parent) {
                             valueSpan.text(Oracle.Formating.formatValue(metrics.value));
                         }
                         countSpan.text("(" + metrics.count + ")­");
-
                         filterItem.append(valueSpan);
                         filterItem.append(countSpan);
-
                         filterItem.click((e) => {
                             this.applyPanelSelectedFilter($(e.target));
                         });
-
                         filterSection.append(filterItem);
                     }
-
                 }
-
                 this.element.append(filterSection);
-
             }
         }
 
