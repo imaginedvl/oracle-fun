@@ -87,7 +87,7 @@ var Oracle = (function () {
     const _getKnownClassSettings = function(value)
     {
         for (const [key, settings] of Object.entries(_knownClassSettings)) {
-            if(settings.predicateCallback && value instanceof settings.actualClass)
+            if(settings?.class && value instanceof settings.class)
             {
                 return settings;
             }
@@ -98,7 +98,7 @@ var Oracle = (function () {
     const _getKnownClass = function(value)
     {
         const settings = _getKnownClassSettings(value);
-        if(settings?.predicateCallback && settings.predicateCallback(value) === true)
+        if(settings?.class && value instanceof settings.class)
         {
             return settings.className;
         }
