@@ -98,8 +98,21 @@ Oracle = (function (parent) {
                             valueSpan.text(Oracle.Formating.formatValue(metrics.value));
                         }
                         countSpan.text("(" + metrics.count + ")­");
+                        valueSpan.attr("data-filter-field", filterObj);
+                        valueSpan.data("data-filter-value", metrics.value);
+
                         filterItem.append(valueSpan);
+
+
+
+                        countSpan.attr("data-filter-field", filterObj);
+                        countSpan.data("data-filter-value", metrics.value);
+
                         filterItem.append(countSpan);
+
+
+
+
                         filterItem.click((e) => {
                             this.applyPanelSelectedFilter($(e.target));
                         });
