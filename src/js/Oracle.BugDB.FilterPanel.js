@@ -48,7 +48,7 @@ Oracle = (function (parent) {
             const panelFromTo = $("<div class='fromTo'>");
             const bugsRange = $("<p>");
             bugsRange.append(Oracle.HTML.formatValue(this.summary.getMinimum(Oracle.BugDB.Fields.DateReported), { formater: 'BugDBDate'}));
-            bugsRange.append("<br/>to<br/> ");
+            bugsRange.append(" to ");
             bugsRange.append(Oracle.HTML.formatValue(this.summary.getMaximum(Oracle.BugDB.Fields.DateReported), { formater: 'BugDBDate'}));
             panelFromTo.append(bugsRange);
             panelFromTo.append($('<hr>'));
