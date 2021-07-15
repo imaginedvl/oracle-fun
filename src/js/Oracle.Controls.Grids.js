@@ -249,11 +249,11 @@ Oracle = (function (parent) {
             this.index = initializationSettings.columnIndex;
             this.path = Oracle.toNullableValue(initializationSettings.columnDefinition.path);
             this.id = Oracle.toNullableValue(initializationSettings.columnDefinition.id);
-            this.title = Oracle.toNullableValue(initializationSettings.columnDefinition.title);
+            this.columnTitle = Oracle.toNullableValue(initializationSettings.columnDefinition.columnTitle);
             this.formater = Oracle.toNullableValue(initializationSettings.columnDefinition.formater);
             this.groupable = Oracle.toDefaultValue(initializationSettings.columnDefinition.groupable, false);
             this.element = $("<th data-column-index='" + this.index + "' class='column-" + this.id  + "' >");
-            this.element.setContent(this.title);
+            this.element.setContent(this.columnTitle);
             if(initializationSettings.columnDefinition.sortable !== false)
             {
                 this.element.addClass("sortable");
