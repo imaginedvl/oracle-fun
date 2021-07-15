@@ -233,6 +233,9 @@ Oracle = (function (parent) {
             this.element.append(this.tbodyElement);
         }
 
+        reset() {
+            this.filter();
+        }
 
     };
 
