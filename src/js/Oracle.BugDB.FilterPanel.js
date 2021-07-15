@@ -54,6 +54,11 @@ Oracle = (function (parent) {
             panelFromTo.append($('<hr>'));
             this.element.append(panelFromTo);
 
+            // add reset buton .. TODO: .. give some love to this button       
+            const resetFiltersButton = $('<button/>', {text: 'Reset Filters', id: 'resetFiltersButton'});
+            resetFiltersButton.click((e) => {this.applyPanelSelectedFilter();});            
+            this.element.append(resetFiltersButton); 
+
             // Build the filters
             if (!Oracle.isEmpty(controlSettings.panelFilters)) {
                 for (let i = 0; i < controlSettings.panelFilters.length; i++) {
@@ -117,12 +122,18 @@ Oracle = (function (parent) {
 
         applyPanelSelectedFilter(target)
         {
-            const field = target.attr("data-filter-field");
-            const value = target.data("data-filter-value");
-            console.log("FILTER", { value: value, field: field}); 
-            this.grid.filter((settings) => Oracle.compare(settings.data[field], value) === 0);
+            if ( !Oracle.isEmpty(target))
+            {
+                const field = target.attr("data-filter-field");
+                const value = target.data("data-filter-value");
+                console.log("FILTER", { value: value, field: field}); 
+                this.grid.filter((settings) => Oracle.compare(settings.data[field], value) === 0);
+            }
+            else
+            {
+                this.grid.filter();
+            }
         }
-
     }
 
     return parent;
