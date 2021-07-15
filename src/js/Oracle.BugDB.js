@@ -10,36 +10,48 @@ Oracle = (function (parent) {
     
     result.Statuses = 
     {
-        11: 'Open',
-        15: 'Enhancement Request',
-        30: 'More Info Requested',
-        31: 'Could Not Reproduce',
-        32: 'Not a Bug',
-        33: 'Suspended',
-        36: 'Duplicate Bug',
-        37: 'Merged',
-        39: 'Waiting For Codeline',
-        40: 'Waiting',
-        41: 'Base Bug fixed',
-        71: 'Closed, data fix',
-        72: 'Closed, data fix',
-        78: 'Closed Environment Issue',
-        80: 'Ready To Validate',
-        84: 'Closed, not feasible to fix',
-        90: 'Closed, Verified by Filer',
-        91: 'Closed, Could Not Reproduce',
-        92: 'Closed, Not a Bug',
-        93: 'Closed, Not Verified by Filer',
-        95: 'Closed Vendor OS/Software/Framework Prob',
-        96: 'Closed As Duplicate'
+        11: { name: 'Open', number: 11 },
+        15: { name: 'Enhancement Request', number: 15 },
+        30: { name: 'More Info Requested', number: 30 },
+        31: { name: 'Could Not Reproduce', number: 31 },
+        32: { name: 'Not a Bug', number: 32 },
+        33: { name: 'Suspended', number: 33 },
+        36: { name: 'Duplicate Bug', number: 36 },
+        37: { name: 'Merged', number: 37 },
+        39: { name: 'Waiting For Codeline', number: 39 },
+        40: { name: 'Waiting', number: 40 },
+        41: { name: 'Base Bug fixed', number: 41 },
+        71: { name: 'Closed, data fix', number: 71 },
+        72: { name: 'Closed, data fix', number: 72 },
+        78: { name: 'Closed Environment Issue', number: 78 },
+        80: { name: 'Ready To Validate', number: 80 },
+        84: { name: 'Closed, not feasible to fix', number: 84 },
+        90: { name: 'Closed, Verified by Filer', number: 90 },
+        91: { name: 'Closed, Could Not Reproduce', number: 91 },
+        92: { name: 'Closed, Not a Bug', number: 92 },
+        93: { name: 'Closed, Not Verified by Filer', number: 93 },
+        95: { name: 'Closed Vendor OS/Software/Framework Prob', number: 95 },
+        96: { name: 'Closed As Duplicate', number: 96 }
     }
 
     result.Severity = 
     {
-        1: 'Complete',
-        2: 'Severe',
-        3: 'Minimal',
-        4: 'Minor'
+        1: { name: 'Complete', number: '1'},
+        2: { name: 'Severe', number: '2'},
+        3: { name: 'Minimal', number: '3'},
+        4: { name: 'Minor', number: '4'}
+    }
+
+    result.Tag =
+    {
+       REGRN: { name: 'REGRN' },
+       P1: { name: 'P1' },
+       QABLK: { name: 'QABLK' },
+       HCMBRONZE: { name: 'HCMBRONZE' },
+       HCMSILVER: { name: 'HCMSILVER' },
+       SQL_CLEANUP: { name: 'SQL_CLEANUP' },
+       VPAT_MUST: { name: 'VPAT_MUST' },
+       CLIENT_BUGS: { name: 'CLIENT_BUGS' }
     }
 
     result.Fields = {
@@ -63,11 +75,11 @@ Oracle = (function (parent) {
     const _fieldProperties = {
         number: { headerTitle: 'Num', title: 'Number', sectionTitle: 'Numbers',  type: 'number', formater: 'BugDBNumber', groupable: false }, 
         assignee: { headerTitle: 'Assignee'  }, 
-        severity: { headerTitle: 'Sev', lookup: result.Severity }, 
+        severity: { headerTitle: 'Sev', lookup: result.Severity, formater: 'BugDBSeverity' }, 
         component: { headerTitle: 'Component' }, 
-        status: { headerTitle: 'St' }, 
+        status: { headerTitle: 'St', lookup: result.Status, formater: 'BugDBStatus' }, 
         fixEta: { headerTitle: 'Fix Eta', formater: 'BugDBDate' }, 
-        tags: { headerTitle: 'Tag' }, 
+        tags: { headerTitle: 'Tag', lookup: result.Tag, formater: 'BugDBTag'}, 
         customer: { headerTitle: 'Customer' }, 
         dateReported: { headerTitle: 'Reported' }, 
         subject: { headerTitle: 'Subject' }, 
@@ -183,7 +195,20 @@ Oracle = (function (parent) {
             });
             result.minimum = sortedValues[0];
             result.maximum = sortedValues[sortedValues.length - 1];
-            result.distinct = sortedValues.distinct();
+            
+            const lookup = _fieldProperties[fieldName].lookup;
+            if(!Oracle.isEmpty(lookup)) {
+                const lookupArray = [];
+                for(const value in lookup)
+                {
+                    lookupArray.push(value);
+                }
+                result.distinct = lookupArray;
+            }
+            else {
+                result.distinct = sortedValues.distinct();
+            }
+            
             for(let i = 0; i < result.distinct.length; i++)
             {
                 const value = result.distinct[i];
@@ -593,16 +618,6 @@ Oracle = (function (parent) {
         }
     });
     
-    Oracle.Formating.addFormater('BugDBDate', null, null, (value, settings) => {
-        if (value) {
-            const dateDay = value.getDate(), month = value.getMonth() + 1, year = value.getFullYear();
-            return $(`<span class='bugdb-date'><span class='day'>${String(dateDay).padStart(2, '0')}</span><span class='month'>${Oracle.Dates.getMonthAbbreviation(month).toUpperCase()}</span><span class='year'>${year}</span></span>`);
-        }
-        else {
-            return null;
-        }
-    });
-
     Oracle.HTML.addFormater("BugDBCustomer", null, null, (value, settings) =>
     {
         if(settings.isHeader)
@@ -635,10 +650,10 @@ Oracle = (function (parent) {
             if(Oracle.BugDB.Severity.hasOwnProperty(value)) {
                 if(settings.isHeader !== true)
                 {
-                    result.html(Oracle.BugDB.Severity[value] + " <span class='bugdb-severity-number'>(" + value + ")<span>")
+                    result.html(Oracle.BugDB.Severity[value].name + " <span class='bugdb-severity-number'>(" + Oracle.BugDB.Severity[value].number + ")<span>")
                 }
                 else {
-                    result.html(Oracle.BugDB.Severity[value] + " (" + value + ")")
+                    result.html(Oracle.BugDB.Severity[value].name + " (" + Oracle.BugDB.Severity[value].number + ")")
                 }
             }
             return result;
@@ -656,10 +671,10 @@ Oracle = (function (parent) {
             {
                 if(settings.isHeader !== true)
                 {
-                    result.html(Oracle.BugDB.Statuses[value] + " <span class='bugdb-status-number'>(" + value + ")<span>")
+                    result.html(Oracle.BugDB.Statuses[value].name + " <span class='bugdb-status-number'>(" + Oracle.BugDB.Statuses[value].number + ")<span>")
                 }
                 else{
-                    result.html(Oracle.BugDB.Statuses[value] + " (" + value + ")")
+                    result.html(Oracle.BugDB.Statuses[value].name + " (" + Oracle.BugDB.Statuses[value].number + ")")
                 }
             }
             return result;
@@ -693,27 +708,6 @@ Oracle = (function (parent) {
         }
     }, 'controls.grids');
 
-    Oracle.HTML.addFormater("BugDBStatus", null, null, (value, settings) =>
-    {
-        if (value) {
-            const result = $("<span class='bugdb-status status-" + value + "'>" + value + "</span>");
-            if(Oracle.BugDB.Statuses.hasOwnProperty(value))
-            {
-                if(settings.isHeader !== true)
-                {
-                    result.html(Oracle.BugDB.Statuses[value] + " <span class='bugdb-status-number'>(" + value + ")<span>")
-                }
-                else{
-                    result.html(Oracle.BugDB.Statuses[value] + " (" + value + ")")
-                }
-            }
-            return result;
-        }
-        else {
-            return null;
-        }
-    });
-
     Oracle.HTML.addFormater('BugDBTags', null, null, (value, settings) => { 
         const result = $("<div class='bugdb-tags'>")
         if(!Oracle.isEmpty(value) && value.length > 0)
@@ -726,7 +720,6 @@ Oracle = (function (parent) {
         result.append("</div>");
         return result;
      });
-
 
     // <a href='" + context.bug.getViewLink() + "' target='_blank'>
     return parent;
