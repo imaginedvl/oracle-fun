@@ -16,7 +16,7 @@ Oracle = (function (parent) {
     Oracle.Controls.Themes.addStaticCSSRule('.FilterPanelSectionTitle { font-weight: 600; padding-bottom:16px; } ');
     Oracle.Controls.Themes.addStaticCSSRule('span.FilterPanelSectionFilterItem {cursor: pointer;}'); //  white-space:nowrap
     Oracle.Controls.Themes.addStaticCSSRule('span.FilterPanelSectionFilterItem:not(:last-child)::after { color: var(--controlTextColorLighten3); content: ", "}');
-    Oracle.Controls.Themes.addStaticCSSRule('span.FilterPanelSectionFilterItem span.value{ font-weight: 600}');
+    Oracle.Controls.Themes.addStaticCSSRule('span.FilterPanelSectionFilterItem span.value{ font-weight: 600; white-space: nowrap; }');
     Oracle.Controls.Themes.addStaticCSSRule('span.FilterPanelSectionFilterItem span.count { padding-left:4px; color: var(--controlTextColorLighten3)}');
 
     // ---------------------------------------------------------------------------------------------------------------- //
