@@ -3,7 +3,7 @@
     const bugDbPage = new Oracle.BugDB.BugTablePage();
     bugDbPage.hide();
 
-    const table = new Oracle.Controls.Grids.Grid(
+    const table = new Oracle.BugDB.BugGrid(
         {
             classes: 'groupable sortable groupable-headers',
             columns:

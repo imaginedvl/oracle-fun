@@ -62,9 +62,11 @@ Oracle.Tests.execute({
         const a = ['X', 'Y', 'Z'];
         const b = 'Y';
         const c = 'A';
+        const d = 'Y';
         assert.isTrue(Oracle.includes(a,b));
         assert.isFalse(Oracle.includes(a,c));
         assert.isFalse(Oracle.includes(null,c));
-        assert.isTrue(Oracle.includes(a,null));
+        assert.isTrue(Oracle.includes(b,d));
+        assert.isFalse(Oracle.includes(b,c));
     }
 });
