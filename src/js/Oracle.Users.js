@@ -201,6 +201,7 @@ Oracle = (function (parent) {
     _addUser({ globalId: 'KICHINTA', emailAddress: 'kiran.chandra.chintakindi@oracle.com', flags: _flags.Internal });
     _addUser({ globalId: 'SAVGARG', emailAddress: 'savi.garg@oracle.com', flags: _flags.Internal });
     _addUser({ globalId: 'SUDASARI', emailAddress: 'sudheer.dasari@oracle.com', flags: _flags.Internal });
+    _addUser({ globalId: 'NGAGO', emailAddress: 'nelson.gago@oracle.com', flags: _flags.Internal });
     _addUser({ globalId: 'PGAJJELA', emailAddress: 'prashanth.gajjela@oracle.com', flags: _flags.Internal });
     _addUser({ globalId: 'GPICARD', emailAddress: 'guy.picard@oracle.com', flags: _flags.Internal });
     _addUser({ globalId: 'BRPRASAD', firstName: 'B', lastName: 'Prasad', displayName: 'Prasad', fullName: 'Prasad', emailAddress: 'b.prasad@oracle.com', flags: _flags.Internal });

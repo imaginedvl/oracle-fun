@@ -105,16 +105,43 @@ var Oracle = (function () {
         return null;
     }
 
-    result.distinct = function(items)
+    result.distinct = function(items, comparer = null)
     {
+        let item;
+        let exists = false;
         const result = [];
         if(!Oracle.isEmpty(items) && Array.isArray(items))
         {
-            items.sort((a, b) => Oracle.compare(a, b));
-            
             for(let i = 0; i < items.length; i++)
             {
-
+                item = items[i];
+                exists = false;
+                if(Oracle.isFunction(comparer))
+                {
+                    for(let j = 0; j < result.length; j++)
+                    {
+                        if(comparer(item, items[j]) === 0)
+                        {
+                            exists = true;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    for(let j = 0; j < result.length; j++)
+                    {
+                        if(Oracle.compare(item, items[j]) === 0)
+                        {
+                            exists = true;
+                            break;
+                        }
+                    }
+                }
+                if(!exists)
+                {
+                    result.push(item);
+                }
             }
         }
         return result;
@@ -441,6 +468,12 @@ var Oracle = (function () {
     }
     return result;
 }());
+
+if (!Array.prototype.distinct) {
+    Array.prototype.distinct = function (comparer = null) {
+        return Oracle.distinct(this, comparer);
+    };
+}
 
 if (!String.prototype.toUpperCaseFirstLetter) {
     String.prototype.toUpperCaseFirstLetter = function () {

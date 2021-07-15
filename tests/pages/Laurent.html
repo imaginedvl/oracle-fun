@@ -9,26 +9,48 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     </head>
     <body>
-        
+
+        <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>    
+        <script src='../../src/js/Oracle.js'></script>
+        <script src='../../src/js/Oracle.Conversion.js'></script>
+        <script src='../../src/js/Oracle.Formating.js'></script>
+        <script src='../../src/js/Oracle.HTML.js'></script>
+        <script src='../../src/js/Oracle.Controls.js'></script>
+        <script src='../../src/js/Oracle.Controls.Themes.js'></script>
+        <script src='../../src/js/Oracle.Controls.Grids.js'></script>
+        <script src='../../src/js/Oracle.Users.js'></script>
+
         <script>
 
-           const myString = "";
+            const testDistinctStrings = [ 'a', 'b', 'c', 'a', 'A', 'c', 'b', 'B'];
 
-            console.log("String",
-            {
-                typeof: typeof(myString),
-                instance: myString instanceof String
-            })
-           
-           const myDate = new Date();
+            const testDistinctUsers = 
+            [
+                Oracle.Users.getOrCreateUser({ globalId: 'LDEVIGNE'}),
+                Oracle.Users.getOrCreateUser({ globalId: 'SILBARRE'}),
+                Oracle.Users.getOrCreateUser({ globalId: 'GPICARD'}),
+                Oracle.Users.getOrCreateUser({ globalId: 'SILBARRE'}),
+                Oracle.Users.getOrCreateUser({ globalId: 'SILBARRE'}),
+                Oracle.Users.getOrCreateUser({ globalId: 'SILBARRE'}),
+                Oracle.Users.getOrCreateUser({ globalId: 'SILBARRE'}),
+                Oracle.Users.getOrCreateUser({ globalId: 'VHAMEL'}),
+                Oracle.Users.getOrCreateUser({ globalId: 'GPICARD'}),
+                Oracle.Users.getOrCreateUser({ globalId: 'NGAGO'}),
+                Oracle.Users.getOrCreateUser({ globalId: 'VHAMEL'})
+            ];
 
-           console.log("Date",
-            {
-                typeof: typeof(myDate),
-                instance: myDate instanceof Date,
-                class: Date 
-            })
+            console.log("Distincts (string)",
+                { 
+                    distinct: testDistinctStrings.distinct(), 
+                    distinctWithCustomComparer: testDistinctStrings.distinct((a, b) => a.toUpperCase().localeCompare(b.toUpperCase())) 
+                }
+            );
 
+            console.log("Distincts (user)",
+                { 
+                    distinct: testDistinctUsers.distinct()
+                }
+            );
 
         </script>
 

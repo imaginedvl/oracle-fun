@@ -99,8 +99,7 @@ Oracle = (function (parent) {
             primaryTextColorLighten5: 'white'
         },
         css:
-        [
-           
+        [           
         ],
         dynamicCss:
         [            
