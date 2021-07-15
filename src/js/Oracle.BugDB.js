@@ -150,18 +150,23 @@ Oracle = (function (parent) {
                 metrics: []
             };
 
+            let sortedValues = [];
             if(fieldName === Oracle.BugDB.Fields.Tags)
-            {               
-                /*
-                let tags = [];
-                for(let i = 0; i < sortBugs.length; i++)
+            {   
+                for(let i = 0; i < bugs.length; i++)
                 {
-                    tags = tags.concat(newArray[i][fieldName]);  
-                }*/
+                    const value = bugs[i][fieldName];
+                    if(!Oracle.isEmpty(value))
+                    {
+                        for(let j = 0; j < value.length; j++)
+                        {
+                            sortedValues.push(value[j]);
+                        }
+                    }
+                }
             }
-            else{
-  
-                let sortedValues = [];
+            else
+            {
                 for(let i = 0; i < bugs.length; i++)
                 {
                     const value = bugs[i][fieldName];
@@ -170,27 +175,27 @@ Oracle = (function (parent) {
                         sortedValues.push(value);                                       
                     }
                 }
-
-                sortedValues = sortedValues.sort((a,b) =>
+            }
+            
+            sortedValues = sortedValues.sort((a,b) =>
+            {
+                return Oracle.compare(a, b); 
+            });
+            result.minimum = sortedValues[0];
+            result.maximum = sortedValues[sortedValues.length - 1];
+            result.distinct = sortedValues.distinct();
+            for(let i = 0; i < result.distinct.length; i++)
+            {
+                const value = result.distinct[i];
+                let count = 0;
+                for(let j = 0; j < sortedValues.length; j++)
                 {
-                    return Oracle.compare(a, b); 
-                });
-                result.minimum = sortedValues[0];
-                result.maximum = sortedValues[sortedValues.length - 1];
-                result.distinct = sortedValues.distinct();
-                for(let i = 0; i < result.distinct.length; i++)
-                {
-                    const value = result.distinct[i];
-                    let count = 0;
-                    for(let j = 0; j < sortedValues.length; j++)
+                    if(Oracle.compare(value, sortedValues[j]) === 0) 
                     {
-                        if(Oracle.compare(value, sortedValues[j]) === 0) 
-                        {
-                            count++;
-                        }
+                        count++;
                     }
-                    result.metrics.push({ value: value, count: count });
                 }
+                result.metrics.push({ value: value, count: count });
             }
             this.data[fieldName] = result;
         }
