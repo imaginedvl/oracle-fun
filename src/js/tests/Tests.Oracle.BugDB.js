@@ -5,6 +5,9 @@ Oracle.Tests.execute({
     name: 'Bug.match',
     test: (assert, logger) => 
     {
-                
+        const bugs = Oracle.Tests.getMockData('Oracle.BugDB.Bugs');
+        assert.isTrue(bugs[1].match("Zooktel"));
+        assert.isFalse(bugs[2].match("Zooktel"));
+        assert.isTrue(bugs[1].match("Laurent"));
     }
 });

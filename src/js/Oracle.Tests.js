@@ -19,6 +19,48 @@ Oracle = (function (parent) {
         }
     };
 
+    assert.isTrue = function (actual, message) {
+        if (actual !== true) {
+            throw new Oracle.Errors.AssertionError(message ? message : "Assert.isTrue failed. Actual:<" + actual + ">. ", { actual: actual }, false);
+        }
+    }
+
+    assert.isFalse = function (actual, message) {
+        if (actual !== false) {
+            throw new Oracle.Errors.AssertionError(message ? message : "Assert.isFalse failed. Actual:<" + actual + ">. ", { actual: actual }, false);
+        }
+    }
+
+    assert.isUndefined = function (actual, message) {
+        if (actual !== isUndefined) {
+            throw new Oracle.Errors.AssertionError(message ? message : "Assert.isUndefined failed. Actual:<" + actual + ">. ", { actual: actual }, false);
+        }
+    }
+
+    assert.isNotNull = function (actual, message) {
+        if (actual === null) {
+            throw new Oracle.Errors.AssertionError(message ? message : "Assert.isNotNull failed. Actual:<" + actual + ">. ", { actual: actual }, false);
+        }
+    }
+
+    assert.isNotUndefined = function (actual, message) {
+        if (actual === isUndefined) {
+            throw new Oracle.Errors.AssertionError(message ? message : "Assert.isNotUndefined failed. Actual:<" + actual + ">. ", { actual: actual }, false);
+        }
+    }
+
+    assert.isNotEmpty = function (actual, message) {
+        if (Oracle.isEmpty(actual)) {
+            throw new Oracle.Errors.AssertionError(message ? message : "Assert.isNotEmpty failed. Actual:<" + actual + ">. ", { actual: actual }, false);
+        }
+    }
+
+    assert.isNull = function (actual, message) {
+        if (actual !== null) {
+            throw new Oracle.Errors.AssertionError(message ? message : "Assert.isNull failed. Actual:<" + actual + ">. ", { actual: actual }, false);
+        }
+    }
+
     assert.isEmpty = function (actual, message) {
         if (!Oracle.isEmpty(actual)) {
             throw new Oracle.Errors.AssertionError(message ? message : "Assert.isEmpty failed. Actual:<" + actual + ">. ", { actual: actual }, false);
@@ -39,11 +81,30 @@ Oracle = (function (parent) {
         }
     }
 
-    assert.areComprable = function (expected, actual, message) {
+    assert.areComparable = function (expected, actual, message) {
         if (Oracle.compare(expected, actual) === 0) {
             throw new Oracle.Errors.AssertionError(message ? message : "Assert.areComprable failed. Expected:<" + expected + ">. Actual:<" + actual + ">. ", { expected: expected, actual: actual }, false);
         }
     }
+
+    assert.areNotEqual = function (expected, actual, message) {
+        if (expected == actual) {
+            throw new Oracle.Errors.AssertionError(message ? message : "Assert.areNotEqual failed. Expected:<" + expected + ">. Actual:<" + actual + ">. ", { expected: expected, actual: actual }, false);
+        }
+    }
+
+    assert.areNotStrictlyEqual = function (expected, actual, message) {
+        if (expected === actual) {
+            throw new Oracle.Errors.AssertionError(message ? message : "Assert.areNotStrictlyEqual failed. Expected:<" + expected + ">. Actual:<" + actual + ">. ", { expected: expected, actual: actual }, false);
+        }
+    }
+
+    assert.areNotComparable = function (expected, actual, message) {
+        if (Oracle.compare(expected, actual) !== 0) {
+            throw new Oracle.Errors.AssertionError(message ? message : "Assert.areNotComprable failed. Expected:<" + expected + ">. Actual:<" + actual + ">. ", { expected: expected, actual: actual }, false);
+        }
+    }
+
 
     let _element = Oracle.toNullableValue($('#oracle-unit-test'));
 

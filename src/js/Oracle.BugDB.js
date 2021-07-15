@@ -7,8 +7,8 @@ Oracle = (function (parent) {
     if (!parent.hasOwnProperty('BugDB')) parent.BugDB = {};
 
     const result = parent.BugDB;
-    
-    result.Statuses = 
+
+    result.Statuses =
     {
         11: 'Open',
         15: 'Enhancement Request',
@@ -34,7 +34,7 @@ Oracle = (function (parent) {
         96: 'Closed As Duplicate'
     }
 
-    result.Severity = 
+    result.Severity =
     {
         1: 'Complete Loss of Service',
         2: 'Severe',
@@ -61,42 +61,38 @@ Oracle = (function (parent) {
     }
 
     const _fieldProperties = {
-        number: { headerTitle: 'Num', title: 'Number', sectionTitle: 'Numbers',  type: 'number', formater: 'BugDBNumber', groupable: false }, 
-        assignee: { headerTitle: 'Assignee'  }, 
-        severity: { headerTitle: 'Sev', lookup: result.Severity }, 
-        component: { headerTitle: 'Component' }, 
-        status: { headerTitle: 'St' }, 
-        fixEta: { headerTitle: 'Fix Eta', formater: 'BugDBDate' }, 
-        tags: { headerTitle: 'Tag' }, 
-        customer: { headerTitle: 'Customer' }, 
-        dateReported: { headerTitle: 'Reported' }, 
-        subject: { headerTitle: 'Subject' }, 
-        selection: { headerTitle: '#select_all_option' }, 
-        lineNumber: { headerTitle: 'Sl No.' }, 
-        productNumber: { headerTitle: 'Product ID'},
+        number: { headerTitle: 'Num', title: 'Number', sectionTitle: 'Numbers', type: 'number', formater: 'BugDBNumber', groupable: false },
+        assignee: { headerTitle: 'Assignee' },
+        severity: { headerTitle: 'Sev', lookup: result.Severity },
+        component: { headerTitle: 'Component' },
+        status: { headerTitle: 'St' },
+        fixEta: { headerTitle: 'Fix Eta', formater: 'BugDBDate' },
+        tags: { headerTitle: 'Tag' },
+        customer: { headerTitle: 'Customer' },
+        dateReported: { headerTitle: 'Reported' },
+        subject: { headerTitle: 'Subject' },
+        selection: { headerTitle: '#select_all_option' },
+        lineNumber: { headerTitle: 'Sl No.' },
+        productNumber: { headerTitle: 'Product ID' },
         supportContact: { headerTitle: 'Support Contact' },
-        testName: { headerTitle: 'Test Name/Doc Field'}
+        testName: { headerTitle: 'Test Name/Doc Field' }
     }
 
-    result.getFieldProperties = function(fieldName)
-    {
+    result.getFieldProperties = function (fieldName) {
         return _fieldProperties[fieldName];
     }
 
-    result.UrlManager = 
+    result.UrlManager =
     {
-        getBugEditUrl: function(bug)
-        {
+        getBugEditUrl: function (bug) {
             return "https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=" + bug.number;
         },
 
-        getBugViewUrl: function(bug)
-        {
+        getBugViewUrl: function (bug) {
             return "https://bug.oraclecorp.com/pls/bug/webbug_print.showbug?c_rptno=" + bug.number;
         },
 
-        getSearchByTagUrl: function(tag, bug, productNumber)
-        {
+        getSearchByTagUrl: function (tag, bug, productNumber) {
             if (!Oracle.isEmptyOrWhiteSpaces(bug?.productNumber)) {
                 productNumber = bug.productNumber;
             }
@@ -111,24 +107,33 @@ Oracle = (function (parent) {
     // ---------------------------------------------------------------------------------------------------------------- //
     // Class: Bug
     // ---------------------------------------------------------------------------------------------------------------- //
-    result.Bug = class{
+    result.Bug = class {
 
         constructor(data) {
-            if(!Oracle.isEmpty(data))
-            {
-                for (const [key, value] of Object.entries(Oracle.BugDB.Fields)) 
-                {
+            if (!Oracle.isEmpty(data)) {
+                for (const [key, value] of Object.entries(Oracle.BugDB.Fields)) {
                     this[value] = data[value];
                 }
             }
         }
 
-        match(keyword)
-        {
-            return this.subject?.toLowerCase().indexOf(keyword) > -1
-                || this.customer?.toLowerCase().indexOf(keyword) > -1 
-                || this.component?.toLowerCase().indexOf(keyword) > -1
-                || this.assignee?.displayName.toLowerCase().indexOf(keyword) > -1;
+        match(keyword) {
+            if(keyword)
+            {
+                keyword = keyword.toLowerCase();
+                const result = this.subject?.toLowerCase().indexOf(keyword) > -1
+                    || this.customer?.toLowerCase().indexOf(keyword) > -1
+                    || this.component?.toLowerCase().indexOf(keyword) > -1
+                    || this.assignee?.displayName.toLowerCase().indexOf(keyword) > -1;
+                if (!result) // her we will add tags search too, etc
+                {
+
+                }
+                return result;
+            }
+            else{
+                return false;
+            }
         }
 
     };
@@ -136,20 +141,18 @@ Oracle = (function (parent) {
     // ---------------------------------------------------------------------------------------------------------------- //
     // Class: BugSummary
     // ---------------------------------------------------------------------------------------------------------------- //
-    result.BugSummary = class{
+    result.BugSummary = class {
 
         constructor(bugs) {
             this.data = {};
 
             // Contruire la liste des champs
-            for (const [key, value] of Object.entries(Oracle.BugDB.Fields)) 
-            { 
+            for (const [key, value] of Object.entries(Oracle.BugDB.Fields)) {
                 this.computeFieldSummary(bugs, value);
             }
         }
 
-        computeFieldSummary(bugs, fieldName)
-        {
+        computeFieldSummary(bugs, fieldName) {
             const result = {
                 minimum: null,
                 maximum: null,
@@ -158,47 +161,36 @@ Oracle = (function (parent) {
             };
 
             let sortedValues = [];
-            if(fieldName === Oracle.BugDB.Fields.Tags)
-            {   
-                for(let i = 0; i < bugs.length; i++)
-                {
+            if (fieldName === Oracle.BugDB.Fields.Tags) {
+                for (let i = 0; i < bugs.length; i++) {
                     const value = bugs[i][fieldName];
-                    if(!Oracle.isEmpty(value))
-                    {
-                        for(let j = 0; j < value.length; j++)
-                        {
+                    if (!Oracle.isEmpty(value)) {
+                        for (let j = 0; j < value.length; j++) {
                             sortedValues.push(value[j]);
                         }
                     }
                 }
             }
-            else
-            {
-                for(let i = 0; i < bugs.length; i++)
-                {
+            else {
+                for (let i = 0; i < bugs.length; i++) {
                     const value = bugs[i][fieldName];
-                    if(!Oracle.isEmpty(value))
-                    {
-                        sortedValues.push(value);                                       
+                    if (!Oracle.isEmpty(value)) {
+                        sortedValues.push(value);
                     }
                 }
             }
-            
-            sortedValues = sortedValues.sort((a,b) =>
-            {
-                return Oracle.compare(a, b); 
+
+            sortedValues = sortedValues.sort((a, b) => {
+                return Oracle.compare(a, b);
             });
             result.minimum = sortedValues[0];
             result.maximum = sortedValues[sortedValues.length - 1];
             result.distinct = sortedValues.distinct();
-            for(let i = 0; i < result.distinct.length; i++)
-            {
+            for (let i = 0; i < result.distinct.length; i++) {
                 const value = result.distinct[i];
                 let count = 0;
-                for(let j = 0; j < sortedValues.length; j++)
-                {
-                    if(Oracle.compare(value, sortedValues[j]) === 0) 
-                    {
+                for (let j = 0; j < sortedValues.length; j++) {
+                    if (Oracle.compare(value, sortedValues[j]) === 0) {
                         count++;
                     }
                 }
@@ -207,40 +199,32 @@ Oracle = (function (parent) {
             this.data[fieldName] = result;
         }
 
-        getFieldSummary(fieldName)
-        {
+        getFieldSummary(fieldName) {
             return this.data[fieldName];
         }
 
-        getMinimum(fieldName)
-        {
+        getMinimum(fieldName) {
             return this.getFieldSummary(fieldName)?.minimum;
         }
 
-        getMaximum(fieldName)
-        {
+        getMaximum(fieldName) {
             return this.getFieldSummary(fieldName)?.maximum;
         }
 
-        getDistinctMetrics(fieldName)
-        {
+        getDistinctMetrics(fieldName) {
             return this.getFieldSummary(fieldName)?.metrics;
         }
 
-        getDistincts(fieldName)
-        {
+        getDistincts(fieldName) {
             return this.getFieldSummary(fieldName)?.distinct;
         }
     };
 
-    const _setBugValue = function(bug, field, value, defaultValue)
-    {
-        if (value === null || value === undefined)
-        {
+    const _setBugValue = function (bug, field, value, defaultValue) {
+        if (value === null || value === undefined) {
             bug[field] = defaultValue;
         }
-        else
-        {
+        else {
             bug[field] = value;
         }
     }
@@ -248,83 +232,69 @@ Oracle = (function (parent) {
     // ---------------------------------------------------------------------------------------------------------------- //
     // Class: BugTable
     // ---------------------------------------------------------------------------------------------------------------- //
-    result.BugTable = class{
+    result.BugTable = class {
 
         constructor(table, target) {
-            if(Oracle.isEmpty(table)) table = "#SummaryTab";
-            if(Oracle.isEmpty(target))
-            {
+            if (Oracle.isEmpty(table)) table = "#SummaryTab";
+            if (Oracle.isEmpty(target)) {
                 this.element = $(table);
             }
-            else{
+            else {
                 this.element = $(target).find(table);
             }
-            if(this.element.length === 0)
-            {
+            if (this.element.length === 0) {
                 throw new Oracle.Errors.ValidationError("BugDB table does not exists", table);
             }
-            if(!this.element.hasClass("summary"))
-            {
+            if (!this.element.hasClass("summary")) {
                 Oracle.Logger.logWarning("BudDB element does not have 'summary' class", this.element);
             }
             this.initializeIndexes();
             this.initializeRows();
         }
 
-        initializeIndexes()
-        {
+        initializeIndexes() {
             this.indexes = {};
             this.fields = [];
             for (const [key, value] of Object.entries(Oracle.BugDB.Fields)) {
                 const lookup = _fieldProperties[value].headerTitle;
-                if(!Oracle.isEmpty(lookup))
-                {
-                    if(lookup.startsWith('#'))
-                    {
+                if (!Oracle.isEmpty(lookup)) {
+                    if (lookup.startsWith('#')) {
                         this.indexes[value] = this.getColumnIndexByControlId(lookup.substring(1));
                     }
-                    else
-                    {
+                    else {
                         this.indexes[value] = this.getColumnIndexByTitle(lookup);
                     }
                 }
-                else
-                {
+                else {
                     this.indexes[value] = -1;
                 }
-                if(this.indexes[value] > -1)
-                {
+                if (this.indexes[value] > -1) {
                     this.fields.push(value);
                 }
             }
-            Oracle.Logger.logDebug("BugDBTable: Indexes initialized", { indexes: this.indexes, fields : this.fields });
+            Oracle.Logger.logDebug("BugDBTable: Indexes initialized", { indexes: this.indexes, fields: this.fields });
         }
 
-        initializeRows()
-        {
+        initializeRows() {
             this.rows = [];
             this.bugs = [];
             const rows = this.element.find("tbody tr");
-            for(let i = 0; i < rows.length; i++)
-            {
+            for (let i = 0; i < rows.length; i++) {
                 const rowElement = $(rows.get(i));
                 const row = new Oracle.BugDB.BugTableRow(this, rowElement);
                 this.rows.push(row);
                 for (const [key, value] of Object.entries(this.indexes)) {
-                    if(value > -1)
-                    {
+                    if (value > -1) {
                         row.cells[key] = rowElement.find("td:eq(" + value + ")");
                     }
-                    else
-                    {
+                    else {
                         row.cells[key] = null;
                     }
                 }
                 const bug = new Oracle.BugDB.Bug();
                 // I always assume the Number column is present... If not, da fuck you want to do with that list... Just saying
                 const number = row.getAsLink(Oracle.BugDB.Fields.Number);
-                if(number)
-                {
+                if (number) {
                     bug[Oracle.BugDB.Fields.Number] = Number(number.text);
                 }
                 bug[Oracle.BugDB.Fields.SupportContact] = row.getAsUser(Oracle.BugDB.Fields.SupportContact);
@@ -333,9 +303,8 @@ Oracle = (function (parent) {
                 bug[Oracle.BugDB.Fields.Severity] = row.getAsNumber(Oracle.BugDB.Fields.Severity);
                 bug[Oracle.BugDB.Fields.Subject] = row.getAsString(Oracle.BugDB.Fields.Subject);
                 bug[Oracle.BugDB.Fields.Customer] = row.getAsString(Oracle.BugDB.Fields.Customer);
-                if(!Oracle.isEmpty(bug[Oracle.BugDB.Fields.Customer]) 
-                   && bug[Oracle.BugDB.Fields.Customer].startsWith("INTERNAL"))
-                {
+                if (!Oracle.isEmpty(bug[Oracle.BugDB.Fields.Customer])
+                    && bug[Oracle.BugDB.Fields.Customer].startsWith("INTERNAL")) {
                     bug[Oracle.BugDB.Fields.Customer] = null;
                 }
                 bug[Oracle.BugDB.Fields.Tags] = row.getAsTags(Oracle.BugDB.Fields.Tags);
@@ -348,43 +317,34 @@ Oracle = (function (parent) {
             Oracle.Logger.logDebug("BugDBTable: Rows initialized", { rows: this.rows, bugs: this.bugs });
         }
 
-        getBugByIndex(index)
-        {
+        getBugByIndex(index) {
             return this.bugs[index];
         }
 
-        getColumnIndexByTitle(columnName)
-        {
+        getColumnIndexByTitle(columnName) {
             const col = this.element.find("thead tr th:containsi('" + columnName + "')");
-            if(Oracle.isEmpty(col))
-            {
+            if (Oracle.isEmpty(col)) {
                 return -1;
             }
-            else
-            {
+            else {
                 return col.index();
             }
         }
 
-        getColumnIndexByControlId(controlId)
-        {
+        getColumnIndexByControlId(controlId) {
             const col = this.element.find("thead tr th > #" + controlId);
-            if(Oracle.isEmpty(col))
-            {
+            if (Oracle.isEmpty(col)) {
                 return -1;
             }
-            else
-            {
+            else {
                 return col.parent().index();
             }
         }
 
-        hideColumnByIndex(index)
-        {
+        hideColumnByIndex(index) {
             this.element.find("thead tr th:eq(" + index + ")").hide();
-            for(let i = 0; i < this.rows.length; i++)
-            {
-                 this.rows[i].element.find("td:eq(" + index + ")").hide();
+            for (let i = 0; i < this.rows.length; i++) {
+                this.rows[i].element.find("td:eq(" + index + ")").hide();
             }
         }
     };
@@ -392,35 +352,29 @@ Oracle = (function (parent) {
     // ---------------------------------------------------------------------------------------------------------------- //
     // Class: BugTableRow
     // ---------------------------------------------------------------------------------------------------------------- //
-    result.BugTableRow = class{
+    result.BugTableRow = class {
 
-        constructor(table, element)
-        {
+        constructor(table, element) {
             this.table = table;
             this.element = element;
             this.cells = {};
         }
 
-        getAsTags(fieldName)
-        {
+        getAsTags(fieldName) {
             let result = [];
             const cell = this.cells[fieldName];
-            if(cell)
-            {
+            if (cell) {
                 const value = cell.text();
-                if(!Oracle.isEmptyOrWhiteSpaces(value))
-                {
+                if (!Oracle.isEmptyOrWhiteSpaces(value)) {
                     const result = [];
                     // depending of the type of bugdb report, the tags can be 
                     // rendered as separate links or one space-separated text
                     const lineParsed = value.split('\n');
                     lineParsed.forEach(element => {
-                        if(!Oracle.isEmptyOrWhiteSpaces(element))
-                        {
+                        if (!Oracle.isEmptyOrWhiteSpaces(element)) {
                             const spaceParsed = element.split(' ');
                             spaceParsed.forEach(element => {
-                                if(!Oracle.isEmptyOrWhiteSpaces(element))
-                                {
+                                if (!Oracle.isEmptyOrWhiteSpaces(element)) {
                                     result.push(element);
                                 }
                             });
@@ -433,106 +387,83 @@ Oracle = (function (parent) {
             return result;
         }
 
-        getAsUser(fieldName)
-        {
+        getAsUser(fieldName) {
             const cell = this.cells[fieldName];
-            if(cell)
-            {
+            if (cell) {
                 let globalId = null;
                 let emailAddress = null;
                 const a = cell.find('a');
-                if(a.length > 0)
-                {
+                if (a.length > 0) {
                     emailAddress = a.attr('title');
-                    if(!Oracle.isEmpty(emailAddress) && emailAddress.length > 16)
-                    {
+                    if (!Oracle.isEmpty(emailAddress) && emailAddress.length > 16) {
                         emailAddress = emailAddress.substring(16);
                     }
-                    else
-                    {
+                    else {
                         emailAddress = null;
                     }
                     globalId = Oracle.Strings.trim(a.text());
                 }
-                else
-                {
+                else {
                     globalId = Oracle.Strings.trim(cell.text());
                 }
-                return Oracle.Users.getOrCreateUser( { globalId: globalId, emailAddress: emailAddress } );
+                return Oracle.Users.getOrCreateUser({ globalId: globalId, emailAddress: emailAddress });
             }
-            else
-            {
+            else {
                 return null;
             }
         }
 
-        getAsLink(fieldName)
-        {
+        getAsLink(fieldName) {
             const cell = this.cells[fieldName];
-            if(cell)
-            {
+            if (cell) {
                 const a = cell.find('a');
-                if(a.length > 0)
-                {
+                if (a.length > 0) {
                     return {
                         link: a.attr('href'),
                         text: a.text()
                     };
                 }
-                else
-                {
+                else {
                     return null;
                 }
             }
-            else
-            {
+            else {
                 return null;
             }
         }
 
-        getAsNumber(fieldName)
-        {
+        getAsNumber(fieldName) {
             const cell = this.cells[fieldName];
-            if(cell)
-            {
+            if (cell) {
                 return Number(cell.text());
             }
-            else
-            {
+            else {
                 return 0;
             }
         }
 
-        getAsString(fieldName)
-        {
+        getAsString(fieldName) {
             const cell = this.cells[fieldName];
-            if(cell)
-            {
+            if (cell) {
                 return cell.text();
             }
-            else
-            {
+            else {
                 return null;
             }
         }
 
-        getAsDateTime(fieldName)
-        {
+        getAsDateTime(fieldName) {
             const cell = this.cells[fieldName];
-            if(cell)
-            {
+            if (cell) {
                 const text = cell.text();
-                if(Oracle.isEmptyOrWhiteSpaces(text))
-                {
+                if (Oracle.isEmptyOrWhiteSpaces(text)) {
                     return null;
                 }
-                else
-                {
+                else {
                     return new Date(text);
                 }
             }
-            else
-            {
+            else {
                 return null;
             }
         }
@@ -541,7 +472,7 @@ Oracle = (function (parent) {
     // ---------------------------------------------------------------------------------------------------------------- //
     // Class: BugTablePage
     // ---------------------------------------------------------------------------------------------------------------- //
-    result.BugTablePage = class{
+    result.BugTablePage = class {
 
         constructor() {
             this.element = $("<div id='bugDbPage' bgcolor='white' >");
@@ -554,11 +485,10 @@ Oracle = (function (parent) {
             this.title = this.element.children('h2').text();
         }
 
-        hide()
-        {
+        hide() {
             this.element.hide();
         }
-        
+
     };
 
 
@@ -599,7 +529,7 @@ Oracle = (function (parent) {
             return null;
         }
     });
-    
+
     Oracle.Formating.addFormater('BugDBDate', null, null, (value, settings) => {
         if (value) {
             const dateDay = value.getDate(), month = value.getMonth() + 1, year = value.getFullYear();
@@ -610,22 +540,17 @@ Oracle = (function (parent) {
         }
     });
 
-    Oracle.HTML.addFormater("BugDBCustomer", null, null, (value, settings) =>
-    {
-        if(settings.isHeader)
-        {
-            if(Oracle.isEmpty(value))
-            {
+    Oracle.HTML.addFormater("BugDBCustomer", null, null, (value, settings) => {
+        if (settings.isHeader) {
+            if (Oracle.isEmpty(value)) {
                 return "Internal"
             }
-            else
-            {
+            else {
                 return value;
             }
         }
-        else{
-            if (value) 
-            {
+        else {
+            if (value) {
                 const result = $("<span class='bugdb-customer'>" + value + "</span>");
                 return result;
             }
@@ -635,13 +560,11 @@ Oracle = (function (parent) {
         }
     });
 
-    Oracle.HTML.addFormater("BugDBSeverity", null, null, (value, settings) =>
-    {
+    Oracle.HTML.addFormater("BugDBSeverity", null, null, (value, settings) => {
         if (value) {
             const result = $("<span class='bugdb-severity severity-" + value + "'>" + value + "</span>");
-            if(Oracle.BugDB.Severity.hasOwnProperty(value)) {
-                if(settings.isHeader !== true)
-                {
+            if (Oracle.BugDB.Severity.hasOwnProperty(value)) {
+                if (settings.isHeader !== true) {
                     result.html(Oracle.BugDB.Severity[value] + " <span class='bugdb-severity-number'>(" + value + ")<span>")
                 }
                 else {
@@ -654,18 +577,15 @@ Oracle = (function (parent) {
             return null;
         }
     });
- 
-    Oracle.HTML.addFormater("BugDBStatus", null, null, (value, settings) =>
-    {
+
+    Oracle.HTML.addFormater("BugDBStatus", null, null, (value, settings) => {
         if (value) {
             const result = $("<span class='bugdb-status status-" + value + "'>" + value + "</span>");
-            if(Oracle.BugDB.Statuses.hasOwnProperty(value))
-            {
-                if(settings.isHeader !== true)
-                {
+            if (Oracle.BugDB.Statuses.hasOwnProperty(value)) {
+                if (settings.isHeader !== true) {
                     result.html(Oracle.BugDB.Statuses[value] + " <span class='bugdb-status-number'>(" + value + ")<span>")
                 }
-                else{
+                else {
                     result.html(Oracle.BugDB.Statuses[value] + " (" + value + ")")
                 }
             }
@@ -675,8 +595,7 @@ Oracle = (function (parent) {
             return null;
         }
     });
-    const _userHtmlFormater = function(value, settings) 
-    {
+    const _userHtmlFormater = function (value, settings) {
         if (value) {
             return "<a class='bugdb-number' href='" + Oracle.BugDB.UrlManager.getBugViewUrl(settings.entity) + "' target='_view_" + value + "'>" + value + "</a>";
         }
@@ -686,8 +605,7 @@ Oracle = (function (parent) {
     };
 
     Oracle.HTML.addFormater("BugDBNumber", null, null, _userHtmlFormater, 'html');
-    Oracle.Formating.addFormater("BugDBNumber", null, null, (value, settings) =>
-    {
+    Oracle.Formating.addFormater("BugDBNumber", null, null, (value, settings) => {
         if (value) {
             const result = $("<span style='white-space: nowrap; display: flex; justify-content: center; align-items: center; '>");
             result.append(_userHtmlFormater(value, settings));
@@ -700,17 +618,14 @@ Oracle = (function (parent) {
         }
     }, 'controls.grids');
 
-    Oracle.HTML.addFormater("BugDBStatus", null, null, (value, settings) =>
-    {
+    Oracle.HTML.addFormater("BugDBStatus", null, null, (value, settings) => {
         if (value) {
             const result = $("<span class='bugdb-status status-" + value + "'>" + value + "</span>");
-            if(Oracle.BugDB.Statuses.hasOwnProperty(value))
-            {
-                if(settings.isHeader !== true)
-                {
+            if (Oracle.BugDB.Statuses.hasOwnProperty(value)) {
+                if (settings.isHeader !== true) {
                     result.html(Oracle.BugDB.Statuses[value] + " <span class='bugdb-status-number'>(" + value + ")<span>")
                 }
-                else{
+                else {
                     result.html(Oracle.BugDB.Statuses[value] + " (" + value + ")")
                 }
             }
@@ -721,18 +636,16 @@ Oracle = (function (parent) {
         }
     });
 
-    Oracle.HTML.addFormater('BugDBTags', null, null, (value, settings) => { 
+    Oracle.HTML.addFormater('BugDBTags', null, null, (value, settings) => {
         const result = $("<div class='bugdb-tags'>")
-        if(!Oracle.isEmpty(value) && value.length > 0)
-        {
-            for(let i = 0; i < value.length; i++)            
-            {
-                result.append("<a href='" + Oracle.BugDB.UrlManager.getSearchByTagUrl(value[i], settings.entity) + "'><div class='bugdb-tag bugdb-tag-" +  value[i].toLowerCase() + "' >" + value[i] + "</div></a> ");
+        if (!Oracle.isEmpty(value) && value.length > 0) {
+            for (let i = 0; i < value.length; i++) {
+                result.append("<a href='" + Oracle.BugDB.UrlManager.getSearchByTagUrl(value[i], settings.entity) + "'><div class='bugdb-tag bugdb-tag-" + value[i].toLowerCase() + "' >" + value[i] + "</div></a> ");
             }
         }
         result.append("</div>");
         return result;
-     });
+    });
 
 
     // <a href='" + context.bug.getViewLink() + "' target='_blank'>
