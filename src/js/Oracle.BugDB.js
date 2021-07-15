@@ -132,14 +132,15 @@ Oracle = (function (parent) {
         match(keyword) {
             if(keyword)
             {
-                keyword = keyword.toLowerCase();
-                const result = this.subject?.toLowerCase().indexOf(keyword) > -1
+                keyword = keyword.toLowerCase().trim();
+                const result = 
+                       this.subject?.toLowerCase().indexOf(keyword) > -1
                     || this.customer?.toLowerCase().indexOf(keyword) > -1
                     || this.component?.toLowerCase().indexOf(keyword) > -1
                     || this.assignee?.displayName.toLowerCase().indexOf(keyword) > -1;
-                if (!result) // her we will add tags search too, etc
+                if (!result) 
                 {
-
+                    // here we will add tags search too, etc
                 }
                 return result;
             }
