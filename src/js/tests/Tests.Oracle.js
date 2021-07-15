@@ -1,7 +1,7 @@
 
 Oracle.Tests.execute({ 
-    category: 'Oracle',
-    group: 'Distincts',
+    module: 'Oracle',
+    category: 'Distincts',
     name: 'Distincts tests (simple types)',
     test: (assert, logger) => 
     {
@@ -16,8 +16,8 @@ Oracle.Tests.execute({
 });
 
 Oracle.Tests.execute({
-    category: 'Oracle',
-    group: 'Distincts',
+    module: 'Oracle',
+    category: 'Distincts',
     name: 'Distincts tests (objects using knowclasses)',
     test: (assert, logger) => {
         const MyObject = class { constructor(a, b, c) { this.a = a; this.b = b; this.c = c;}}
@@ -28,8 +28,8 @@ Oracle.Tests.execute({
 });
 
 Oracle.Tests.execute({
-    category: 'Oracle',
-    group: 'Distincts',
+    module: 'Oracle',
+    category: 'Distincts',
     name: 'Distincts tests (objects with custom comparer)',
     test: (assert, logger) => {
         const MyObject = class { constructor(a, b, c) { this.a = a; this.b = b; this.c = c; } }

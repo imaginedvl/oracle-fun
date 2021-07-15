@@ -1,7 +1,7 @@
 
 Oracle.Tests.execute({ 
-    category: 'Oracle.BugDB',
-    group: 'Bug',
+    module: 'Oracle.BugDB',
+    category: 'Bug',
     name: 'Bug.match',
     test: (assert, logger) => 
     {
