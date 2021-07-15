@@ -41,7 +41,7 @@ Oracle = (function (parent) {
 
             // Init Panel Header
             const panelHader = $("<div class='title'>");
-            panelHader.append($("<div  id='" + this.id + "-filter'  class='FilterPanelTitle'>").append("Bug List Helper"));
+            panelHader.append($("<div id='" + this.id + "-filter'  class='FilterPanelTitle'>").append("Bug List Helper"));
             this.element.append(panelHader);
 
             // Compute summary which will be used by the init sections

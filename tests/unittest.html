@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+
     <head>
         <title>Unit Tests</title>
         <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
@@ -8,34 +10,39 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     </head>
-    <body>
-        <!-- External dependencies -->
-        <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>    
-        <!-- Oracle-Fun Framework-->
-        <script src='../src/js/Oracle.js'></script>
-        <script src='../src/js/Oracle.Conversion.js'></script>
-        <script src='../src/js/Oracle.Formating.js'></script>
-        <script src='../src/js/Oracle.HTML.js'></script>
-        <script src='../src/js/Oracle.Controls.js'></script>
-        <script src='../src/js/Oracle.Controls.Themes.js'></script>
-        <script src='../src/js/Oracle.Controls.Grids.js'></script>
-        <script src='../src/js/Oracle.Users.js'></script>
 
-        <script src='../src/js/Oracle.BugDb.js'></script>
+<body>
+    <!-- External dependencies -->
+    <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
+    <!-- Oracle-Fun Framework-->
+    <script src='../src/js/Oracle.js'></script>
+    <script src='../src/js/Oracle.Conversion.js'></script>
+    <script src='../src/js/Oracle.Formating.js'></script>
+    <script src='../src/js/Oracle.HTML.js'></script>
+    <script src='../src/js/Oracle.Controls.js'></script>
+    <script src='../src/js/Oracle.Controls.Themes.js'></script>
+    <script src='../src/js/Oracle.Controls.Grids.js'></script>
+    <script src='../src/js/Oracle.Users.js'></script>
 
-        <script src='../src/js/Oracle.Tests.js'></script>
+    <script src='../src/js/Oracle.BugDb.js'></script>
 
-        <!-- Tests -->
-        <script src='../src/js/tests/Tests.Oracle.js'></script>
-        <script src='../src/js/tests/Tests.Oracle.BugDB.MockData.js'></script>
-        <script src='../src/js/tests/Tests.Oracle.BugDB.js'></script>
+    <script src='../src/js/Oracle.Tests.js'></script>
+
+    <!-- Tests -->
+    <script src='../src/js/tests/Tests.Oracle.js'></script>
+    <script src='../src/js/tests/Tests.Oracle.BugDB.MockData.js'></script>
+    <script src='../src/js/tests/Tests.Oracle.BugDB.js'></script>
+
+    <h2>Unit Tests</h2>
+    <div id='oracle-test-unit-results'></div>
+
+    <script>
+        Oracle.Tests.displayResults('#oracle-test-unit-results');
+
+    </script>
 
 
-        <div id='oracle-test-unit-results'></div>
 
-        <script>
-            Oracle.Tests.displayResults('#oracle-test-unit-results');
-        </script>
+</body>
 
-    </body>
 </html>

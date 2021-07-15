@@ -11,9 +11,7 @@
 		"editor.detectIndentation": false,
 		"javascript.suggest.alwaysAllWords": true,
 		"javascript.suggest.completeFunctionCalls": true,
-		"json.schemas": [
-		
-			
+		"json.schemas": [			
         ],
 	}
 }

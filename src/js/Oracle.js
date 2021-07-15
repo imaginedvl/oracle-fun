@@ -13,42 +13,36 @@ var Oracle = (function () {
     // Module: Global Utility Methods
     // ---------------------------------------------------------------------------------------------------------------- //
 
-    result.isEmpty = function(value)
-    {
+    result.isEmpty = function (value) {
         if (value === null || value === undefined) return true;
         if (value === '') return true;
         if (value instanceof $) {
             return value.length === 0;
         }
-        if(typeof(value) === 'string')
-        {
+        if (typeof (value) === 'string') {
             return value === '';
         }
         return false;
     };
 
-    result.isEmptyOrWhiteSpaces = function(value)
-    {
+    result.isEmptyOrWhiteSpaces = function (value) {
         if (value === null || value === undefined) return true;
         if (value === '') return true;
         if (value instanceof $) {
             return value.length === 0;
         }
-        if(typeof(value) === 'string')
-        {
+        if (typeof (value) === 'string') {
             return Oracle.Strings.trim(value) === '';
         }
         return false;
     };
 
-    result.toDefaultValue = function(value, defaultValue)
-    {
+    result.toDefaultValue = function (value, defaultValue) {
         if (value === null || value === undefined) return defaultValue;
         return value;
     }
 
-    result.toNullableValue = function(value)
-    {
+    result.toNullableValue = function (value) {
         return Oracle.toDefaultValue(value, null);
     }
 
@@ -57,89 +51,84 @@ var Oracle = (function () {
     result.generateId = function (length) {
         if (Oracle.isEmpty(length) || length < 1) length = 10;
         let text = _generatedIdPossibleFirstCharacters.charAt(Math.floor(Math.random() * _generatedIdPossibleFirstCharacters.length));
-        for (var i = 1; i < length; i++)
-        {
+        for (var i = 1; i < length; i++) {
             text += _generatedIdPossibleCharacters.charAt(Math.floor(Math.random() * _generatedIdPossibleCharacters.length));
         }
         return text;
     };
 
+    if (window.performance.now) {
+        result.getTimestamp = function () { return window.performance.now(); };
+    } else {
+        if (window.performance.webkitNow) {
+            result.getTimestamp = function () { return window.performance.webkitNow(); };
+        } else {
+            result.getTimestamp = function () { return new Date().getTime(); };
+        }
+    }
+
+
     // ------------------------------------------------------------------------------------------------
     // Known Classes
     // ------------------------------------------------------------------------------------------------
 
-    const _knownClassSettings = 
+    const _knownClassSettings =
     {
     }
 
-    const _knownClasses = 
+    const _knownClasses =
     {
         Date: 'Date',
         Array: 'Array'
     }
 
-    const _addKnownClass = function(className, actualClass, compareCallback, generateHashCallback)
-    {
+    const _addKnownClass = function (className, actualClass, compareCallback, generateHashCallback) {
         _knownClasses[className] = className;
-        _knownClassSettings[className] = { className: className,  class: actualClass, compareCallback: compareCallback, generateHashCallback: generateHashCallback };
+        _knownClassSettings[className] = { className: className, class: actualClass, compareCallback: compareCallback, generateHashCallback: generateHashCallback };
     }
-    
-    const _getKnownClassSettings = function(value)
-    {
+
+    const _getKnownClassSettings = function (value) {
         for (const [key, settings] of Object.entries(_knownClassSettings)) {
-            if(settings?.class && value instanceof settings.class)
-            {
+            if (settings?.class && value instanceof settings.class) {
                 return settings;
             }
         }
         return null;
     }
 
-    const _getKnownClass = function(value)
-    {
+    const _getKnownClass = function (value) {
         const settings = _getKnownClassSettings(value);
-        if(settings?.class && value instanceof settings.class)
-        {
+        if (settings?.class && value instanceof settings.class) {
             return settings.className;
         }
         return null;
     }
 
-    result.distinct = function(items, comparer = null)
-    {
+    result.distinct = function (items, comparer = null) {
         let item;
         let exists = false;
         const result = [];
-        if(!Oracle.isEmpty(items) && Array.isArray(items))
-        {
-            for(let i = 0; i < items.length; i++)
-            {
+        if (!Oracle.isEmpty(items) && Array.isArray(items)) {
+            for (let i = 0; i < items.length; i++) {
                 item = items[i];
                 exists = false;
-                if(Oracle.isFunction(comparer))
-                {
-                    for(let j = 0; j < result.length; j++)
-                    {
-                        if(comparer(item, result[j]) === 0)
-                        {
+                if (Oracle.isFunction(comparer)) {
+                    for (let j = 0; j < result.length; j++) {
+                        if (comparer(item, result[j]) === 0) {
                             exists = true;
                             break;
                         }
                     }
                 }
-                else
-                {
-                    for(let j = 0; j < result.length; j++)
-                    {
-                        if(Oracle.compare(item, result[j]) === 0)
-                        {
+                else {
+                    for (let j = 0; j < result.length; j++) {
+                        if (Oracle.compare(item, result[j]) === 0) {
                             exists = true;
                             break;
                         }
                     }
                 }
-                if(!exists)
-                {
+                if (!exists) {
                     result.push(item);
                 }
             }
@@ -147,71 +136,56 @@ var Oracle = (function () {
         return result;
     }
 
-    result.includes = function(a, b)
-    {
-        if(a === null || a === undefined)
-        {
+    result.includes = function (a, b) {
+        if (a === null || a === undefined) {
             return false;
         }
-        else if(b === null || b === undefined)
-        {
+        else if (b === null || b === undefined) {
             return true;
         }
-        if(Array.isArray(a))
-        {
+        if (Array.isArray(a)) {
             return a.includes(b);
         }
         else {
-            return Oracle.compare(a,b) === 0;
+            return Oracle.compare(a, b) === 0;
         }
         return false;
     }
 
-    result.compare = function(a, b)
-    {
-        if (a === null || a === undefined)
-        {
-            if(b !== null && b !== undefined)
-            {
+    result.compare = function (a, b) {
+        if (a === null || a === undefined) {
+            if (b !== null && b !== undefined) {
                 return -1
             }
-            else
-            {
+            else {
                 return 0;
             }
         }
-        else if (b === null || b === undefined)
-        {
-            if(a !== null && a !== undefined)
-            {
+        else if (b === null || b === undefined) {
+            if (a !== null && a !== undefined) {
                 return 1
             }
-            else
-            {
+            else {
                 return 0;
             }
         }
-        if(Oracle.isObject(a) && Oracle.isObject(b))
-        {
-            const settings =  _getKnownClassSettings(a);
-            if(settings?.compareCallback)
-            {
+        if (Oracle.isObject(a) && Oracle.isObject(b)) {
+            const settings = _getKnownClassSettings(a);
+            if (settings?.compareCallback) {
                 return settings.compareCallback(a, b);
             }
         }
-        if(a > b)
-        {
+        if (a > b) {
             return 1;
         }
-        else if(a < b)
-        {
+        else if (a < b) {
             return -1
         }
-        else{
+        else {
             return 0;
         }
     }
-    
+
     result.addKnownClass = _addKnownClass;
     result.getKnownClass = _getKnownClass;
     result.KnownClasses = _knownClasses;
@@ -290,8 +264,7 @@ var Oracle = (function () {
     const _tryGetMemberValueByPath = function (target, path) {
         let resultValue = target;
         let result = false;
-        if (!Oracle.isEmpty(target))
-        {
+        if (!Oracle.isEmpty(target)) {
             if (path === null) throw "Token name is null or empty (Oracle.tryGetMemberValueByPath)";
             path = path.toLowerCase();
             const tokens = path.split('>');
@@ -305,17 +278,14 @@ var Oracle = (function () {
                     }
                 }
             }
-            if (!result)
-            {
+            if (!result) {
                 let members = path.split('.');
-                for (let i = 0; i < members.length; i++)
-                {
+                for (let i = 0; i < members.length; i++) {
                     result = false;
                     if (Oracle.isEmpty(resultValue)) break;
                     let member = members[i];
                     const tokens = member.split('>');
-                    for (let j = 0; j < tokens.length; j++)
-                    {
+                    for (let j = 0; j < tokens.length; j++) {
                         const token = tokens[j];
                         for (const [key, value] of Object.entries(resultValue)) {
                             if ((key + "").toLowerCase() === token) {
@@ -330,8 +300,7 @@ var Oracle = (function () {
                     }
                 }
             }
-            if (!result)
-            {
+            if (!result) {
                 resultValue = null;
             }
         }
@@ -346,12 +315,10 @@ var Oracle = (function () {
         if (!target) return null;
         if (!path) return null;
         const result = _tryGetMemberValueByPath(target, path);
-        if (result.result) 
-        {
+        if (result.result) {
             return result.value;
         }
-        else
-        {
+        else {
             return defaultValue;
         }
     };
@@ -365,17 +332,15 @@ var Oracle = (function () {
     result.Errors = {};
     result.Errors.BaseError = class extends Error {
         constructor(errorType, message, data, logError = true) {
-            if(Oracle.isObject(data))
-            {
+            if (Oracle.isObject(data)) {
                 super(message);
             }
-            else{
+            else {
                 super(message + ". " + data);
             }
             this.data = data;
             this.name = errorType;
-            if(logError && Oracle.debugMode === true)
-            {
+            if (logError && Oracle.debugMode === true) {
                 Oracle.Logger.logError(message, data);
             }
         }
@@ -388,7 +353,7 @@ var Oracle = (function () {
     };
 
     result.Errors.RuntimeError = class extends result.Errors.BaseError {
-        constructor( message, data, logError = true) {
+        constructor(message, data, logError = true) {
             super("RuntimeError", message, data, logError);
         }
     };
@@ -397,29 +362,25 @@ var Oracle = (function () {
     // Module: Oracle.Logger
     // ---------------------------------------------------------------------------------------------------------------- //
     result.Logger = {};
-    
-    result.Logger.logWarning = function(message, data)
-    {
-        if(data === undefined)
-        {
+
+    result.Logger.logWarning = function (message, data) {
+        if (data === undefined) {
             console.warn("ORACLE: " + message);
         }
-        else{
+        else {
             console.warn("ORACLE: " + message, data);
         }
     }
 
-    result.Logger.logError = function(message, data)
-    {
-        if(data === undefined)
-        {
+    result.Logger.logError = function (message, data) {
+        if (data === undefined) {
             console.error("ORACLE: " + message);
         }
-        else{
+        else {
             console.error("ORACLE: " + message, data);
         }
     }
-    
+
     result.Logger.logInformation = function (message, data) {
         if (data === undefined) {
             console.log("ORACLE: " + message);
@@ -429,17 +390,15 @@ var Oracle = (function () {
         }
     }
 
-    result.Logger.logDebug = function(message, data)
-    {
-        if(data === undefined)
-        {
+    result.Logger.logDebug = function (message, data) {
+        if (data === undefined) {
             console.debug("ORACLE: " + message);
         }
-        else{
+        else {
             console.debug("ORACLE: " + message, data);
         }
     }
-    
+
     // ---------------------------------------------------------------------------------------------------------------- //
     // Module: Oracle.Http
     // ---------------------------------------------------------------------------------------------------------------- //
@@ -475,8 +434,7 @@ var Oracle = (function () {
     // ---------------------------------------------------------------------------------------------------------------- //
     result.Strings = {};
 
-    result.Strings.trim = function(value)
-    {
+    result.Strings.trim = function (value) {
         return value.replace(/[\s\n\r\t]*$/, '').replace(/^[\s\n\r\t]*/, '');
     }
 
@@ -485,14 +443,14 @@ var Oracle = (function () {
     // ---------------------------------------------------------------------------------------------------------------- //
     result.Dates = {};
 
-    const _months = [ { n: 'January', a: 'Jan' }, { n: 'January', a: 'Jan' }, { n: 'February', a: 'Feb' }, { n: 'March', a: 'Mar' }, { n: 'April', a: 'Apr' }, { n: 'May', a: 'May' }, { n: 'June', a: 'Jun' },
-    { n: 'July', a: 'Jul' }, { n: 'August', a: 'Aug' }, { n: 'September', a: 'Sep' }, { n: 'October', a: 'Oct' }, { n: 'November', a: 'Nov' }, { n: 'December', a: 'Dev' } ];
+    const _months = [{ n: 'January', a: 'Jan' }, { n: 'January', a: 'Jan' }, { n: 'February', a: 'Feb' }, { n: 'March', a: 'Mar' }, { n: 'April', a: 'Apr' }, { n: 'May', a: 'May' }, { n: 'June', a: 'Jun' },
+    { n: 'July', a: 'Jul' }, { n: 'August', a: 'Aug' }, { n: 'September', a: 'Sep' }, { n: 'October', a: 'Oct' }, { n: 'November', a: 'Nov' }, { n: 'December', a: 'Dev' }];
 
-    result.Dates.getMonthName = function(monthIndex){
+    result.Dates.getMonthName = function (monthIndex) {
         return _months[monthIndex].n;
     }
 
-    result.Dates.getMonthAbbreviation = function(monthIndex){
+    result.Dates.getMonthAbbreviation = function (monthIndex) {
         return _months[monthIndex].a;
     }
     return result;
@@ -504,17 +462,14 @@ if (!Array.prototype.distinct) {
     };
 }
 
-
 if (!Array.prototype.pushRange) {
     Array.prototype.pushRange = function (range) {
-        if(Array.isArray(range))
-        {
-            for(let i = 0; i < range.length; i++)
-            {
+        if (Array.isArray(range)) {
+            for (let i = 0; i < range.length; i++) {
                 this.push(range[i]);
             }
         }
-        else{
+        else {
             this.push(range);
         }
     };
