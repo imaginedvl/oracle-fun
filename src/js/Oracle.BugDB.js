@@ -36,22 +36,22 @@ Oracle = (function (parent) {
 
     result.Severity =
     {
-        1: { name: 'Complete Loss of Service', number: '1', filterTitle: 'Sev-1'},
-        2: { name: 'Severe', number: '2', filterTitle: 'Sev-2'},
-        3: { name: 'Minimal', number: '3', filterTitle: 'Sev-3'},
-        4: { name: 'Minor', number: '4', filterTitle: 'Sev-4'}
+        1: { name: 'Complete Loss of Service', number: '1', filterTitle: 'Sev-1' },
+        2: { name: 'Severe', number: '2', filterTitle: 'Sev-2' },
+        3: { name: 'Minimal', number: '3', filterTitle: 'Sev-3' },
+        4: { name: 'Minor', number: '4', filterTitle: 'Sev-4' }
     }
 
     result.Tag =
     {
-       REGRN: { name: 'REGRN', filterTitle: 'REGRN'},
-       P1: { name: 'P1', filterTitle: 'P1' },
-       QABLK: { name: 'QABLK', filterTitle: 'QABLK' },
-       HCMBRONZE: { name: 'HCMBRONZE', filterTitle: 'HCMBRONZE' },
-       HCMSILVER: { name: 'HCMSILVER', filterTitle: 'HCMSILVER' },
-       SQL_CLEANUP: { name: 'SQL_CLEANUP', filterTitle: 'SQL_CLEANUP' },
-       VPAT_MUST: { name: 'VPAT_MUST', filterTitle: 'VPAT_MUST' },
-       CLIENT_BUGS: { name: 'CLIENT_BUGS', filterTitle: 'CLIENT_BUGS' }
+        REGRN: { name: 'REGRN', filterTitle: 'REGRN' },
+        P1: { name: 'P1', filterTitle: 'P1' },
+        QABLK: { name: 'QABLK', filterTitle: 'QABLK' },
+        HCMBRONZE: { name: 'HCMBRONZE', filterTitle: 'HCMBRONZE' },
+        HCMSILVER: { name: 'HCMSILVER', filterTitle: 'HCMSILVER' },
+        SQL_CLEANUP: { name: 'SQL_CLEANUP', filterTitle: 'SQL_CLEANUP' },
+        VPAT_MUST: { name: 'VPAT_MUST', filterTitle: 'VPAT_MUST' },
+        CLIENT_BUGS: { name: 'CLIENT_BUGS', filterTitle: 'CLIENT_BUGS' }
     }
 
     result.Fields = {
@@ -73,19 +73,19 @@ Oracle = (function (parent) {
     }
 
     const _fieldProperties = {
-        number: { headerTitle: 'Num', title: 'Number', sectionTitle: 'Numbers',  type: 'number', formater: 'BugDBNumber', groupable: false }, 
-        assignee: { headerTitle: 'Assignee', filterId:'assignees', filterTitle: 'Assignees' }, 
-        severity: { headerTitle: 'Sev', lookup: result.Severity, formater: 'BugDBSeverity', filterId:'severity', filterTitle: 'Severity' }, 
-        component: { headerTitle: 'Component', filterId:'components', filterTitle: 'Components'} , 
-        status: { headerTitle: 'St', lookup: result.Status, formater: 'BugDBStatus' }, 
-        fixEta: { headerTitle: 'Fix Eta', formater: 'BugDBDate' }, 
-        tags: { headerTitle: 'Tag', lookup: result.Tag, formater: 'BugDBTag', filterId:'tags', filterTitle: 'Tags' }, 
-        customer: { headerTitle: 'Customer', filterId:'customer', filterTitle: 'Customers', formater: 'BugDBCustomer' }, 
-        dateReported: { headerTitle: 'Reported', formater: 'BugDBDate' }, 
-        subject: { headerTitle: 'Subject' }, 
-        selection: { headerTitle: '#select_all_option' }, 
-        lineNumber: { headerTitle: 'Sl No.' }, 
-        productNumber: { headerTitle: 'Product ID'},
+        number: { headerTitle: 'Num', title: 'Number', sectionTitle: 'Numbers', type: 'number', formater: 'BugDBNumber', groupable: false },
+        assignee: { headerTitle: 'Assignee', filterId: 'assignees', filterTitle: 'Assignees' },
+        severity: { headerTitle: 'Sev', lookup: result.Severity, formater: 'BugDBSeverity', filterId: 'severity', filterTitle: 'Severity' },
+        component: { headerTitle: 'Component', filterId: 'components', filterTitle: 'Components' },
+        status: { headerTitle: 'St', lookup: result.Status, formater: 'BugDBStatus' },
+        fixEta: { headerTitle: 'Fix Eta', formater: 'BugDBDate' },
+        tags: { headerTitle: 'Tag', lookup: result.Tag, formater: 'BugDBTag', filterId: 'tags', filterTitle: 'Tags' },
+        customer: { headerTitle: 'Customer', filterId: 'customer', filterTitle: 'Customers', formater: 'BugDBCustomer', filterHiddenByDefault: true },
+        dateReported: { headerTitle: 'Reported', formater: 'BugDBDate' },
+        subject: { headerTitle: 'Subject' },
+        selection: { headerTitle: '#select_all_option' },
+        lineNumber: { headerTitle: 'Sl No.' },
+        productNumber: { headerTitle: 'Product ID' },
         supportContact: { headerTitle: 'Support Contact' },
         testName: { headerTitle: 'Test Name/Doc Field' }
     }
@@ -130,21 +130,19 @@ Oracle = (function (parent) {
         }
 
         match(keyword) {
-            if(keyword)
-            {
+            if (keyword) {
                 keyword = keyword.toLowerCase().trim();
-                const result = 
-                       this.subject?.toLowerCase().indexOf(keyword) > -1
+                const result =
+                    this.subject?.toLowerCase().indexOf(keyword) > -1
                     || this.customer?.toLowerCase().indexOf(keyword) > -1
                     || this.component?.toLowerCase().indexOf(keyword) > -1
                     || this.assignee?.displayName.toLowerCase().indexOf(keyword) > -1;
-                if (!result) 
-                {
+                if (!result) {
                     // here we will add tags search too, etc
                 }
                 return result;
             }
-            else{
+            else {
                 return false;
             }
         }
@@ -180,26 +178,24 @@ Oracle = (function (parent) {
                     sortedValues.pushRange(value);
                 }
             }
-            
+
             sortedValues = sortedValues.sort((a, b) => {
                 return Oracle.compare(a, b);
             });
             result.minimum = sortedValues[0];
             result.maximum = sortedValues[sortedValues.length - 1];
-            
+
             const lookup = _fieldProperties[fieldName].lookup;
-            if(!Oracle.isEmpty(lookup)) {
-                for(const value in lookup)
-                {
+            if (!Oracle.isEmpty(lookup)) {
+                for (const value in lookup) {
                     result.distinct.push(value);
                 }
             }
             else {
                 result.distinct = sortedValues.distinct();
             }
-            
-            for(let i = 0; i < result.distinct.length; i++)
-            {
+
+            for (let i = 0; i < result.distinct.length; i++) {
                 const value = result.distinct[i];
                 let count = 0;
                 for (let j = 0; j < sortedValues.length; j++) {
@@ -542,13 +538,10 @@ Oracle = (function (parent) {
             return null;
         }
     });
-    
-    Oracle.HTML.addFormater("BugDBCustomer", null, null, (value, settings) =>
-    {
-        if(settings.isHeader)
-        {
-            if(Oracle.isEmpty(value))
-            {
+
+    Oracle.HTML.addFormater("BugDBCustomer", null, null, (value, settings) => {
+        if (settings.isHeader) {
+            if (Oracle.isEmpty(value)) {
                 return "Internal"
             }
             else {
@@ -569,9 +562,8 @@ Oracle = (function (parent) {
     Oracle.HTML.addFormater("BugDBSeverity", null, null, (value, settings) => {
         if (value) {
             const result = $("<span class='bugdb-severity severity-" + value + "'>" + value + "</span>");
-            if(Oracle.BugDB.Severity.hasOwnProperty(value)) {
-                if(settings.isHeader !== true)
-                {
+            if (Oracle.BugDB.Severity.hasOwnProperty(value)) {
+                if (settings.isHeader !== true) {
                     result.html(Oracle.BugDB.Severity[value].name + " <span class='bugdb-severity-number'>(" + Oracle.BugDB.Severity[value].number + ")<span>")
                 }
                 else {
@@ -588,13 +580,11 @@ Oracle = (function (parent) {
     Oracle.HTML.addFormater("BugDBStatus", null, null, (value, settings) => {
         if (value) {
             const result = $("<span class='bugdb-status status-" + value + "'>" + value + "</span>");
-            if(Oracle.BugDB.Statuses.hasOwnProperty(value))
-            {
-                if(settings.isHeader !== true)
-                {
+            if (Oracle.BugDB.Statuses.hasOwnProperty(value)) {
+                if (settings.isHeader !== true) {
                     result.html(Oracle.BugDB.Statuses[value].name + " <span class='bugdb-status-number'>(" + Oracle.BugDB.Statuses[value].number + ")<span>")
                 }
-                else{
+                else {
                     result.html(Oracle.BugDB.Statuses[value].name + " (" + Oracle.BugDB.Statuses[value].number + ")")
                 }
             }
@@ -627,7 +617,7 @@ Oracle = (function (parent) {
         }
     }, 'controls.grids');
 
-    Oracle.HTML.addFormater('BugDBTags', null, null, (value, settings) => { 
+    Oracle.HTML.addFormater('BugDBTags', null, null, (value, settings) => {
         const result = $("<div class='bugdb-tags'>")
         if (!Oracle.isEmpty(value) && value.length > 0) {
             for (let i = 0; i < value.length; i++) {

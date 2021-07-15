@@ -1,5 +1,5 @@
-(function() {
-     
+(function () {
+
     const bugDbPage = new Oracle.BugDB.BugTablePage();
     bugDbPage.hide();
 
@@ -7,18 +7,18 @@
         {
             classes: 'groupable sortable groupable-headers',
             columns:
-            [
-                { id:'number', title: 'Number', formater: 'BugDBNumber',  },
-                { id:'dateReported', title: 'Creation', formater: 'BugDBDate' },                        
-                { id:'severity', title: 'Severity', formater: 'BugDBSeverity', groupable: true },
-                { id:'status', title: 'Status', formater: 'BugDBStatus', groupable: true },
-                { id:'assignee', title: 'Assignee', groupable: true}, 
-                { id:'fixEta', title: 'Fix ETA', formater: 'BugDBDate' },         
-                { id:'component', title: 'Component', groupable: true },         
-                { id:'tags', title: 'Tags', formater: 'BugDBTags' },
-                { id:'subject', title: 'Subject' },
-                { id:'customer', title: 'Customer', formater: 'BugDBCustomer', groupable: true }
-            ],
+                [
+                    { id: 'number', title: 'Number', formater: 'BugDBNumber', },
+                    { id: 'dateReported', title: 'Creation', formater: 'BugDBDate' },
+                    { id: 'severity', title: 'Severity', formater: 'BugDBSeverity', groupable: true },
+                    { id: 'status', title: 'Status', formater: 'BugDBStatus', groupable: true },
+                    { id: 'assignee', title: 'Assignee', groupable: true },
+                    { id: 'fixEta', title: 'Fix ETA', formater: 'BugDBDate' },
+                    { id: 'component', title: 'Component', groupable: true },
+                    { id: 'tags', title: 'Tags', formater: 'BugDBTags' },
+                    { id: 'subject', title: 'Subject' },
+                    { id: 'customer', title: 'Customer', formater: 'BugDBCustomer', groupable: true }
+                ],
             data: bugDbPage.bugs,
             sort:
             {
@@ -34,13 +34,13 @@
             grid: table,
             data: bugDbPage.bugs,
             panelFilters:
-            [
-                Oracle.BugDB.Fields.Assignee,
-                Oracle.BugDB.Fields.Severity,
-                Oracle.BugDB.Fields.Component,
-                Oracle.BugDB.Fields.Customer,
-                Oracle.BugDB.Fields.Tags
-            ]    
+                [
+                    Oracle.BugDB.Fields.Assignee,
+                    Oracle.BugDB.Fields.Severity,
+                    Oracle.BugDB.Fields.Component,
+                    // Oracle.BugDB.Fields.Customer,
+                    Oracle.BugDB.Fields.Tags
+                ]
         });
     // -- /Filter Panel Section -- //
 
