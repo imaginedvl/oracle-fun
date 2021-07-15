@@ -120,7 +120,7 @@ Oracle = (function (parent) {
                 const field = target.attr("data-filter-field");
                 const value = target.data("data-filter-value");
                 console.log("FILTER", { value: value, field: field}); 
-                this.grid.filter((settings) => Oracle.compare(settings.data[field], value) === 0);
+                this.grid.filter((settings) => Oracle.includes(settings.data[field], value));
             }
             else
             {

@@ -35,11 +35,6 @@
             data: bugDbPage.bugs,
             panelFilters:
             [
-                /*{ id:'assignees', title: 'Assignees', targetField: Oracle.BugDB.Fields.Assignee , filterLayout: 'CLASS_BASED'}, 
-                { id:'severity', title: 'Severity', targetField: Oracle.BugDB.Fields.Severity, filterLayout: 'SIMPLE'},
-                { id:'components', title: 'Components', targetField: Oracle.BugDB.Fields.Component,  filterLayout: 'SIMPLE'},
-                { id:'customer', title: 'Customers', targetField: Oracle.BugDB.Fields.Customer,  filterLayout: 'SIMPLE'},
-                { id:'tags', title: 'Tags', targetField: Oracle.BugDB.Fields.Tags, filterLayout: 'SIMPLE'}*/
                 Oracle.BugDB.Fields.Assignee,
                 Oracle.BugDB.Fields.Severity,
                 Oracle.BugDB.Fields.Component,

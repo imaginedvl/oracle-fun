@@ -147,6 +147,26 @@ var Oracle = (function () {
         return result;
     }
 
+    result.includes = function(a, b)
+    {
+        if(a === null || a === undefined)
+        {
+            return false;
+        }
+        else if(b === null || b === undefined)
+        {
+            return true;
+        }
+        if(Array.isArray(a))
+        {
+            return a.includes(b);
+        }
+        else {
+            return Oracle.compare(a,b) === 0;
+        }
+        return false;
+    }
+
     result.compare = function(a, b)
     {
         if (a === null || a === undefined)

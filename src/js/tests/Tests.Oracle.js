@@ -53,3 +53,18 @@ Oracle.Tests.execute({
         assert.areEqual(4, x.length);
     }
 });
+
+Oracle.Tests.execute({
+    module: 'Oracle',
+    category: 'Array extensions',
+    name: 'Includes',
+    test: (assert, logger) => {
+        const a = ['X', 'Y', 'Z'];
+        const b = 'Y';
+        const c = 'A';
+        assert.isTrue(Oracle.includes(a,b));
+        assert.isFalse(Oracle.includes(a,c));
+        assert.isFalse(Oracle.includes(null,c));
+        assert.isTrue(Oracle.includes(a,null));
+    }
+});
