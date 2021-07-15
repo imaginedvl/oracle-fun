@@ -27,11 +27,21 @@
             noItemsMessage: "No bugs are matching the criteria. I strongly suggest to spend some time creating a custom query to check if Joel is not hidding any bug with a missing or past due date!"
         });
 
+    // -- Filter Panel Section -- //
+    //  Oracle.BubDB.BugPanel  ( TODO )
     const filterPanel = new Oracle.BugDB.FilterPanel(
         {
             grid: table,
-            data: bugDbPage.bugs
+            data: bugDbPage.bugs,
+            panelFilters:
+            [
+                { id:'assignees', title: 'Assignees', targetField: Oracle.BugDB.Fields.Assignee , filterLayout: 'CLASS_BASED'}, 
+                { id:'severity', title: 'Severity', targetField: Oracle.BugDB.Fields.Severity, filterLayout: 'USE_TITLE'},
+                { id:'components', title: 'Components', targetField: Oracle.BugDB.Fields.Component,  filterLayout: 'SIMPLE'},
+                { id:'tags', title: 'Tags', targetField: Oracle.BugDB.Fields.Tags, filterLayout: 'SIMPLE'}
+            ]    
         });
+    // -- /Filter Panel Section -- //
 
 
     Oracle.HTML.addStyle("table td#main-view { } ");
