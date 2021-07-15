@@ -8,16 +8,16 @@
             classes: 'groupable sortable groupable-headers',
             columns:
                 [
-                    { id: 'number', title: 'Number', formater: 'BugDBNumber', },
-                    { id: 'dateReported', title: 'Creation', formater: 'BugDBDate' },
-                    { id: 'severity', title: 'Severity', formater: 'BugDBSeverity', groupable: true },
-                    { id: 'status', title: 'Status', formater: 'BugDBStatus', groupable: true },
-                    { id: 'assignee', title: 'Assignee', groupable: true },
-                    { id: 'fixEta', title: 'Fix ETA', formater: 'BugDBDate' },
-                    { id: 'component', title: 'Component', groupable: true },
-                    { id: 'tags', title: 'Tags', formater: 'BugDBTags' },
-                    { id: 'subject', title: 'Subject' },
-                    { id: 'customer', title: 'Customer', formater: 'BugDBCustomer', groupable: true }
+                    { id: 'number', columnTitle: 'Number', formater: 'BugDBNumber', },
+                    { id: 'dateReported', columnTitle: 'Creation', formater: 'BugDBDate' },
+                    { id: 'severity', columnTitle: 'Severity', formater: 'BugDBSeverity', groupable: true },
+                    { id: 'status', columnTitle: 'Status', formater: 'BugDBStatus', groupable: true },
+                    { id: 'assignee', columnTitle: 'Assignee', groupable: true },
+                    { id: 'fixEta', columnTitle: 'Fix ETA', formater: 'BugDBDate' },
+                    { id: 'component', columnTitle: 'Component', groupable: true },
+                    { id: 'tags', columnTitle: 'Tags', formater: 'BugDBTags' },
+                    { id: 'subject', columnTitle: 'Subject' },
+                    { id: 'customer', columnTitle: 'Customer', formater: 'BugDBCustomer', groupable: true }
                 ],
             data: bugDbPage.bugs,
             sort:
