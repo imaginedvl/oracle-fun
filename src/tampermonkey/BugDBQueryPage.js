@@ -44,11 +44,18 @@
         });
     // -- /Filter Panel Section -- //
 
+    // -- Search Panel Section -- //
+    const searchPanel = new Oracle.BugDB.SearchPanel(
+        {
+            grid: table
+        });
+    // -- /Search Panel Section -- //
 
-    Oracle.HTML.addStyle("table td#main-view { } ");
+    Oracle.HTML.addStyle("table td#main-view { vertical-align:top; } ");
     Oracle.HTML.addStyle("table td#side-view { width: 300px; vertical-align:top } ");
-    const tableElement = $("<table style='width:100%' border='0'><tbody><tr><td id='main-view'></td><td id='side-view'></td></tbody></table>");
+    const tableElement = $("<table style='width:100%' border='0'><tbody><tr><td id='top-view'></td></tr><tr><td id='main-view'></td><td id='side-view'></td></tr></tbody></table>");
     tableElement.find("#main-view").append(table.element);
+    tableElement.find("#top-view").append(searchPanel.element);
     tableElement.find("#side-view").append(filterPanel.element);
     $('body').prepend(tableElement);
 

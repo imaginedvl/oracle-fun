@@ -116,6 +116,14 @@ Oracle = (function (parent) {
         constructor() {
         }
 
+        match(keyword)
+        {
+            return this.subject?.toLowerCase().indexOf(keyword) > -1
+                || this.customer?.toLowerCase().indexOf(keyword) > -1 
+                || this.component?.toLowerCase().indexOf(keyword) > -1
+                || this.assignee?.displayName.toLowerCase().indexOf(keyword) > -1;
+        }
+
     };
 
     // ---------------------------------------------------------------------------------------------------------------- //
