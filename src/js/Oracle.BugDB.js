@@ -609,7 +609,6 @@ Oracle = (function (parent) {
             const result = $("<span style='white-space: nowrap; display: flex; justify-content: center; align-items: center; '>");
             result.append(_userHtmlFormater(value, settings));
             result.append("<a class='bugdb-number-action' href='" + Oracle.BugDB.UrlManager.getBugEditUrl(settings.entity) + "'  target='_edit_" + value + "'><img src='https://zooktel.blob.core.windows.net/oracle/icons/edit.png' alt='Edit bug' /></a>");
-            //return $(&nbsp;");
             return result;
         }
         else {
@@ -618,16 +617,14 @@ Oracle = (function (parent) {
     }, 'controls.grids');
 
     Oracle.HTML.addFormater('BugDBTags', null, null, (value, settings) => {
-        const result = $("<div class='bugdb-tags'>")
+        const result = $("<div class='bugdb-tags'/>")
         if (!Oracle.isEmpty(value) && value.length > 0) {
             for (let i = 0; i < value.length; i++) {
                 result.append("<a href='" + Oracle.BugDB.UrlManager.getSearchByTagUrl(value[i], settings.entity) + "'><div class='bugdb-tag bugdb-tag-" + value[i].toLowerCase() + "' >" + value[i] + "</div></a> ");
             }
         }
-        result.append("</div>");
         return result;
     });
 
-    // <a href='" + context.bug.getViewLink() + "' target='_blank'>
     return parent;
 }(Oracle));
