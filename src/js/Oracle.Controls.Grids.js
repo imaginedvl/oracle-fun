@@ -320,13 +320,12 @@ Oracle = (function (parent) {
             const tr = $("<tr class='group'></tr>");
             const td = $("<td colspan='" + this.grid.columns.length + "'></td>");
             const spanTitle = $("<span class='group-title'>");
-            spanTitle.setContent(sortColumn.title);
+            spanTitle.setContent(sortColumn.columnTitle);
             const spanValue = $("<span class='group-value'>");
             tr.append(td);
             td.append(spanTitle);
             td.append(spanValue);
             const spanCount = $("<span class='group-count'>");
-            spanCount.text("3 bugs");
             td.append(spanCount);
             let value = Oracle.getMemberValueByPath(this.data, sortColumn.path);
             value = Oracle.Formating.formatValue(value, { isHeader: true, entity: this.data, element: td, formater: sortColumn.formater },  _formaterCollection );
