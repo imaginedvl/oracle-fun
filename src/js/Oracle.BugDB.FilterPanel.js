@@ -124,7 +124,7 @@ Oracle = (function (parent) {
             }
             else
             {
-                this.grid.filter();
+                this.grid.reset();
             }
         }
     }

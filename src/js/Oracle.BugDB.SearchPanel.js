@@ -33,17 +33,12 @@ Oracle = (function (parent) {
             const searchBox = $("<input id='searchBox' type='text' placeholder='Refine search' size='50' class='searchKeyword'>");
             searchBox.on("input", (e) => {
                 const keyword = $(e.target).val();
-                console.log("searchBox keyword", keyword);
                 if (!Oracle.isEmptyOrWhiteSpaces(keyword)) 
                 {
-                    if (keyword.length > 1) 
-                    {
-                        this.grid.filter((settings) => {
-                            let bug = settings.data;
-                            console.log("grid filter predicate", keyword);
-                            return bug.match(keyword);
-                        });
-                    }
+                    this.grid.filter((settings) => {
+                        let bug = settings.data;
+                        return bug.match(keyword);
+                    });
                 }
                 else 
                 {
