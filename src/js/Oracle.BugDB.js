@@ -49,7 +49,7 @@ Oracle = (function (parent) {
         QABLK: { name: 'QABLK', filterTitle: 'QABLK' },
         HCMBRONZE: { name: 'HCMBRONZE', filterTitle: 'HCMBRONZE' },
         HCMSILVER: { name: 'HCMSILVER', filterTitle: 'HCMSILVER' },
-        SQL_CLEANUP: { name: 'SQL_CLEANUP', filterTitle: 'SQL_CLEANUP' },
+        'FRCE-SQL-CLEANUP': { name: 'FRCE-SQL-CLEANUP', filterTitle: 'FRCE-SQL-CLEANUP' },
         VPAT_MUST: { name: 'VPAT_MUST', filterTitle: 'VPAT_MUST' },
         CLIENT_BUGS: { name: 'CLIENT_BUGS', filterTitle: 'CLIENT_BUGS' }
     }
