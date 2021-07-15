@@ -37,3 +37,19 @@ Oracle.Tests.execute({
         assert.areEqual(3, objects.distinct((a, b) => Oracle.compare(a.a + a.b + a.c, b.a + b.b + b.c)).length);
     }
 });
+
+Oracle.Tests.execute({
+    module: 'Oracle',
+    category: 'Array extensions',
+    name: 'PushRange',
+    test: (assert, logger) => {
+        const a = ['X', 'Y', 'Z'];
+        const b = ['A', 'B', 'C'];
+        a.pushRange(b);
+        assert.areEqual(6, a.length);
+        const x = ['X', 'Y', 'Z'];
+        const y = 'A';
+        x.pushRange(y);
+        assert.areEqual(4, x.length);
+    }
+});

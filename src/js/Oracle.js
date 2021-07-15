@@ -484,6 +484,22 @@ if (!Array.prototype.distinct) {
     };
 }
 
+
+if (!Array.prototype.pushRange) {
+    Array.prototype.pushRange = function (range) {
+        if(Array.isArray(range))
+        {
+            for(let i = 0; i < range.length; i++)
+            {
+                this.push(range[i]);
+            }
+        }
+        else{
+            this.push(range);
+        }
+    };
+}
+
 if (!String.prototype.toUpperCaseFirstLetter) {
     String.prototype.toUpperCaseFirstLetter = function () {
         if (Oracle.isEmpty(this)) {
