@@ -249,11 +249,11 @@ Oracle = (function (parent) {
             this.index = initializationSettings.columnIndex;
             this.path = Oracle.toNullableValue(initializationSettings.columnDefinition.path);
             this.id = Oracle.toNullableValue(initializationSettings.columnDefinition.id);
-            this.title = Oracle.toNullableValue(initializationSettings.columnDefinition.title);
+            this.columnTitle = Oracle.toNullableValue(initializationSettings.columnDefinition.columnTitle);
             this.formater = Oracle.toNullableValue(initializationSettings.columnDefinition.formater);
             this.groupable = Oracle.toDefaultValue(initializationSettings.columnDefinition.groupable, false);
             this.element = $("<th data-column-index='" + this.index + "' class='column-" + this.id  + "' >");
-            this.element.setContent(this.title);
+            this.element.setContent(this.columnTitle);
             if(initializationSettings.columnDefinition.sortable !== false)
             {
                 this.element.addClass("sortable");
@@ -320,13 +320,12 @@ Oracle = (function (parent) {
             const tr = $("<tr class='group'></tr>");
             const td = $("<td colspan='" + this.grid.columns.length + "'></td>");
             const spanTitle = $("<span class='group-title'>");
-            spanTitle.setContent(sortColumn.title);
+            spanTitle.setContent(sortColumn.columnTitle);
             const spanValue = $("<span class='group-value'>");
             tr.append(td);
             td.append(spanTitle);
             td.append(spanValue);
             const spanCount = $("<span class='group-count'>");
-            spanCount.text("3 bugs");
             td.append(spanCount);
             let value = Oracle.getMemberValueByPath(this.data, sortColumn.path);
             value = Oracle.Formating.formatValue(value, { isHeader: true, entity: this.data, element: td, formater: sortColumn.formater },  _formaterCollection );
