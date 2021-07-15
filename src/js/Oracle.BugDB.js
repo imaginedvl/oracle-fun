@@ -61,12 +61,12 @@ Oracle = (function (parent) {
     }
 
     const _fieldProperties = {
-        number: { headerTitle: 'Num', type: 'number', formater: 'BugDBNumber', groupable: false }, 
-        assignee: { headerTitle: 'Assignee' }, 
-        severity: { headerTitle: 'Sev' }, 
+        number: { headerTitle: 'Num', title: 'Number', sectionTitle: 'Numbers',  type: 'number', formater: 'BugDBNumber', groupable: false }, 
+        assignee: { headerTitle: 'Assignee'  }, 
+        severity: { headerTitle: 'Sev', lookup: result.Severity }, 
         component: { headerTitle: 'Component' }, 
         status: { headerTitle: 'St' }, 
-        fixEta: { headerTitle: 'Fix Eta' }, 
+        fixEta: { headerTitle: 'Fix Eta', formater: 'BugDBDate' }, 
         tags: { headerTitle: 'Tag' }, 
         customer: { headerTitle: 'Customer' }, 
         dateReported: { headerTitle: 'Reported' }, 
@@ -76,6 +76,11 @@ Oracle = (function (parent) {
         productNumber: { headerTitle: 'Product ID'},
         supportContact: { headerTitle: 'Support Contact' },
         testName: { headerTitle: 'Test Name/Doc Field'}
+    }
+
+    result.getFieldProperties = function(fieldName)
+    {
+        return _fieldProperties[fieldName];
     }
 
     result.UrlManager = 
@@ -133,29 +138,51 @@ Oracle = (function (parent) {
             const result = {
                 minimum: null,
                 maximum: null,
-                distinct: {}
+                distinct: [],
+                metrics: []
             };
 
-            const newArray = bugs.sort((a,b) =>
-            {
-                return Oracle.compare(a[fieldName], b[fieldName]); 
-            });
-            result.minimum = newArray[0][fieldName];
-            result.maximum = newArray[newArray.length-1][fieldName];
-            if(fieldName !== Oracle.BugDB.Fields.Tags) {
-                newArray.forEach(el => {
-                    result.distinct[el[fieldName]] = (result.distinct[el[fieldName]] || 0) + 1;
-                })
-            }
-            else {
+            if(fieldName === Oracle.BugDB.Fields.Tags)
+            {               
+                /*
                 let tags = [];
-                for(let i = 0; i < newArray.length; i++)
+                for(let i = 0; i < sortBugs.length; i++)
                 {
                     tags = tags.concat(newArray[i][fieldName]);  
+                }*/
+            }
+            else{
+  
+                let sortedValues = [];
+                for(let i = 0; i < bugs.length; i++)
+                {
+                    const value = bugs[i][fieldName];
+                    if(!Oracle.isEmpty(value))
+                    {
+                        sortedValues.push(value);                                       
+                    }
                 }
-                tags.forEach(el => {
-                    result.distinct[el] = (result.distinct[el] || 0) + 1;
-                })
+
+                sortedValues = sortedValues.sort((a,b) =>
+                {
+                    return Oracle.compare(a, b); 
+                });
+                result.minimum = sortedValues[0];
+                result.maximum = sortedValues[sortedValues.length - 1];
+                result.distinct = sortedValues.distinct();
+                for(let i = 0; i < result.distinct.length; i++)
+                {
+                    const value = result.distinct[i];
+                    let count = 0;
+                    for(let j = 0; j < sortedValues.length; j++)
+                    {
+                        if(Oracle.compare(value, sortedValues[j]) === 0) 
+                        {
+                            count++;
+                        }
+                    }
+                    result.metrics.push({ value: value, count: count });
+                }
             }
             this.data[fieldName] = result;
         }
@@ -173,6 +200,11 @@ Oracle = (function (parent) {
         getMaximum(fieldName)
         {
             return this.getFieldSummary(fieldName)?.maximum;
+        }
+
+        getDistinctMetrics(fieldName)
+        {
+            return this.getFieldSummary(fieldName)?.metrics;
         }
 
         getDistincts(fieldName)

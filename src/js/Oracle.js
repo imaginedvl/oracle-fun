@@ -120,7 +120,7 @@ var Oracle = (function () {
                 {
                     for(let j = 0; j < result.length; j++)
                     {
-                        if(comparer(item, items[j]) === 0)
+                        if(comparer(item, result[j]) === 0)
                         {
                             exists = true;
                             break;
@@ -131,7 +131,7 @@ var Oracle = (function () {
                 {
                     for(let j = 0; j < result.length; j++)
                     {
-                        if(Oracle.compare(item, items[j]) === 0)
+                        if(Oracle.compare(item, result[j]) === 0)
                         {
                             exists = true;
                             break;

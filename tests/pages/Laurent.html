@@ -22,6 +22,8 @@
 
         <script>
 
+            const testDistinctNumber = [1, 1, 2, 2, 1, 2, 3, 2,3, 2, 3, 2, 2, 2];
+
             const testDistinctStrings = [ 'a', 'b', 'c', 'a', 'A', 'c', 'b', 'B'];
 
             const testDistinctUsers = 
@@ -38,7 +40,13 @@
                 Oracle.Users.getOrCreateUser({ globalId: 'NGAGO'}),
                 Oracle.Users.getOrCreateUser({ globalId: 'VHAMEL'})
             ];
-
+            
+            console.log("Distincts (number)",
+                { 
+                    distinct: testDistinctNumber.distinct(), 
+                }
+            );
+            
             console.log("Distincts (string)",
                 { 
                     distinct: testDistinctStrings.distinct(), 

@@ -90,6 +90,10 @@ Oracle = (function (parent) {
     }
 
     const _formatValue = function (value, settings, collectionName = null) {
+        if(Oracle.isEmpty(settings)) 
+        {
+            settings = {};
+        }
         let collection = _getFormaterCollectionByName(collectionName);
         if (settings && Oracle.isString(settings.formater) && collection.byId.hasOwnProperty(settings.formater)) {
             return collection.byId[settings.formater](value, settings);

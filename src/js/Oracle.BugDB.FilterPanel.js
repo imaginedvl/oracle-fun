@@ -31,6 +31,7 @@ Oracle = (function (parent) {
             {
                 Oracle.Logger.logWarning("Target grid is not provided...");                
             }  
+            this.grid = controlSettings.grid;
 
         
             // Init Panel Header
@@ -45,9 +46,9 @@ Oracle = (function (parent) {
             // Add the From to which is a specific section 
             const panelFromTo = $("<div class='fromTo'>");
             const bugsRange = $("<p>");
-            bugsRange.append(this.summary.getMinimum(Oracle.BugDB.Fields.DateReported));
-            bugsRange.append(" to ");
-            bugsRange.append(this.summary.getMaximum(Oracle.BugDB.Fields.DateReported));
+            bugsRange.append(Oracle.HTML.formatValue(this.summary.getMinimum(Oracle.BugDB.Fields.DateReported), { formater: 'BugDBDate'}));
+            bugsRange.append("<br/>to<br/> ");
+            bugsRange.append(Oracle.HTML.formatValue(this.summary.getMaximum(Oracle.BugDB.Fields.DateReported), { formater: 'BugDBDate'}));
             panelFromTo.append(bugsRange);
             panelFromTo.append($('<hr>'));
             this.element.append(panelFromTo);
@@ -58,6 +59,8 @@ Oracle = (function (parent) {
                     this.initializeFilterPanelSections(controlSettings.panelFilters[i]);
                 }    
             }
+            Oracle.Logger.logDebug("FilterPanel initialized: " + this.id, { panel: this });
+
         }
 
         initializeFilterPanelSections(filterObj) {
@@ -68,24 +71,31 @@ Oracle = (function (parent) {
                 filterSection.append($("<p  id=  '" + this.id + "-filter'  class='FilterPanelSectionTitle'>").append(filterObj.title + ":"));
 
                 // TODO .. for now we simply use distint for all fields 
-                const fieldSummary = this.summary.getDistincts(filterObj.targetField);
+                const distinctMetrics = this.summary.getDistinctMetrics(filterObj.targetField);
 
-                if ( !Oracle.isEmpty(fieldSummary))
+                // fieldSummary = this
+                if ( !Oracle.isEmpty(distinctMetrics))
                 {
-                    for (const property in fieldSummary) {
-                        
+                    for(let i = 0; i < distinctMetrics.length; i++)
+                    {
+                        const metrics = distinctMetrics[i];
                         const filterItem = $("<span class='FilterPanelSectionFilterItem'>");
-                        filterItem.attr("filterField", filterObj.id);
-                        filterItem.attr("filterKey", property);
+                        filterItem.attr("data-filter-field", filterObj.targetField);
+                        filterItem.data("data-filter-value", metrics.value);
     
+                        if("CLASS_BASED" == filterObj.filterLayout)
+                        {
+                            filterItem.append(Oracle.Formating.formatValue(metrics.value) + " (" + metrics.count + ")­ <br>");
+                        }
+
                         if("SIMPLE" == filterObj.filterLayout)
                         {
-                            filterItem.append( property + " (" + fieldSummary[property] + ")­ <br>");
+                            filterItem.append(metrics.value + " (" + metrics.count + ")­ <br>");
                         }
     
                         if("USE_TITLE" == filterObj.filterLayout)
                         {
-                            filterItem.append(filterObj.title + "-" + property + " (" + fieldSummary[property] + ") <br>");
+                            filterItem.append(filterObj.title + "-" + metrics.value + " (" + metrics.count + ") <br>");
                         }        
     
                         filterItem.click((e) => 
@@ -93,23 +103,23 @@ Oracle = (function (parent) {
                             this.applyPanelSelectedFilter($(e.target));                               
                         });
     
-                        filterSection.append(filterItem);                        
+                        filterSection.append(filterItem);  
                     }
+                        
                 }
 
                 filterSection.append($("<hr>"));
                 this.element.append(filterSection);
-
-                Oracle.Logger.logDebug("Filter section  (" + filterObj.title + ") initialized");
                 
             }
         }
 
-
         applyPanelSelectedFilter(target)
         {
-           // TODO -- filter on field and on key     
-            alert("TODO - filter on => " + target.attr("filterField") + " / " + target.attr("filterKey"));
+            const field = target.attr("data-filter-field");
+            const value = target.data("data-filter-value");
+            console.log("FILTER", { value: value, field: field}); 
+            this.grid.filter((settings) => Oracle.compare(settings.data[field], value) === 0);
         }
 
     }

@@ -38,6 +38,11 @@ Oracle = (function (parent) {
         return Oracle.Formating.addFormater(ids, types, knownClasses, callback, 'html');
     }
 
+    result.formatValue = function (value, settings) {
+        return Oracle.Formating.formatValue(value, settings, 'html');
+    }
+    
+
     result.addFormater = _addFormater;
 
     return parent;
