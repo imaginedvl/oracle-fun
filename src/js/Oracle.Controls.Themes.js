@@ -145,7 +145,7 @@ Oracle = (function (parent) {
         const sheet = style.sheet;
         const index = (sheet.cssRules || sheet.rules || []).length;
         sheet.insertRule(css, index);
-        Oracle.Logger.logDebug("CSS Rule Applied (#" + _ruleNumber + ").", { number: _ruleNumber, index: index, css: css } );
+        //Oracle.Logger.logDebug("CSS Rule Applied (#" + _ruleNumber + ").", { number: _ruleNumber, index: index, css: css } );
     }
 
     const _addCSSRule = function(css, themeName = null, dynamic = false) {

@@ -113,7 +113,14 @@ Oracle = (function (parent) {
     // ---------------------------------------------------------------------------------------------------------------- //
     result.Bug = class{
 
-        constructor() {
+        constructor(data) {
+            if(!Oracle.isEmpty(data))
+            {
+                for (const [key, value] of Object.entries(Oracle.BugDB.Fields)) 
+                {
+                    this[value] = data[value];
+                }
+            }
         }
 
         match(keyword)

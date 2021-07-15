@@ -345,12 +345,12 @@ var Oracle = (function () {
     result.Errors = {};
     result.Errors.BaseError = class extends Error {
         constructor(errorType, message, data, logError = true) {
-            if(data === undefined)
+            if(Oracle.isObject(data))
             {
                 super(message);
             }
             else{
-                super(message + " | " + data);
+                super(message + ". " + data);
             }
             this.data = data;
             this.name = errorType;
@@ -397,6 +397,15 @@ var Oracle = (function () {
         }
         else{
             console.error("ORACLE: " + message, data);
+        }
+    }
+    
+    result.Logger.logInformation = function (message, data) {
+        if (data === undefined) {
+            console.log("ORACLE: " + message);
+        }
+        else {
+            console.log("ORACLE: " + message, data);
         }
     }
 
