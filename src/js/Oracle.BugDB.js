@@ -36,22 +36,22 @@ Oracle = (function (parent) {
 
     result.Severity =
     {
-        1: { name: 'Complete Loss of Service', number: '1'},
-        2: { name: 'Severe', number: '2'},
-        3: { name: 'Minimal', number: '3'},
-        4: { name: 'Minor', number: '4'}
+        1: { name: 'Complete Loss of Service', number: '1', filterTitle: 'Sev-1'},
+        2: { name: 'Severe', number: '2', filterTitle: 'Sev-2'},
+        3: { name: 'Minimal', number: '3', filterTitle: 'Sev-3'},
+        4: { name: 'Minor', number: '4', filterTitle: 'Sev-4'}
     }
 
     result.Tag =
     {
-       REGRN: { name: 'REGRN' },
-       P1: { name: 'P1' },
-       QABLK: { name: 'QABLK' },
-       HCMBRONZE: { name: 'HCMBRONZE' },
-       HCMSILVER: { name: 'HCMSILVER' },
-       SQL_CLEANUP: { name: 'SQL_CLEANUP' },
-       VPAT_MUST: { name: 'VPAT_MUST' },
-       CLIENT_BUGS: { name: 'CLIENT_BUGS' }
+       REGRN: { name: 'REGRN', filterTitle: 'REGRN'},
+       P1: { name: 'P1', filterTitle: 'P1' },
+       QABLK: { name: 'QABLK', filterTitle: 'QABLK' },
+       HCMBRONZE: { name: 'HCMBRONZE', filterTitle: 'HCMBRONZE' },
+       HCMSILVER: { name: 'HCMSILVER', filterTitle: 'HCMSILVER' },
+       SQL_CLEANUP: { name: 'SQL_CLEANUP', filterTitle: 'SQL_CLEANUP' },
+       VPAT_MUST: { name: 'VPAT_MUST', filterTitle: 'VPAT_MUST' },
+       CLIENT_BUGS: { name: 'CLIENT_BUGS', filterTitle: 'CLIENT_BUGS' }
     }
 
     result.Fields = {
@@ -74,13 +74,13 @@ Oracle = (function (parent) {
 
     const _fieldProperties = {
         number: { headerTitle: 'Num', title: 'Number', sectionTitle: 'Numbers',  type: 'number', formater: 'BugDBNumber', groupable: false }, 
-        assignee: { headerTitle: 'Assignee'  }, 
-        severity: { headerTitle: 'Sev', lookup: result.Severity, formater: 'BugDBSeverity' }, 
-        component: { headerTitle: 'Component' }, 
+        assignee: { headerTitle: 'Assignee', filterId:'assignees', filterTitle: 'Assignees' }, 
+        severity: { headerTitle: 'Sev', lookup: result.Severity, formater: 'BugDBSeverity', filterId:'severity', filterTitle: 'Severity' }, 
+        component: { headerTitle: 'Component', filterId:'components', filterTitle: 'Components'} , 
         status: { headerTitle: 'St', lookup: result.Status, formater: 'BugDBStatus' }, 
         fixEta: { headerTitle: 'Fix Eta', formater: 'BugDBDate' }, 
-        tags: { headerTitle: 'Tag', lookup: result.Tag, formater: 'BugDBTag'}, 
-        customer: { headerTitle: 'Customer' }, 
+        tags: { headerTitle: 'Tag', lookup: result.Tag, formater: 'BugDBTag', filterId:'tags', filterTitle: 'Tags' }, 
+        customer: { headerTitle: 'Customer', filterId:'customer', filterTitle: 'Customers' }, 
         dateReported: { headerTitle: 'Reported' }, 
         subject: { headerTitle: 'Subject' }, 
         selection: { headerTitle: '#select_all_option' }, 
@@ -173,25 +173,13 @@ Oracle = (function (parent) {
             };
 
             let sortedValues = [];
-            if (fieldName === Oracle.BugDB.Fields.Tags) {
-                for (let i = 0; i < bugs.length; i++) {
-                    const value = bugs[i][fieldName];
-                    if (!Oracle.isEmpty(value)) {
-                        for (let j = 0; j < value.length; j++) {
-                            sortedValues.push(value[j]);
-                        }
-                    }
+            for (let i = 0; i < bugs.length; i++) {
+                const value = bugs[i][fieldName];
+                if (!Oracle.isEmpty(value)) {
+                    sortedValues.pushRange(value);
                 }
             }
-            else {
-                for (let i = 0; i < bugs.length; i++) {
-                    const value = bugs[i][fieldName];
-                    if (!Oracle.isEmpty(value)) {
-                        sortedValues.push(value);
-                    }
-                }
-            }
-
+            
             sortedValues = sortedValues.sort((a, b) => {
                 return Oracle.compare(a, b);
             });
@@ -200,12 +188,10 @@ Oracle = (function (parent) {
             
             const lookup = _fieldProperties[fieldName].lookup;
             if(!Oracle.isEmpty(lookup)) {
-                const lookupArray = [];
                 for(const value in lookup)
                 {
-                    lookupArray.push(value);
+                    result.distinct.push(value);
                 }
-                result.distinct = lookupArray;
             }
             else {
                 result.distinct = sortedValues.distinct();
