@@ -36,7 +36,7 @@ Oracle = (function (parent) {
 
     result.Severity = 
     {
-        1: 'Complete',
+        1: 'Complete Loss of Service',
         2: 'Severe',
         3: 'Minimal',
         4: 'Minor'
