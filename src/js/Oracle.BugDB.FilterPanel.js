@@ -50,8 +50,9 @@ Oracle = (function (parent) {
             // Add the From to which is a specific section 
             const panelFromTo = $("<div class='fromTo'>");
             const bugsRange = $("<p>");
+            bugsRange.append("From: ");
             bugsRange.append(Oracle.HTML.formatValue(this.summary.getMinimum(Oracle.BugDB.Fields.DateReported), { formater: 'BugDBDate' }));
-            bugsRange.append("<br/>to<br/> ");
+            bugsRange.append(" to: ");
             bugsRange.append(Oracle.HTML.formatValue(this.summary.getMaximum(Oracle.BugDB.Fields.DateReported), { formater: 'BugDBDate' }));
             panelFromTo.append(bugsRange);
             this.element.append(panelFromTo);
