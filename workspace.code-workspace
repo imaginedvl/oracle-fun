@@ -6,12 +6,14 @@
 		}
 	],
 	"settings": {
-		// Always include all words from the current document.
+		"editor.tabSize": 4,
+		"editor.insertSpaces": true,
+		"editor.detectIndentation": false,
 		"javascript.suggest.alwaysAllWords": true,
-		// Complete functions with their parameter signature.
 		"javascript.suggest.completeFunctionCalls": true,
 		"json.schemas": [
 		
-		],
+			
+        ],
 	}
 }

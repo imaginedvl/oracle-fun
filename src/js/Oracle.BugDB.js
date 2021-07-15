@@ -36,7 +36,7 @@ Oracle = (function (parent) {
 
     result.Severity = 
     {
-        1: { name: 'Complete', number: '1'},
+        1: { name: 'Complete Loss of Service', number: '1'},
         2: { name: 'Severe', number: '2'},
         3: { name: 'Minimal', number: '3'},
         4: { name: 'Minor', number: '4'}
@@ -125,7 +125,14 @@ Oracle = (function (parent) {
     // ---------------------------------------------------------------------------------------------------------------- //
     result.Bug = class{
 
-        constructor() {
+        constructor(data) {
+            if(!Oracle.isEmpty(data))
+            {
+                for (const [key, value] of Object.entries(Oracle.BugDB.Fields)) 
+                {
+                    this[value] = data[value];
+                }
+            }
         }
 
         match(keyword)

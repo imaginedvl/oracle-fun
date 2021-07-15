@@ -8,6 +8,7 @@ Oracle = (function (parent) {
     const result = parent.BugDB;
 
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterpanel { border: 1px solid var(--controlBorderColor);  }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterpanel span {cursor: pointer;}');
 
     /*
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterpanel.oracle.control div { border: 1px solid var(--controlBorderColor);  }');
