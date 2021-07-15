@@ -9,7 +9,7 @@ Oracle = (function (parent) {
 
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterpanel { border: 1px solid var(--controlBorderColor);  }');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterpanel span {cursor: pointer;}');
-
+    
     /*
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterpanel.oracle.control div { border: 1px solid var(--controlBorderColor);  }');
     */
@@ -71,13 +71,14 @@ Oracle = (function (parent) {
 
         initializeFilterPanelSections(filterObj) {
 
-            if(!Oracle.isEmpty(filterObj.targetField))
+            if(!Oracle.isEmpty(filterObj))
             {
+                const properties = Oracle.BugDB.getFieldProperties(filterObj);
                 const filterSection =  $("<div  id=  '" + this.id + "-filter' class='FilterPanelSection'>");
-                filterSection.append($("<p  id=  '" + this.id + "-filter'  class='FilterPanelSectionTitle'>").append(filterObj.title + ":"));
+                filterSection.append($("<p  id=  '" + this.id + "-filter'  class='FilterPanelSectionTitle'>").append(properties.filterTitle + ":"));
 
                 // TODO .. for now we simply use distint for all fields 
-                const distinctMetrics = this.summary.getDistinctMetrics(filterObj.targetField);
+                const distinctMetrics = this.summary.getDistinctMetrics(filterObj);
 
                 // fieldSummary = this
                 if ( !Oracle.isEmpty(distinctMetrics))
@@ -86,24 +87,16 @@ Oracle = (function (parent) {
                     {
                         const metrics = distinctMetrics[i];
                         const filterItem = $("<span class='FilterPanelSectionFilterItem'>");
-                        filterItem.attr("data-filter-field", filterObj.targetField);
+                        filterItem.attr("data-filter-field", filterObj);
                         filterItem.data("data-filter-value", metrics.value);
     
-                        if("CLASS_BASED" == filterObj.filterLayout)
-                        {
-                            filterItem.append(Oracle.Formating.formatValue(metrics.value) + " (" + metrics.count + ")­ <br>");
+                        if(properties.lookup) {
+                            filterItem.append(properties.lookup[metrics.value].filterTitle + " (" + metrics.count + ")­ ");
                         }
-
-                        if("SIMPLE" == filterObj.filterLayout)
-                        {
-                            filterItem.append(metrics.value + " (" + metrics.count + ")­ <br>");
+                        else {
+                            filterItem.append(Oracle.Formating.formatValue(metrics.value) + " (" + metrics.count + ")­ ");
                         }
-    
-                        if("USE_TITLE" == filterObj.filterLayout)
-                        {
-                            filterItem.append(filterObj.title + "-" + metrics.value + " (" + metrics.count + ") <br>");
-                        }        
-    
+                        
                         filterItem.click((e) => 
                         {
                             this.applyPanelSelectedFilter($(e.target));                               
