@@ -32,6 +32,12 @@ Oracle = (function (parent) {
     Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid tbody tr.group td span.group-count::after { content: ")" }');
     Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid tbody tr.group td { border: 1px solid var(--controlBorderColor); } ')
 
+    // Events
+    result.Event =
+    {
+        GRID_RESET: { name: 'GRID_RESET' }
+    }
+
     // ---------------------------------------------------------------------------------------------------------------- //
     // Class: Grid
     // ---------------------------------------------------------------------------------------------------------------- //
@@ -235,6 +241,7 @@ Oracle = (function (parent) {
 
         reset() {
             this.filter();
+            this.triggerEvent(Oracle.Controls.Grids.Event.GRID_RESET.name);
         }
 
     };

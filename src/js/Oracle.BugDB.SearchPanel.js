@@ -47,6 +47,12 @@ Oracle = (function (parent) {
             });
             this.element.append(searchBox);
 
+            // Register reset grid event to clear searchbox
+            this.grid.on(Oracle.Controls.Grids.Event.GRID_RESET.name, (e) => {
+                let searchBox = this.element.find("input#searchBox");
+                searchBox.val("");
+            });
+
             Oracle.Logger.logDebug("SearchPanel initialized: " + this.id, { panel: this });
         }
 

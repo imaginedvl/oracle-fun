@@ -30,6 +30,16 @@ Oracle = (function (parent) {
             }
         }
 
+        on(event, callback) {
+            this.element.on(event, callback);
+            Oracle.Logger.logDebug(this.element.attr("data-control-type") + " event " + event + " registered");
+        }
+
+        triggerEvent(event) {
+            Oracle.Logger.logDebug(this.element.attr("data-control-type") + " event " + event + " triggered");
+            this.element.trigger(event);
+        }
+
     };
 
     return parent;
