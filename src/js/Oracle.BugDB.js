@@ -131,12 +131,14 @@ Oracle = (function (parent) {
 
         match(keyword) {
             if (keyword) {
-                keyword = keyword.toLowerCase().trim();
-                const result =
-                    this.subject?.toLowerCase().indexOf(keyword) > -1
-                    || this.customer?.toLowerCase().indexOf(keyword) > -1
-                    || this.component?.toLowerCase().indexOf(keyword) > -1
-                    || this.assignee?.displayName.toLowerCase().indexOf(keyword) > -1;
+                keyword = keyword.normalize().toLowerCase().trim();
+                let result =
+                    this.subject?.normalize().toLowerCase().indexOf(keyword) > -1
+                    || this.customer?.normalize().toLowerCase().indexOf(keyword) > -1
+                    || this.component?.normalize().toLowerCase().indexOf(keyword) > -1;
+                if (!result && this.assignee) {
+                    result = this.assignee.match(keyword);
+                }
                 if (!result) {
                     // here we will add tags search too, etc
                 }

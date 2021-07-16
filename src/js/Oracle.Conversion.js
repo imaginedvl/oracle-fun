@@ -31,7 +31,7 @@ Oracle = (function (parent) {
             seconds: seconds
         };
     }
-        
+
     const _toDate = function (value) {
         const result = moment(value).toDate();
         console.log(result);
@@ -146,8 +146,7 @@ Oracle = (function (parent) {
         }
     };
 
-    const _toBoolean = function (value)
-    {
+    const _toBoolean = function (value) {
         if (Oracle.isEmpty(value)) {
             return false;
         }
@@ -187,8 +186,8 @@ Oracle = (function (parent) {
         }
     }
 
-    const _toNormalizedString = function (value) {
-        if (value === null || !value || !_isString(value)) {
+    const _removeAccentsAndDiacritics = function (value) {
+        if (!Oracle.isString(value)) {
             return null;
         }
         else {
@@ -203,8 +202,20 @@ Oracle = (function (parent) {
     result.toNumber = _toNumber;
     result.toBoolean = _toBoolean
     result.toTimeSpan = _toTimeSpan;
-    result.toNormalizedString = _toNormalizedString;
-    
+    result.removeAccentsAndDiacritics = _removeAccentsAndDiacritics;
+
     return parent;
 
 }(Oracle));
+
+
+if (!String.prototype.removeAccentsAndDiacritics) {
+    String.prototype.removeAccentsAndDiacritics = function () {
+        if (Oracle.isEmpty(this)) {
+            return this;
+        }
+        else {
+            return Oracle.Conversion.removeAccentsAndDiacritics(this);
+        }
+    };
+}

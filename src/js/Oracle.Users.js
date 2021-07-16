@@ -31,6 +31,16 @@ Oracle = (function (parent) {
             this.update(firstName, lastName, fullName, displayName, emailAddress, globalId, flags);
         }
 
+        match(keyword) {
+            if (keyword) {
+                console.log({ keyword: keyword, keywords: this.keywords })
+                return this.keywords?.indexOf(keyword.removeAccentsAndDiacritics()) > -1;
+            }
+            else {
+                return false;
+            }
+        }
+
         getSortString() {
             if ((this.flags & _flags.Group) === _flags.Group) {
                 return "Z" + this.fullName;
@@ -104,10 +114,10 @@ Oracle = (function (parent) {
             if (this.emailAddress === '') {
                 this.emailAddress = null;
             }
-            if(this.fullName === null)
-            {
+            if (this.fullName === null) {
                 this.fullName = this.displayName;
             }
+            this.keywords = ("" + this.globalId + this.firstName + this.lastName + this.displayName + this.emailAddress + this.fullName).removeAccentsAndDiacritics();
         }
 
     };
@@ -209,7 +219,7 @@ Oracle = (function (parent) {
     _addUser({ globalId: 'JMUHIMPU', firstName: 'Joel', lastName: 'Muhimpundu', emailAddress: 'joel.muhimpundu@oracle.com', flags: _flags.Internal });
 
 
-    
+
     Oracle.Logger.logDebug("Users initialized", { byGlobalId: _userByGlobalId, byEmailAddress: _userByEmailAddress });
 
     const _compareUser = function (a, b) {
