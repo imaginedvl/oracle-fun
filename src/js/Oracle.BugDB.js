@@ -72,21 +72,24 @@ Oracle = (function (parent) {
     }
 
     const _fieldProperties = {
-        number: { id: 'number', columnTitle: 'Number', headerTitle: 'Num', formater: 'BugDBNumber', groupable: false, filterable: false },
-        assignee: { id: 'assignee', columnTitle: 'Assignee', headerTitle: 'Assignee', filterTitle: 'Assignees', groupable: true, filterable: true },
-        severity: { id: 'severity', columnTitle: 'Severity', headerTitle: 'Sev', lookup: result.Severity, formater: 'BugDBSeverity', filterTitle: 'Severity', groupable: true, filterable: true },
-        component: { id: 'component', columnTitle: 'Component', headerTitle: 'Component', filterTitle: 'Components', groupable: true, filterable: true },
-        status: { id: 'status', columnTitle: 'Status', headerTitle: 'St', lookup: result.Status, formater: 'BugDBStatus', groupable: true, filterable: true },
-        fixEta: { id: 'fixEta', columnTitle: 'Fix ETA', headerTitle: 'Fix Eta', formater: 'BugDBDate', groupable: false, filterable: false },
-        tags: { id: 'tags', columnTitle: 'Tags', headerTitle: 'Tag', lookup: result.Tag, formater: 'BugDBTag', filterTitle: 'Tags', groupable: false, filterable: true },
-        customer: { id: 'customer', columnTitle: 'Customer', headerTitle: 'Customer', filterTitle: 'Customers', formater: 'BugDBCustomer', groupable: true, filterable: false },
-        dateReported: { id: 'dateReported', columnTitle: 'Creation', headerTitle: 'Reported', formater: 'BugDBDate', groupable: false, filterable: false },
-        subject: { id: 'subject', columnTitle: 'Subject', headerTitle: 'Subject', groupable: false, filterable: false },
-        selection: { id: 'selection', headerTitle: '#select_all_option', groupable: false, filterable: false },
-        lineNumber: { id: 'lineNumber', headerTitle: 'Sl No.', groupable: false, filterable: false },
-        productNumber: { id: 'productNumber', columnTitle: 'Product', headerTitle: 'Product ID', groupable: true, filterable: false },
-        supportContact: { id: 'supportContact', columnTitle: 'Support Contact', headerTitle: 'Support Contact', groupable: true, filterable: false },
-        testName: { id: 'testName', columnTitle: 'Test Name', headerTitle: 'Test Name/Doc Field', groupable: true, filterable: false }
+        number: { id: 'number', columnTitle: 'Number', columnSelector: 'Num', formater: 'BugDBNumber', groupable: false, filterable: false },
+        assignee: { id: 'assignee', columnTitle: 'Assignee', columnSelector: 'Assignee', filterTitle: 'Assignees', groupable: true, filterable: true },
+        severity: { id: 'severity', columnTitle: 'Severity', columnSelector: 'Sev', lookup: result.Severity, formater: 'BugDBSeverity', filterTitle: 'Severity', groupable: true, filterable: true },
+        component: { id: 'component', columnTitle: 'Component', columnSelector: 'Component', filterTitle: 'Components', groupable: true, filterable: true },
+        status: { id: 'status', columnTitle: 'Status', columnSelector: 'St', lookup: result.Status, formater: 'BugDBStatus', groupable: true, filterable: true },
+        fixEta: { id: 'fixEta', columnTitle: 'Fix ETA', columnSelector: 'Fix Eta', formater: 'BugDBDate', groupable: false, filterable: false },
+        tags: { id: 'tags', columnTitle: 'Tags', columnSelector: 'Tag', lookup: result.Tag, formater: 'BugDBTag', filterTitle: 'Tags', groupable: false, filterable: true },
+        customer: { id: 'customer', columnTitle: 'Customer', columnSelector: 'Customer', filterTitle: 'Customers', formater: 'BugDBCustomer', groupable: true, filterable: false },
+        dateReported:
+        {
+            id: 'dateReported', columnTitle: 'Creation', columnSelector: "$thead tr th:containsi('Date Reported'), thead tr th:containsi('Reported Date')", formater: 'BugDBDate', groupable: false, filterable: false
+        },
+        subject: { id: 'subject', columnTitle: 'Subject', columnSelector: 'Subject', groupable: false, filterable: false },
+        selection: { id: 'selection', columnSelector: '#select_all_option', groupable: false, filterable: false },
+        lineNumber: { id: 'lineNumber', columnSelector: 'Sl No.', groupable: false, filterable: false },
+        productNumber: { id: 'productNumber', columnTitle: 'Product', columnSelector: 'Product ID', groupable: true, filterable: false },
+        supportContact: { id: 'supportContact', columnTitle: 'Support Contact', columnSelector: 'Support Contact', groupable: true, filterable: false },
+        testName: { id: 'testName', columnTitle: 'Test Name', columnSelector: 'Test Name/Doc Field', groupable: true, filterable: false }
     }
 
     result.getFieldProperties = function (fieldName) {
@@ -272,13 +275,21 @@ Oracle = (function (parent) {
             this.indexes = {};
             this.fields = [];
             for (const [key, value] of Object.entries(Oracle.BugDB.Fields)) {
-                const lookup = _fieldProperties[value].headerTitle;
-                if (!Oracle.isEmpty(lookup)) {
-                    if (lookup.startsWith('#')) {
-                        this.indexes[value] = this.getColumnIndexByControlId(lookup.substring(1));
+                let columnSelector = _fieldProperties[value].columnSelector;
+                if (!Oracle.isEmpty(columnSelector)) {
+                    if (columnSelector.startsWith("$")) {
+                        columnSelector = columnSelector.substring(1);
                     }
                     else {
-                        this.indexes[value] = this.getColumnIndexByTitle(lookup);
+                        columnSelector = "thead tr th:containsi('" + columnSelector + "')"
+                    }
+                    const col = this.element.find(columnSelector);
+                    console.log({ field: value, selector: columnSelector, result: col });
+                    if (Oracle.isEmpty(col)) {
+                        this.indexes[value] - 1;
+                    }
+                    else {
+                        this.indexes[value] = col.index();
                     }
                 }
                 else {
@@ -335,26 +346,6 @@ Oracle = (function (parent) {
 
         getBugByIndex(index) {
             return this.bugs[index];
-        }
-
-        getColumnIndexByTitle(columnName) {
-            const col = this.element.find("thead tr th:containsi('" + columnName + "')");
-            if (Oracle.isEmpty(col)) {
-                return -1;
-            }
-            else {
-                return col.index();
-            }
-        }
-
-        getColumnIndexByControlId(controlId) {
-            const col = this.element.find("thead tr th > #" + controlId);
-            if (Oracle.isEmpty(col)) {
-                return -1;
-            }
-            else {
-                return col.parent().index();
-            }
         }
 
         hideColumnByIndex(index) {
@@ -470,6 +461,7 @@ Oracle = (function (parent) {
 
         getAsDateTime(fieldName) {
             const cell = this.cells[fieldName];
+            console.log({ field: fieldName, cell: cell });
             if (cell) {
                 const text = cell.text();
                 if (Oracle.isEmptyOrWhiteSpaces(text)) {
@@ -534,14 +526,15 @@ Oracle = (function (parent) {
     Oracle.Controls.Themes.addStaticCSSRule('.bugdb-tags .bugdb-tag-regrn {  color: var(--warningTextColor); background-color: var(--warningBackgroundColor) }');
     Oracle.Controls.Themes.addStaticCSSRule('.bugdb-tags .bugdb-tag-frce-sql-cleanup {  color: var(--infoTextColor); background-color: var(--infoBackgroundColor) }');
 
-    Oracle.Formating.addFormater('BugDBDate', null, null, (value, settings) => "");
-    /*if (value) {
-        const dateDay = value.getDate(), month = value.getMonth() + 1, year = value.getFullYear();
-        return $(`<span class='bugdb-date'><span class='day'>${String(dateDay).padStart(2, '0')}</span><span class='month'>${Oracle.Dates.getMonthAbbreviation(month).toUpperCase()}</span><span class='year'>${year}</span></span>`);
-    }
-    else {
-        return null;
-    }*/
+    Oracle.Formating.addFormater('BugDBDate', null, null, (value, settings) => {
+        if (value) {
+            const dateDay = value.getDate(), month = value.getMonth() + 1, year = value.getFullYear();
+            return $(`<span class='bugdb-date'><span class='day'>${String(dateDay).padStart(2, '0')}</span><span class='month'>${Oracle.Dates.getMonthAbbreviation(month).toUpperCase()}</span><span class='year'>${year}</span></span>`);
+        }
+        else {
+            return null;
+        }
+    });
 
     Oracle.HTML.addFormater("BugDBCustomer", null, null, (value, settings) => {
         if (settings.isHeader) {
