@@ -129,7 +129,11 @@ Oracle = (function (parent) {
         }
 
         isLate() {
-            return false;
+            let isLate = false;
+            if (!Oracle.isEmpty(this.fixEta)) {
+                isLate = Oracle.compare(this.getFixEta, new Date());
+            }
+            return isLate;
         }
 
         match(keyword) {

@@ -46,7 +46,8 @@ Oracle = (function (parent) {
 
     result.CustomFilters =
     {
-        IsCustomer: 'isCustomer'
+        IsCustomer: 'isCustomer',
+        IsLate: 'isLate'
     }
 
     const _customFilterSettings =
@@ -65,6 +66,22 @@ Oracle = (function (parent) {
                 }
                 return count;
             },
+        },
+        isLate: {
+            title: 'Past ETA',
+            predicate: (bug) => {
+                return (bug.isLate());
+
+            },
+            count: (bugs) => {
+                let count = 0;
+                for (let i = 0; i < bugs.length; i++) {
+                    if (bugs[i].isLate()) {
+                        count++;
+                    }
+                }
+                return count;
+            }
         }
     }
 
