@@ -128,6 +128,10 @@ Oracle = (function (parent) {
             }
         }
 
+        isLate() {
+            return false;
+        }
+
         match(keyword) {
             if (keyword) {
                 keyword = keyword.normalize().toLowerCase().trim();

@@ -35,7 +35,8 @@ Oracle = (function (parent) {
     // Events
     result.Events =
     {
-        Reset: "Oracle.Controls.Grids.Reset"
+        Reset: "Oracle.Controls.Grids.Reset",
+        RowCountChanged: "Oracle.Controls.Grids.RowCountChange"
     }
 
     // ---------------------------------------------------------------------------------------------------------------- //
@@ -75,6 +76,10 @@ Oracle = (function (parent) {
                 }
             }
             this.populateRows();
+        }
+
+        getVisibleRowCount() {
+            return 10;
         }
 
         initializeColumns(controlSettings, initializationSettings) {
