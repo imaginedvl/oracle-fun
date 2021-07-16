@@ -33,29 +33,35 @@
         {
             grid: table,
             data: bugDbPage.bugs,
-            panelFilters:
+            panels:
                 [
+                    { type: Oracle.BugDB.PanelTypes.Reset },
+                    { type: Oracle.BugDB.PanelTypes.Summary },
+                    { type: Oracle.BugDB.PanelTypes.Search },
                     Oracle.BugDB.Fields.Assignee,
                     Oracle.BugDB.Fields.Severity,
                     Oracle.BugDB.Fields.Component,
-                    // Oracle.BugDB.Fields.Customer,
-                    Oracle.BugDB.Fields.Tags
+                    Oracle.BugDB.Fields.Tags,
+                    {
+                        type: Oracle.BugDB.PanelTypes.Custom,
+                        filters: ['customer']
+                    },
                 ]
         });
     // -- /Filter Panel Section -- //
-
-    // -- Search Panel Section -- //
-    const searchPanel = new Oracle.BugDB.SearchPanel(
-        {
-            grid: table
-        });
-    // -- /Search Panel Section -- //
-
+    /*
+        // -- Search Panel Section -- //
+        const searchPanel = new Oracle.BugDB.SearchPanel(
+            {
+                grid: table
+            });
+        // -- /Search Panel Section -- //
+    */
     Oracle.HTML.addStyle("table td#main-view { vertical-align:top; } ");
     Oracle.HTML.addStyle("table td#side-view { width: 300px; vertical-align:top } ");
     const tableElement = $("<table style='width:100%' border='0'><tbody><tr><td id='top-view'></td></tr><tr><td id='main-view'></td><td id='side-view'></td></tr></tbody></table>");
     tableElement.find("#main-view").append(table.element);
-    tableElement.find("#top-view").append(searchPanel.element);
+    //tableElement.find("#top-view").append(searchPanel.element);
     tableElement.find("#side-view").append(filterPanel.element);
     $('body').prepend(tableElement);
 

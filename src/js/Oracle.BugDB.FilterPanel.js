@@ -7,20 +7,47 @@ Oracle = (function (parent) {
     if (!parent.hasOwnProperty('BugDB')) parent.BugDB = {};
     const result = parent.BugDB;
 
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterpanel { border: 1px solid var(--controlBorderColor);  }');
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterpanel .resetFiltersButtonContainer { padding:8px; text-align: center }');
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterpanel .resetFiltersButton { padding:8px; width:90% }');
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterpanel .fromTo { text-align: center } ');
-    Oracle.Controls.Themes.addStaticCSSRule('.FilterPanelSection { border-bottom: 1px solid var(--controlBorderColor) } ');
-    Oracle.Controls.Themes.addStaticCSSRule('.FilterPanelSection:first-child { border-top: 1px solid var(--controlBorderColor) } ');
-    Oracle.Controls.Themes.addStaticCSSRule('.FilterPanelTitle { padding:8px; color: var(--primaryTextColor); background-color: var(--primaryBackgroundColorLighten1); font-weight: 600;  } ');
-    Oracle.Controls.Themes.addStaticCSSRule('.FilterPanelSectionTitle { background-color: var(--primaryBackgroundColorLighten4); var(--primaryTextColorLighten4); } ');
-    Oracle.Controls.Themes.addStaticCSSRule('.FilterPanelSectionTitle { font-weight: 600; padding-bottom:16px; } ');
-    Oracle.Controls.Themes.addStaticCSSRule('span.FilterPanelSectionFilterItem {cursor: pointer;}'); //  white-space:nowrap
-    Oracle.Controls.Themes.addStaticCSSRule('span.FilterPanelSectionFilterItem:not(:last-child)::after { color: var(--controlTextColorLighten3); content: ", "}');
-    Oracle.Controls.Themes.addStaticCSSRule('span.FilterPanelSectionFilterItem span.value { font-weight: 600; white-space: nowrap; }');
-    Oracle.Controls.Themes.addStaticCSSRule('span.FilterPanelSectionFilterItem span.count { padding-left:4px; color: var(--controlTextColorLighten3)}');
-    Oracle.Controls.Themes.addStaticCSSRule('span.FilterPanelSectionFilterItem * { pointer-events: none }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel { width:200px; }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .main-title-panel { padding:8px; color: var(--primaryTextColor); background-color: var(--primaryBackgroundColorLighten1); font-weight: 600;  } ');
+
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel > .section-panel { border-top: 1px solid var(--controlBorderColor);  border-left: 1px solid var(--controlBorderColor);  border-right: 1px solid var(--controlBorderColor); padding:8px;  }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel > .section-panel:last-child { border-bottom: 1px solid var(--controlBorderColor);   }');
+
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel > .section-header-panel { text-align:center; background-color: var(--primaryBackgroundColorLighten4); var(--primaryTextColorLighten4); font-weight: 600; }');
+
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-centered-panel { text-align: center }');
+
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .date-range-panel .from { color: var(--controlTextColorLighten3); padding-right:4px } ');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .date-range-panel .to  { color: var(--controlTextColorLighten3); padding-left:4px; padding-right:4px } ');
+
+
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item {cursor: pointer;}');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item:not(:last-child)::after { color: var(--controlTextColorLighten3); content: ", "}');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item span.value { font-weight: 600; white-space: nowrap; }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item span.count { padding-left:4px; color: var(--controlTextColorLighten3)}');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item * { pointer-events: none }');
+
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-search-panel input { width:100%; padding:8px; border: 1px solid var(--controlBorderColor); }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-search-panel input.searchKeyword {  height: 35px; padding-left: 10px; }');
+
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-reset-panel button { padding:4px; width:100%; border: 1px solid var(--controlBorderColor); cursor:pointer; color: var(--primaryTextColor); background-color: var(--primaryBackgroundColorLighten1);  }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-reset-panel button:hover { background-color: var(--primaryBackgroundColorLighten2); color: var(--primaryTextColorLighten2);  }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-reset-panel button:active { background-color: var(--primaryBackgroundColorLighten4); color: var(--primaryTextColorLighten4);  }');
+    //
+
+    result.PanelTypes =
+    {
+        Standard: 'standard',
+        Search: 'search',
+        Summary: 'summary',
+        Custom: 'custom',
+        Reset: 'reset'
+    }
+
+    result.CustomFilters =
+    {
+        IsCusomter: 'customer'
+    }
 
     // ---------------------------------------------------------------------------------------------------------------- //
     // Class: FilterPanel
@@ -28,104 +55,138 @@ Oracle = (function (parent) {
     result.FilterPanel = class extends Oracle.Controls.Control {
 
         constructor(controlSettings) {
-
             if (Oracle.isEmpty(controlSettings)) controlSettings = {};
-            controlSettings.type = 'bugdbFilterpanel';
+            controlSettings.type = 'bugdbFilterPanel';
             controlSettings.elementType = 'div';
             super(controlSettings);
-
-
-            // controlSettings.grid..
             if (Oracle.isEmpty(controlSettings.grid)) {
                 Oracle.Logger.logWarning("Target grid is not provided...");
             }
             this.grid = controlSettings.grid;
+            this.bugs = controlSettings.data;
+            this.summary = new Oracle.BugDB.BugSummary(this.bugs);
 
+            // Title
+            const title = $("<div class='main-title-panel'>");
+            title.text("Bug List Helper");
+            this.element.append(title);
 
-            // Init Panel Header
-            const panelHader = $("<div class='title'>");
-            panelHader.append($("<div id='" + this.id + "-filter'  class='FilterPanelTitle'>").append("Bug List Helper"));
-            this.element.append(panelHader);
-
-            // Compute summary which will be used by the init sections
-            this.summary = new Oracle.BugDB.BugSummary(controlSettings.data);
-
-            // Add the From to which is a specific section 
-            const panelFromTo = $("<div class='fromTo'>");
-            const bugsRange = $("<p>");
-            bugsRange.append("From: ");
-            bugsRange.append(Oracle.HTML.formatValue(this.summary.getMinimum(Oracle.BugDB.Fields.DateReported), { formater: 'BugDBDate' }));
-            bugsRange.append(" to: ");
-            bugsRange.append(Oracle.HTML.formatValue(this.summary.getMaximum(Oracle.BugDB.Fields.DateReported), { formater: 'BugDBDate' }));
-            panelFromTo.append(bugsRange);
-            this.element.append(panelFromTo);
-
-            // Add reset button
-            const resetFiltersButtonContainer = $('<div/>', { id: 'resetFiltersButtonContainer', class: 'resetFiltersButtonContainer' });
-            const resetFiltersButton = $('<button/>', { text: 'Reset Filters', id: 'resetFiltersButton', class: 'resetFiltersButton' });
-            resetFiltersButton.click((e) => { this.applyPanelSelectedFilter(); });
-            resetFiltersButtonContainer.append(resetFiltersButton);
-            this.element.append(resetFiltersButtonContainer);
-
-            // Build the filters
-            if (!Oracle.isEmpty(controlSettings.panelFilters)) {
-                for (let i = 0; i < controlSettings.panelFilters.length; i++) {
-                    this.initializeFilterPanelSections(controlSettings.panelFilters[i]);
+            // Panels
+            if (!Oracle.isEmpty(controlSettings.panels)) {
+                for (let i = 0; i < controlSettings.panels.length; i++) {
+                    const panelSettings = controlSettings.panels[i];
+                    if (Oracle.isString(panelSettings)) {
+                        const properties = Oracle.BugDB.getFieldProperties(panelSettings);
+                        const panelTitle = $("<div class='section-panel section-header-panel'>");
+                        if (Oracle.isEmpty(properties.filterTitle)) {
+                            panelTitle.text(properties.headerTitle);
+                        }
+                        else {
+                            panelTitle.text(properties.filterTitle);
+                        }
+                        this.element.append(panelTitle);
+                        const panel = $("<div class='section-panel'>");
+                        this.initializeStandardFilterPanel(panelSettings, properties, panel);
+                        this.element.append(panel);
+                    }
+                    else {
+                        switch (panelSettings.type) {
+                            case result.PanelTypes.Reset:
+                                this.initializeResetFilterPanel(panelSettings);
+                                break;
+                            case result.PanelTypes.Search:
+                                this.initializeSearchPanel(panelSettings);
+                                break;
+                            case result.PanelTypes.Summary:
+                                this.initializeSummaryPanel(panelSettings);
+                                break;
+                        }
+                        // Custom filter
+                    }
                 }
             }
             Oracle.Logger.logDebug("FilterPanel initialized: " + this.id, { panel: this });
-
         }
 
-        initializeFilterPanelSections(filterObj) {
+        initializeSummaryPanel(panelSettings) {
+            // Summary
+            const dateRangePanel = $("<div class='section-panel section-centered-panel date-range-panel'>");
+            dateRangePanel.append("<span class='from'>From</span>");
+            dateRangePanel.append(Oracle.HTML.formatValue(this.summary.getMinimum(Oracle.BugDB.Fields.DateReported), { formater: 'BugDBDate' }));
+            dateRangePanel.append("<span class='to'>to</span>");
+            dateRangePanel.append(Oracle.HTML.formatValue(this.summary.getMaximum(Oracle.BugDB.Fields.DateReported), { formater: 'BugDBDate' }));
+            this.element.append(dateRangePanel);
+        }
 
-            if (!Oracle.isEmpty(filterObj)) {
-                const properties = Oracle.BugDB.getFieldProperties(filterObj);
-                const filterSection = $("<div  id='" + this.id + "-filter' class='FilterPanelSection'>");
-                filterSection.append($("<div id='" + this.id + "-filter'  class='FilterPanelSectionTitle'>").append(properties.filterTitle + ":"));
-
-                // TODO .. for now we simply use distint for all fields 
-                const distinctMetrics = this.summary.getDistinctMetrics(filterObj);
-
-                // fieldSummary = this
-                if (!Oracle.isEmpty(distinctMetrics)) {
-                    for (let i = 0; i < distinctMetrics.length; i++) {
-                        const metrics = distinctMetrics[i];
-                        const filterItem = $("<span class='FilterPanelSectionFilterItem'>");
-                        filterItem.attr("data-filter-field", filterObj);
-                        filterItem.data("data-filter-value", metrics.value);
-                        const valueSpan = $('<span class="value">');
-                        const countSpan = $('<span class="count">');
-                        if (properties.lookup) {
-                            valueSpan.text(properties.lookup[metrics.value].filterTitle);
-                        }
-                        else {
-                            valueSpan.text(Oracle.Formating.formatValue(metrics.value));
-                        }
-                        countSpan.text("(" + metrics.count + ")­");
-                        filterItem.append(valueSpan);
-                        filterItem.append(countSpan);
-                        filterItem.click((e) => {
-                            this.applyPanelSelectedFilter($(e.target));
-                        });
-                        filterSection.append(filterItem);
-                    }
+        initializeSearchPanel(panelSettings) {
+            // Search Panel
+            const searchPanel = $("<div class='section-panel section-search-panel'>");
+            const searchInputBox = $("<input type='text' placeholder='Refine search'>");
+            searchInputBox.on("input", (e) => {
+                const keyword = $(e.target).val();
+                if (!Oracle.isEmptyOrWhiteSpaces(keyword)) {
+                    this.grid.filter((settings) => {
+                        let bug = settings.data;
+                        return bug.match(keyword);
+                    });
                 }
-                this.element.append(filterSection);
+                else {
+                    this.grid.reset();
+                }
+            });
+            searchPanel.append(searchInputBox);
+            this.element.append(searchPanel);
+        }
+
+        initializeResetFilterPanel(panelSettings) {
+            // Reset Panel
+            const resetPanel = $("<div class='section-panel section-centered-panel section-reset-panel '>");
+            const resetButton = $('<button/>');
+            resetButton.text("Clear filters");
+            resetButton.click((e) => { this.resetFilter(); });
+            resetPanel.append(resetButton);
+            this.element.append(resetPanel);
+        }
+
+        initializeStandardFilterPanel(panelSettings, properties, panel) {
+            const distinctMetrics = this.summary.getDistinctMetrics(properties.id);
+            if (!Oracle.isEmpty(distinctMetrics)) {
+                for (let i = 0; i < distinctMetrics.length; i++) {
+                    const metrics = distinctMetrics[i];
+                    const filterItem = $("<span class='filter-item'>");
+                    filterItem.attr("data-filter-field", properties.id);
+                    filterItem.data("data-filter-value", metrics.value);
+                    const valueSpan = $('<span class="value">');
+                    const countSpan = $('<span class="count">');
+                    if (properties.lookup) {
+                        valueSpan.text(properties.lookup[metrics.value].filterTitle);
+                    }
+                    else {
+                        valueSpan.text(Oracle.Formating.formatValue(metrics.value));
+                    }
+                    countSpan.text("(" + metrics.count + ")­");
+                    filterItem.append(valueSpan);
+                    filterItem.append(countSpan);
+                    filterItem.click((e) => {
+                        const target = $(e.target);
+                        const field = target.attr("data-filter-field");
+                        const value = target.data("data-filter-value");
+                        this.applyFilter(field, value);
+                    });
+                    panel.append(filterItem);
+                }
             }
         }
 
-        applyPanelSelectedFilter(target) {
-            if (!Oracle.isEmpty(target)) {
-                const field = target.attr("data-filter-field");
-                const value = target.data("data-filter-value");
-                console.log(value);
-                this.grid.filter((settings) => Oracle.includes(settings.data[field], value));
-            }
-            else {
-                this.grid.reset();
-            }
+        applyFilter(fieldName, fieldValue) {
+            this.grid.filter((settings) => Oracle.includes(settings.data[fieldName], fieldValue));
         }
+
+        resetFilter() {
+            this.element.find(".section-search-panel input").val("");
+            this.grid.reset();
+        }
+
     }
 
     return parent;

@@ -15,7 +15,7 @@ Oracle = (function (parent) {
     Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid thead tr th.sortable { padding-right:30px; background-repeat: no-repeat; background-position:right center ; cursor:pointer; margin:0px;background-color: var(--primaryBackgroundColorLighten1); }');
     Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid thead tr th.sortable.sorted { background-color: var(--primaryBackgroundColor);background-image: url("https://zooktel.blob.core.windows.net/oracle/icons/sort_down.png"); }');
     Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid thead tr th.sortable.sorted.ascending { background-image: url("https://zooktel.blob.core.windows.net/oracle/icons/sort_up.png"); }');
-    Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid thead tr th.sortable:hover { background-color: var(--primaryBackgroundColorLighten2); }');
+    Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid thead tr th.sortable:hover { color: var(--primaryTextColorLighten2); background-color: var(--primaryBackgroundColorLighten2); }');
     Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid tbody tr td { padding-top:8px; padding-bottom: 8px; padding-right: 8px; padding-left: 8px; }');
     Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid tbody tr:first-child td { border-top: none }');
     Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid tbody tr td.sorted { background-color: var(--controlEmphasisBackgroundColor); }');
