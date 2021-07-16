@@ -1,0 +1,59 @@
+(function( $ ) {
+  $.fn.SRTip = function() {
+
+	  $(this).mouseenter(function() {
+	     var rptno = $(this).parent().parent().prev(".bug-noTip").text();
+	     var tarnum = $(this);
+		 //console.log("rptno "+rptno);
+		 //console.log("tarnum "+tarnum.html());
+             var message="";
+		 $.ajax({
+		    url: document.URL.slice(0, document.URL.lastIndexOf("/") + 1) + "get_sr_info",
+                    data: {
+						 p_rptno: rptno
+						,p_tar_num: tarnum.html()
+						},
+		    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function(response) {
+			        if (response.RecFound == 'Y'){
+								message += "<p class='btip'>" + response.sr_det + "</p>";
+					            message += "<p class='btip'>" + response.customer + "</p>";
+                                message += "<p class='btip'>" + response.classification + "</p>";
+					}
+					else{
+								message += "<p class='btip'>" + "Details not found" + "</p>";						
+					}
+			   
+			        var el = tarnum.qtip({
+			                    content: {
+									    title: tarnum.text(),
+										text: message
+								},
+								style: {
+										classes: 'qtip-rounded'
+								},
+								show: {
+								   event: "customShow",
+								   effect: function() {
+											  $(this).show("slide", 20);
+										   }
+								},
+			                    hide: {
+									   inactive: 3000,
+									   effect: function() {
+												  $(this).slideUp();
+											   },
+									   event: 'mouseleave unfocus'
+								}
+			                 });
+			        el.trigger("customShow");
+			     },
+	            error: function(xhr, status, error) {
+                       message="<p>" + status + ": " + error + "</p>";
+					   console.log(message);
+                    }
+		});
+	  });
+  };
+})( jQuery );
