@@ -33,7 +33,6 @@ Oracle = (function (parent) {
 
         match(keyword) {
             if (keyword) {
-                console.log({ keyword: keyword, keywords: this.keywords })
                 return this.keywords?.indexOf(keyword.removeAccentsAndDiacritics()) > -1;
             }
             else {
