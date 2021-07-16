@@ -31,10 +31,10 @@ Makes use of the Grease Monkey browser plugin provide a better user experience w
 // @require      file://C:\{your_folder_path}\src\js\Oracle.Controls.Themes.js
 // @require      file://C:\{your_folder_path}\src\js\Oracle.Controls.Grids.js
 // @require      file://C:\{your_folder_path}\src\js\Oracle.Users.js
+// @require      file://C:\{your_folder_path}\src\js\Oracle.Users.Data.js
 // @require      file://C:\{your_folder_path}\src\js\Oracle.BugDB.js
 // @require      file://C:\{your_folder_path}\src\js\Oracle.BugDB.BugGrid.js
 // @require      file://C:\{your_folder_path}\src\js\Oracle.BugDB.FilterPanel.js
-// @require      file://C:\{your_folder_path}\src\js\Oracle.BugDB.SearchPanel.js
 // @require      file://C:\{your_folder_path}\src\tampermonkey\BugDBQueryPage.js
 
 // ==/UserScript== 

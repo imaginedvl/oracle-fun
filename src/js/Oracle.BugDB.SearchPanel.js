@@ -3,7 +3,7 @@
 // ---------------------------------------------------------------------------------------------------------------- //
 // Module: Oracle.BugDB.SearchPanel
 // ---------------------------------------------------------------------------------------------------------------- //
-Oracle = (function (parent) {
+/*Oracle = (function (parent) {
     if (!parent.hasOwnProperty('BugDB')) parent.BugDB = {};
     const result = parent.BugDB;
 
@@ -56,4 +56,4 @@ Oracle = (function (parent) {
     }
 
     return parent;
-}(Oracle));
+}(Oracle));*/
