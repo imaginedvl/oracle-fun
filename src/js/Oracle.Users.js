@@ -144,6 +144,8 @@ Oracle = (function (parent) {
         return newUser;
     }
 
+    result.addUser = _addUser;
+
     const _findUserByEmailAddress = function (emailAddress) {
         if (!Oracle.isEmpty(emailAddress)) {
             return Oracle.toNullableValue(_userByEmailAddress[emailAddress.toLowerCase()]);
@@ -192,34 +194,6 @@ Oracle = (function (parent) {
     result.addUser = _addUser;
     result.User = _userClass;
     result.Flags = _flags;
-
-    _addUser({ globalId: 'LDEVIGNE', emailAddress: "laurent.devigne@oracle.com", flags: _flags.Internal });
-    _addUser({ globalId: 'LDEVITRG', displayName: 'Triage', fullName: 'Triage (Laurent Devigne)', flags: _flags.Group });
-    _addUser({ globalId: 'DGILBERT', emailAddress: 'danny.gilbert@oracle.com', flags: _flags.Internal });
-    _addUser({ globalId: 'FDORVAL', displayName: 'Frédéric D.', firstName: 'Frédéric', lastName: 'Dorval', emailAddress: 'frederic.dorval@oracle.com', flags: _flags.Internal });
-    _addUser({ globalId: 'SLABARRE', firstName: 'Sébastien', lastName: 'Labarre', emailAddress: 'sebastien.labarre@oracle.com', flags: _flags.Internal });
-    _addUser({ globalId: 'FCOLLIN2', firstName: 'François', lastName: 'Collins', emailAddress: 'francois.collins@oracle.com', flags: _flags.Internal });
-    _addUser({ globalId: 'BFALL', firstName: 'Babacar', lastName: 'Fall', emailAddress: 'babacar.fall@oracle.com', flags: _flags.Internal });
-    _addUser({ globalId: 'VHAMEL', emailAddress: 'vincent.hamel@oracle.com', flags: _flags.Internal });
-    _addUser({ globalId: 'OGRUSHEN', emailAddress: 'olga.grushenko@oracle.com', flags: _flags.Internal });
-    _addUser({ globalId: 'RSCHAUDH', emailAddress: 'rajdeep.chaudhary@oracle.com', flags: _flags.Internal });
-    _addUser({ globalId: 'VDENECHA', firstName: 'Véronique', lastName: 'Denechaud-Lafond', emailAddress: 'veronique.denechaud-lafond@oracle.com', flags: _flags.Internal });
-    _addUser({ globalId: 'STCHAMBE', emailAddress: 'steeve.chamberland@oracle.com', flags: _flags.Internal });
-    _addUser({ globalId: 'ANGUDUPA', emailAddress: 'anusha.g.gudupally@oracle.com', flags: _flags.Internal });
-    _addUser({ globalId: 'SOKAUSHI', emailAddress: 'sohit.kaushik@oracle.com', flags: _flags.Internal });
-    _addUser({ globalId: 'KICHINTA', emailAddress: 'kiran.chandra.chintakindi@oracle.com', flags: _flags.Internal });
-    _addUser({ globalId: 'SAVGARG', emailAddress: 'savi.garg@oracle.com', flags: _flags.Internal });
-    _addUser({ globalId: 'SUDASARI', emailAddress: 'sudheer.dasari@oracle.com', flags: _flags.Internal });
-    _addUser({ globalId: 'NGAGO', emailAddress: 'nelson.gago@oracle.com', flags: _flags.Internal });
-    _addUser({ globalId: 'PGAJJELA', emailAddress: 'prashanth.gajjela@oracle.com', flags: _flags.Internal });
-    _addUser({ globalId: 'GPICARD', emailAddress: 'guy.picard@oracle.com', flags: _flags.Internal });
-    _addUser({ globalId: 'BRPRASAD', firstName: 'B', lastName: 'Prasad', displayName: 'Prasad', fullName: 'Prasad', emailAddress: 'b.prasad@oracle.com', flags: _flags.Internal });
-    _addUser({ globalId: 'SILABARR', emailAddress: 'simon.labarre@oracle.com', flags: _flags.Internal });
-    _addUser({ globalId: 'JMUHIMPU', firstName: 'Joel', lastName: 'Muhimpundu', emailAddress: 'joel.muhimpundu@oracle.com', flags: _flags.Internal });
-
-
-
-    Oracle.Logger.logDebug("Users initialized", { byGlobalId: _userByGlobalId, byEmailAddress: _userByEmailAddress });
 
     const _compareUser = function (a, b) {
         return a.getSortString().localeCompare(b.getSortString());

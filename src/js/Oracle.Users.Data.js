@@ -1,0 +1,24 @@
+
+Oracle.Users.addUser({ globalId: 'LDEVIGNE', emailAddress: "laurent.devigne@oracle.com", flags: Oracle.Users.Flags.Internal });
+Oracle.Users.addUser({ globalId: 'LDEVITRG', displayName: 'Triage', fullName: 'Triage (Laurent Devigne)', flags: Oracle.Users.Flags.Group });
+Oracle.Users.addUser({ globalId: 'DGILBERT', emailAddress: 'danny.gilbert@oracle.com', flags: Oracle.Users.Flags.Internal });
+Oracle.Users.addUser({ globalId: 'FDORVAL', displayName: 'Frédéric D', firstName: 'Frédéric', lastName: 'Dorval', emailAddress: 'frederic.dorval@oracle.com', flags: Oracle.Users.Flags.Internal });
+Oracle.Users.addUser({ globalId: 'SLABARRE', firstName: 'Sébastien', lastName: 'Labarre', emailAddress: 'sebastien.labarre@oracle.com', flags: Oracle.Users.Flags.Internal });
+Oracle.Users.addUser({ globalId: 'FCOLLIN2', firstName: 'François', lastName: 'Collins', emailAddress: 'francois.collins@oracle.com', flags: Oracle.Users.Flags.Internal });
+Oracle.Users.addUser({ globalId: 'BFALL', firstName: 'Babacar', lastName: 'Fall', emailAddress: 'babacar.fall@oracle.com', flags: Oracle.Users.Flags.Internal });
+Oracle.Users.addUser({ globalId: 'VHAMEL', emailAddress: 'vincent.hamel@oracle.com', flags: Oracle.Users.Flags.Internal });
+Oracle.Users.addUser({ globalId: 'OGRUSHEN', emailAddress: 'olga.grushenko@oracle.com', flags: Oracle.Users.Flags.Internal });
+Oracle.Users.addUser({ globalId: 'RSCHAUDH', emailAddress: 'rajdeep.chaudhary@oracle.com', flags: Oracle.Users.Flags.Internal });
+Oracle.Users.addUser({ globalId: 'VDENECHA', firstName: 'Véronique', lastName: 'Denechaud-Lafond', emailAddress: 'veronique.denechaud-lafond@oracle.com', flags: Oracle.Users.Flags.Internal });
+Oracle.Users.addUser({ globalId: 'STCHAMBE', emailAddress: 'steeve.chamberland@oracle.com', flags: Oracle.Users.Flags.Internal });
+Oracle.Users.addUser({ globalId: 'ANGUDUPA', emailAddress: 'anusha.g.gudupally@oracle.com', flags: Oracle.Users.Flags.Internal });
+Oracle.Users.addUser({ globalId: 'SOKAUSHI', emailAddress: 'sohit.kaushik@oracle.com', flags: Oracle.Users.Flags.Internal });
+Oracle.Users.addUser({ globalId: 'KICHINTA', emailAddress: 'kiran.chandra.chintakindi@oracle.com', flags: Oracle.Users.Flags.Internal });
+Oracle.Users.addUser({ globalId: 'SAVGARG', emailAddress: 'savi.garg@oracle.com', flags: Oracle.Users.Flags.Internal });
+Oracle.Users.addUser({ globalId: 'SUDASARI', emailAddress: 'sudheer.dasari@oracle.com', flags: Oracle.Users.Flags.Internal });
+Oracle.Users.addUser({ globalId: 'NGAGO', emailAddress: 'nelson.gago@oracle.com', flags: Oracle.Users.Flags.Internal });
+Oracle.Users.addUser({ globalId: 'PGAJJELA', emailAddress: 'prashanth.gajjela@oracle.com', flags: Oracle.Users.Flags.Internal });
+Oracle.Users.addUser({ globalId: 'GPICARD', emailAddress: 'guy.picard@oracle.com', flags: Oracle.Users.Flags.Internal });
+Oracle.Users.addUser({ globalId: 'BRPRASAD', firstName: 'B', lastName: 'Prasad', displayName: 'Prasad', fullName: 'Prasad', emailAddress: 'b.prasad@oracle.com', flags: Oracle.Users.Flags.Internal });
+Oracle.Users.addUser({ globalId: 'SILABARR', emailAddress: 'simon.labarre@oracle.com', flags: Oracle.Users.Flags.Internal });
+Oracle.Users.addUser({ globalId: 'JMUHIMPU', firstName: 'Joel', lastName: 'Muhimpundu', emailAddress: 'joel.muhimpundu@oracle.com', flags: Oracle.Users.Flags.Internal });

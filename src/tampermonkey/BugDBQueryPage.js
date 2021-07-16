@@ -3,6 +3,8 @@
     const bugDbPage = new Oracle.BugDB.BugTablePage();
     bugDbPage.hide();
 
+    //Oracle.requires('Oracle', 'Oracle.HTML', '');
+
     const table = new Oracle.BugDB.BugGrid(
         {
             classes: 'groupable sortable groupable-headers',
@@ -51,10 +53,7 @@
                     { type: Oracle.BugDB.PanelTypes.Reset },
                     { type: Oracle.BugDB.PanelTypes.Summary },
                     { type: Oracle.BugDB.PanelTypes.Search },
-                    Oracle.BugDB.Fields.Assignee,
-                    Oracle.BugDB.Fields.Severity,
-                    Oracle.BugDB.Fields.Component,
-                    Oracle.BugDB.Fields.Tags,
+                    { type: Oracle.BugDB.PanelTypes.Search },
                     {
                         type: Oracle.BugDB.PanelTypes.Custom,
                         title: 'Advanced Filters',

@@ -1,0 +1,47 @@
+(function( $ ) {
+  $.fn.bugTip = function() {
+      //var settings = $.extend({
+      //  autoFocus  :  false
+      //},options);
+	  $(this).mouseenter(function() {
+             // console.log("good going");
+	     var rptno = $(this);
+             var message="";
+		 $.ajax({
+		    url: document.URL.slice(0, document.URL.lastIndexOf("/") + 1) + "get_bug_info",
+                    data: {
+                       p_rptno: rptno.html()
+                    },
+		    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function(response) {
+			        message += "<p class='btip'>" + response.subject + "</p>";
+					            message += "<p class='btip'>" + response.product + "</p>";
+                                message += "<p class='btip'>" + response.status + "</p>";
+                                message += "<p class='btip'>" + response.gp + "</p>";
+			   
+			        var el = rptno.qtip({
+			                    content: message,
+                                            show: {
+                                               event: "customShow",
+                                               effect: function() {
+                                                          $(this).show("slide", 20);
+                                                       }
+                                            },
+			                    hide: {
+                                               inactive: 3000,
+                                               effect: function() {
+                                                          $(this).slideUp();
+                                                       },
+                                               event: 'mouseleave unfocus'
+                                            }
+			                 });
+			        el.trigger("customShow");
+			     },
+	            error: function(xhr, status, error) {
+                       message="<p>" + status + ": " + error + "</p>";
+                    }
+		});
+	  });
+  };
+})( jQuery );

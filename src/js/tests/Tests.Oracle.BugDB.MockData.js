@@ -45,6 +45,19 @@ Oracle.Tests.addMockData('Oracle.BugDB.Bugs',
                 customer: 'Oracle',
                 fixEta: new Date('10-JUN-2021'),
                 dateReported: new Date('05-JUN-2021'),
+            }),
+        4: new Oracle.BugDB.Bug(
+            {
+                number: 4,
+                component: 'HIRING',
+                assignee: Oracle.Users.getOrCreateUser({ globalId: 'VDENECHA' }),
+                subject: 'Bug #4 subject',
+                severity: 4,
+                status: 11,
+                tags: ['TAG1', 'TAG3'],
+                customer: 'Oracle',
+                fixEta: new Date('10-JUN-2021'),
+                dateReported: new Date('05-JUN-2021'),
             })
     }
 );
