@@ -33,9 +33,9 @@ Oracle = (function (parent) {
     Oracle.Controls.Themes.addStaticCSSRule('table.oracle.control.grid tbody tr.group td { border: 1px solid var(--controlBorderColor); } ')
 
     // Events
-    result.Event =
+    result.Events =
     {
-        GRID_RESET: { name: 'GRID_RESET' }
+        Reset: "Oracle.Controls.Grids.Reset"
     }
 
     // ---------------------------------------------------------------------------------------------------------------- //
@@ -55,26 +55,22 @@ Oracle = (function (parent) {
             const emptyRowMessage = Oracle.toDefaultValue(controlSettings.noItemsMessage, "No data matching the criteria");
             this.emptyRow.find("td").text(emptyRowMessage);
             const sortColumn = this.columnsById[controlSettings?.sort?.column];
-            if(!Oracle.isEmpty(sortColumn))
-            {
+            if (!Oracle.isEmpty(sortColumn)) {
                 this.sortByColumnIndex(sortColumn.index, controlSettings?.sort?.descending !== true);
             }
-            else{
+            else {
                 this.populateRows();
             }
             Oracle.Logger.logDebug("Grid initialized: " + this.id, { grid: this });
         }
 
-        filter(selectPredicate)
-        {
-            for(let i = 0; i < this.rows.length; i++)
-            {
+        filter(selectPredicate) {
+            for (let i = 0; i < this.rows.length; i++) {
                 const row = this.rows[i];
-                if(selectPredicate)
-                {
+                if (selectPredicate) {
                     row.isHidden = !selectPredicate({ grid: this, row: row, data: row.data, rowIndex: i });
                 }
-                else{
+                else {
                     row.isHidden = false;
                 }
             }
@@ -96,34 +92,27 @@ Oracle = (function (parent) {
                     const column = new Oracle.Controls.Grids.GridColumn(initializationSettings);
                     tr.append(column.element);
                     this.columns.push(column);
-                    if(!Oracle.isEmpty(column.id))
-                    {
+                    if (!Oracle.isEmpty(column.id)) {
                         this.columnsById[column.id] = column;
                     }
                 }
             }
             tr.attr("data-column-count", this.columns.length)
-            tr.find("th.sortable").click((e) => 
-            {
+            tr.find("th.sortable").click((e) => {
                 _this.sortByColumnIndex($(e.target).attr('data-column-index'));
             });
             this.element.append(this.theadElement);
         }
 
-        sortByColumnIndex(index, ascending = null)
-        {
+        sortByColumnIndex(index, ascending = null) {
             const column = this.columns[index];
             let ascendingOrder = true;
-            if(ascending !== null)
-            {
+            if (ascending !== null) {
                 ascendingOrder = ascending;
             }
-            else
-            {
-                if(column.isSorted())
-                {
-                    if(column.sortIsAscending())
-                    {
+            else {
+                if (column.isSorted()) {
+                    if (column.sortIsAscending()) {
                         ascendingOrder = false;
                     }
                 }
@@ -133,89 +122,73 @@ Oracle = (function (parent) {
             this.rows.forEach(row => {
                 row.element.find("td.sorted").removeClass("sorted ascending descending");
                 const cell = row.element.find("td[data-column-index=" + index + "]");
-                if(ascendingOrder)
-                {
+                if (ascendingOrder) {
                     cell.addClass("sorted ascending")
                 }
-                else{
+                else {
                     cell.addClass("sorted descending")
                 }
             });
-            this.rows.sort((a,b) => 
-            {
+            this.rows.sort((a, b) => {
                 a = Oracle.getMemberValueByPath(a.data, column.path);
                 b = Oracle.getMemberValueByPath(b.data, column.path);
-                if(ascendingOrder)
-                {
-                    return Oracle.compare(a, b);                
+                if (ascendingOrder) {
+                    return Oracle.compare(a, b);
                 }
-                else{
-                    return Oracle.compare(b, a);                
+                else {
+                    return Oracle.compare(b, a);
                 }
             });
-             // Then we look for groups, probably a better way to do that and maybe we can do the sort/group detection in one go, but it is late so :)
-             // The grouping looks really cool.
-             let a, b;
-             for(let i = 0; i < this.rows.length; i++)
-             {
-                 const row = this.rows[i];
-                 row.isNewGroup = false;
-                 if(column.groupable === true)
-                 {
-                     if(i == 0)
-                     {
+            // Then we look for groups, probably a better way to do that and maybe we can do the sort/group detection in one go, but it is late so :)
+            // The grouping looks really cool.
+            let a, b;
+            for (let i = 0; i < this.rows.length; i++) {
+                const row = this.rows[i];
+                row.isNewGroup = false;
+                if (column.groupable === true) {
+                    if (i == 0) {
                         row.isNewGroup = true;
-                     }
-                     else
-                     {
-                         a = Oracle.getMemberValueByPath(this.rows[i - 1].data, column.path);
-                         b = Oracle.getMemberValueByPath(this.rows[i].data, column.path);
-                         if( Oracle.compare(a, b) !== 0)
-                         {
+                    }
+                    else {
+                        a = Oracle.getMemberValueByPath(this.rows[i - 1].data, column.path);
+                        b = Oracle.getMemberValueByPath(this.rows[i].data, column.path);
+                        if (Oracle.compare(a, b) !== 0) {
                             row.isNewGroup = true;
-                         }
-                     }
-                 }
-             }
+                        }
+                    }
+                }
+            }
             this.populateRows();
         }
 
-        populateRows()
-        {
+        populateRows() {
             let lastGroup = null;
             let groupRowCount = 0;
             let index = 0;
             this.tbodyElement.children().remove();
-            for(let i = 0; i < this.rows.length; i++)
-            {
+            for (let i = 0; i < this.rows.length; i++) {
                 const row = this.rows[i];
-                if(row.isHidden !== true)
-                {
-                    if(row.isNewGroup && this.sortColumn)
-                    {
-                        if(lastGroup !== null)
-                        {
+                if (row.isHidden !== true) {
+                    if (row.isNewGroup && this.sortColumn) {
+                        if (lastGroup !== null) {
                             lastGroup.find("span.group-count").text(groupRowCount);
                         }
                         groupRowCount = 1;
                         lastGroup = row.createGroupRow(this.sortColumn);
                         this.tbodyElement.append(lastGroup)
                     }
-                    else
-                    {
-                        groupRowCount++; 
+                    else {
+                        groupRowCount++;
                     }
                     row.update(i);
                     this.tbodyElement.append(row.element);
                     index++;
                 }
-                if(lastGroup !== null)
-                {
+                if (lastGroup !== null) {
                     lastGroup.find("span.group-count").text(groupRowCount);
                 }
             }
-            if(this.tbodyElement.children().length === 0)
-            {
+            if (this.tbodyElement.children().length === 0) {
                 this.tbodyElement.append(this.emptyRow);
             }
         }
@@ -224,13 +197,11 @@ Oracle = (function (parent) {
             initializationSettings.rowIndex = -1;
             this.tbodyElement = $('<tbody>');
             this.data = controlSettings.data;
-            if(Oracle.isEmpty(controlSettings.data))
-            {
+            if (Oracle.isEmpty(controlSettings.data)) {
                 this.data = [];
             }
             this.rows = [];
-            for(let i = 0; i < this.data.length; i++)
-            {
+            for (let i = 0; i < this.data.length; i++) {
                 initializationSettings.data = this.data[i];
                 initializationSettings.dataIndex = i;
                 const row = new Oracle.Controls.Grids.GridRow(initializationSettings);
@@ -241,7 +212,7 @@ Oracle = (function (parent) {
 
         reset() {
             this.filter();
-            this.triggerEvent(Oracle.Controls.Grids.Event.GRID_RESET.name);
+            this.triggerEvent(Oracle.Controls.Grids.Events.Reset);
         }
 
     };
@@ -259,41 +230,33 @@ Oracle = (function (parent) {
             this.columnTitle = Oracle.toNullableValue(initializationSettings.columnDefinition.columnTitle);
             this.formater = Oracle.toNullableValue(initializationSettings.columnDefinition.formater);
             this.groupable = Oracle.toDefaultValue(initializationSettings.columnDefinition.groupable, false);
-            this.element = $("<th data-column-index='" + this.index + "' class='column-" + this.id  + "' >");
+            this.element = $("<th data-column-index='" + this.index + "' class='column-" + this.id + "' >");
             this.element.setContent(this.columnTitle);
-            if(initializationSettings.columnDefinition.sortable !== false)
-            {
+            if (initializationSettings.columnDefinition.sortable !== false) {
                 this.element.addClass("sortable");
             }
-            if(this.path === null)
-            {
-                this.path = this.id;                
+            if (this.path === null) {
+                this.path = this.id;
             }
         }
 
-        setSort(ascending = false)
-        {
-            if(this.element.hasClass("sortable"))
-            {
+        setSort(ascending = false) {
+            if (this.element.hasClass("sortable")) {
                 this.element.parent().find('th.sortable').removeClass("ascending").removeClass("descending").removeClass("sorted");
-                if(ascending)
-                {
+                if (ascending) {
                     this.element.addClass("sorted ascending");
                 }
-                else
-                {
+                else {
                     this.element.addClass("sorted descending");
                 }
             }
         }
 
-        isSorted()
-        {
+        isSorted() {
             return this.element.hasClass("sorted");
         }
 
-        sortIsAscending()
-        {
+        sortIsAscending() {
             return this.element.hasClass("ascending");
         }
 
@@ -314,16 +277,15 @@ Oracle = (function (parent) {
             for (let c = 0; c < this.grid.columns.length; c++) {
                 const column = this.grid.columns[c];
                 initializationSettings.columnIndex = c;
-                const td = $("<td data-column-index='" + c + "' class='column-" + column.id  + "' >");
+                const td = $("<td data-column-index='" + c + "' class='column-" + column.id + "' >");
                 let value = Oracle.getMemberValueByPath(this.data, column.path);
-                value = Oracle.Formating.formatValue(value, { entity: this.data, element: td, formater: column.formater },  _formaterCollection );
+                value = Oracle.Formating.formatValue(value, { entity: this.data, element: td, formater: column.formater }, _formaterCollection);
                 td.setContent(value);
                 this.element.append(td);
             }
         }
 
-        createGroupRow(sortColumn)
-        {
+        createGroupRow(sortColumn) {
             const tr = $("<tr class='group'></tr>");
             const td = $("<td colspan='" + this.grid.columns.length + "'></td>");
             const spanTitle = $("<span class='group-title'>");
@@ -335,24 +297,22 @@ Oracle = (function (parent) {
             const spanCount = $("<span class='group-count'>");
             td.append(spanCount);
             let value = Oracle.getMemberValueByPath(this.data, sortColumn.path);
-            value = Oracle.Formating.formatValue(value, { isHeader: true, entity: this.data, element: td, formater: sortColumn.formater },  _formaterCollection );
+            value = Oracle.Formating.formatValue(value, { isHeader: true, entity: this.data, element: td, formater: sortColumn.formater }, _formaterCollection);
             spanValue.setContent(value);
             return tr;
         }
 
-        update(rowIndex)
-        {
+        update(rowIndex) {
             this.element.attr("data-row-index", rowIndex);
             this.element.attr("data-row-new-group", this.isNewGroup);
-            if(this.isNewGroup)
-            {
+            if (this.isNewGroup) {
                 this.element.addClass("new-group");
             }
-            else{
+            else {
                 this.element.removeClass("new-group");
             }
         }
-    }     
+    }
 
     // ---------------------------------------------------------------------------------------------------------------- //
     // Class: Formaters

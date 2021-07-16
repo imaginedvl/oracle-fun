@@ -23,32 +23,29 @@ Oracle = (function (parent) {
             super(controlSettings);
 
             // Init grid
-            if(Oracle.isEmpty(controlSettings.grid))
-            {
+            if (Oracle.isEmpty(controlSettings.grid)) {
                 Oracle.Logger.logError("Target grid is not provided.");
-            }  
+            }
             this.grid = controlSettings.grid;
 
             // Init search box
             const searchBox = $("<input id='searchBox' type='text' placeholder='Refine search' size='50' class='searchKeyword'>");
             searchBox.on("input", (e) => {
                 const keyword = $(e.target).val();
-                if (!Oracle.isEmptyOrWhiteSpaces(keyword)) 
-                {
+                if (!Oracle.isEmptyOrWhiteSpaces(keyword)) {
                     this.grid.filter((settings) => {
                         let bug = settings.data;
                         return bug.match(keyword);
                     });
                 }
-                else 
-                {
+                else {
                     this.grid.reset();
                 }
             });
             this.element.append(searchBox);
 
             // Register reset grid event to clear searchbox
-            this.grid.on(Oracle.Controls.Grids.Event.GRID_RESET.name, (e) => {
+            this.grid.on(Oracle.Controls.Grids.Events.Reset, (e) => {
                 let searchBox = this.element.find("input#searchBox");
                 searchBox.val("");
             });
