@@ -208,7 +208,6 @@ Oracle = (function (parent) {
 
 }(Oracle));
 
-
 if (!String.prototype.removeAccentsAndDiacritics) {
     String.prototype.removeAccentsAndDiacritics = function () {
         if (Oracle.isEmpty(this)) {

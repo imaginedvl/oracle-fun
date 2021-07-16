@@ -74,7 +74,7 @@ Oracle = (function (parent) {
     const _fieldProperties = {
         number: { id: 'number', columnTitle: 'Number', headerTitle: 'Num', formater: 'BugDBNumber', groupable: false },
         assignee: { id: 'assignee', columnTitle: 'Assignee', headerTitle: 'Assignee', filterTitle: 'Assignees', groupable: true },
-        severity: { id: 'severity', columnTitle: 'Severity', headerTitle: 'Sev', lookup: result.Severity, formater: 'BugDBSeverity', filterTitle: 'Severity', groupable: true },
+        severity: { id: 'severity', columnTitle: 'Severity', headerTitle: 'Sev', lookup: result.Severity, formater: 'BugDBSeverity', filterTitle: 'Severity', groupable: true, filterable: true },
         component: { id: 'component', columnTitle: 'Component', headerTitle: 'Component', filterTitle: 'Components', groupable: true },
         status: { id: 'status', columnTitle: 'Status', headerTitle: 'St', lookup: result.Status, formater: 'BugDBStatus', groupable: true },
         fixEta: { id: 'fixEta', columnTitle: 'Fix ETA', headerTitle: 'Fix Eta', formater: 'BugDBDate', groupable: false },
@@ -134,11 +134,11 @@ Oracle = (function (parent) {
 
         match(keyword) {
             if (keyword) {
-                keyword = keyword.normalize().toLowerCase().trim();
+                keyword = keyword.removeAccentsAndDiacritics().toLowerCase().trim();
                 let result =
-                    this.subject?.normalize().toLowerCase().indexOf(keyword) > -1
-                    || this.customer?.normalize().toLowerCase().indexOf(keyword) > -1
-                    || this.component?.normalize().toLowerCase().indexOf(keyword) > -1;
+                    this.subject?.removeAccentsAndDiacritics().toLowerCase().indexOf(keyword) > -1
+                    || this.customer?.removeAccentsAndDiacritics().toLowerCase().indexOf(keyword) > -1
+                    || this.component?.removeAccentsAndDiacritics().toLowerCase().indexOf(keyword) > -1;
                 if (!result && this.assignee) {
                     result = this.assignee.match(keyword);
                 }
@@ -160,7 +160,6 @@ Oracle = (function (parent) {
 
         constructor(bugs) {
             this.data = {};
-
             // Contruire la liste des champs
             for (const [key, value] of Object.entries(Oracle.BugDB.Fields)) {
                 this.computeFieldSummary(bugs, value);
@@ -531,15 +530,14 @@ Oracle = (function (parent) {
     Oracle.Controls.Themes.addStaticCSSRule('.bugdb-tags .bugdb-tag-regrn {  color: var(--warningTextColor); background-color: var(--warningBackgroundColor) }');
     Oracle.Controls.Themes.addStaticCSSRule('.bugdb-tags .bugdb-tag-frce-sql-cleanup {  color: var(--infoTextColor); background-color: var(--infoBackgroundColor) }');
 
-    Oracle.Formating.addFormater('BugDBDate', null, null, (value, settings) => {
-        if (value) {
-            const dateDay = value.getDate(), month = value.getMonth() + 1, year = value.getFullYear();
-            return $(`<span class='bugdb-date'><span class='day'>${String(dateDay).padStart(2, '0')}</span><span class='month'>${Oracle.Dates.getMonthAbbreviation(month).toUpperCase()}</span><span class='year'>${year}</span></span>`);
-        }
-        else {
-            return null;
-        }
-    });
+    Oracle.Formating.addFormater('BugDBDate', null, null, (value, settings) => "");
+    /*if (value) {
+        const dateDay = value.getDate(), month = value.getMonth() + 1, year = value.getFullYear();
+        return $(`<span class='bugdb-date'><span class='day'>${String(dateDay).padStart(2, '0')}</span><span class='month'>${Oracle.Dates.getMonthAbbreviation(month).toUpperCase()}</span><span class='year'>${year}</span></span>`);
+    }
+    else {
+        return null;
+    }*/
 
     Oracle.HTML.addFormater("BugDBCustomer", null, null, (value, settings) => {
         if (settings.isHeader) {
