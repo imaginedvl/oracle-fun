@@ -73,12 +73,12 @@ Oracle = (function (parent) {
 
     const _fieldProperties = {
         number: { id: 'number', columnTitle: 'Number', headerTitle: 'Num', formater: 'BugDBNumber', groupable: false },
-        assignee: { id: 'assignee', columnTitle: 'Assignee', headerTitle: 'Assignee', filterTitle: 'Assignees', groupable: true },
+        assignee: { id: 'assignee', columnTitle: 'Assignee', headerTitle: 'Assignee', filterTitle: 'Assignees', groupable: true, filterable: true },
         severity: { id: 'severity', columnTitle: 'Severity', headerTitle: 'Sev', lookup: result.Severity, formater: 'BugDBSeverity', filterTitle: 'Severity', groupable: true, filterable: true },
         component: { id: 'component', columnTitle: 'Component', headerTitle: 'Component', filterTitle: 'Components', groupable: true },
-        status: { id: 'status', columnTitle: 'Status', headerTitle: 'St', lookup: result.Status, formater: 'BugDBStatus', groupable: true },
+        status: { id: 'status', columnTitle: 'Status', headerTitle: 'St', filterTitle: 'Status', lookup: result.Status, formater: 'BugDBStatus', groupable: true, filterable: true },
         fixEta: { id: 'fixEta', columnTitle: 'Fix ETA', headerTitle: 'Fix Eta', formater: 'BugDBDate', groupable: false },
-        tags: { id: 'tags', columnTitle: 'Tags', headerTitle: 'Tag', lookup: result.Tag, formater: 'BugDBTag', filterTitle: 'Tags', groupable: false },
+        tags: { id: 'tags', columnTitle: 'Tags', headerTitle: 'Tag', lookup: result.Tag, formater: 'BugDBTag', filterTitle: 'Tags', groupable: false, filterable: true },
         customer: { id: 'customer', columnTitle: 'Customer', headerTitle: 'Customer', filterTitle: 'Customers', formater: 'BugDBCustomer', groupable: true },
         dateReported: { id: 'dateReported', columnTitle: 'Creation', headerTitle: 'Reported', formater: 'BugDBDate', groupable: false },
         subject: { id: 'subject', columnTitle: 'Subject', headerTitle: 'Subject', groupable: false },
@@ -88,6 +88,8 @@ Oracle = (function (parent) {
         supportContact: { id: 'supportContact', columnTitle: 'Support Contact', headerTitle: 'Support Contact', groupable: true },
         testName: { id: 'testName', columnTitle: 'Test Name', headerTitle: 'Test Name/Doc Field', groupable: true }
     }
+
+    result.FieldProperties = _fieldProperties;
 
     result.getFieldProperties = function (fieldName) {
         return _fieldProperties[fieldName];
