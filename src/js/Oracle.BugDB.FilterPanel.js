@@ -8,15 +8,17 @@ Oracle = (function (parent) {
     const result = parent.BugDB;
 
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterpanel { border: 1px solid var(--controlBorderColor);  }');
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterpanel > *:not(:first-child):not(.FilterPanelSectionTitle) { padding:8px;}');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterpanel .resetFiltersButtonContainer { padding:8px; text-align: center }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterpanel .resetFiltersButton { padding:8px; width:90% }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterpanel .fromTo { text-align: center } ');
     Oracle.Controls.Themes.addStaticCSSRule('.FilterPanelSection { border-bottom: 1px solid var(--controlBorderColor) } ');
     Oracle.Controls.Themes.addStaticCSSRule('.FilterPanelSection:first-child { border-top: 1px solid var(--controlBorderColor) } ');
-    Oracle.Controls.Themes.addStaticCSSRule('.FilterPanelTitle { padding:8px; color: var(--primaryTextColor); background-color: var(--primaryBackgroundColor); font-weight: 600;  } ');
+    Oracle.Controls.Themes.addStaticCSSRule('.FilterPanelTitle { padding:8px; color: var(--primaryTextColor); background-color: var(--primaryBackgroundColorLighten1); font-weight: 600;  } ');
     Oracle.Controls.Themes.addStaticCSSRule('.FilterPanelSectionTitle { background-color: var(--primaryBackgroundColorLighten4); var(--primaryTextColorLighten4); } ');
     Oracle.Controls.Themes.addStaticCSSRule('.FilterPanelSectionTitle { font-weight: 600; padding-bottom:16px; } ');
     Oracle.Controls.Themes.addStaticCSSRule('span.FilterPanelSectionFilterItem {cursor: pointer;}'); //  white-space:nowrap
     Oracle.Controls.Themes.addStaticCSSRule('span.FilterPanelSectionFilterItem:not(:last-child)::after { color: var(--controlTextColorLighten3); content: ", "}');
-    Oracle.Controls.Themes.addStaticCSSRule('span.FilterPanelSectionFilterItem span.value{ font-weight: 600; white-space: nowrap; }');
+    Oracle.Controls.Themes.addStaticCSSRule('span.FilterPanelSectionFilterItem span.value { font-weight: 600; white-space: nowrap; }');
     Oracle.Controls.Themes.addStaticCSSRule('span.FilterPanelSectionFilterItem span.count { padding-left:4px; color: var(--controlTextColorLighten3)}');
     Oracle.Controls.Themes.addStaticCSSRule('span.FilterPanelSectionFilterItem * { pointer-events: none }');
 
@@ -58,10 +60,12 @@ Oracle = (function (parent) {
             panelFromTo.append(bugsRange);
             this.element.append(panelFromTo);
 
-            // add reset buton .. TODO: .. give some love to this button       
-            const resetFiltersButton = $('<button/>', { text: 'Reset Filters', id: 'resetFiltersButton' });
+            // Add reset button
+            const resetFiltersButtonContainer = $('<div/>', { id: 'resetFiltersButtonContainer', class: 'resetFiltersButtonContainer' });
+            const resetFiltersButton = $('<button/>', { text: 'Reset Filters', id: 'resetFiltersButton', class: 'resetFiltersButton' });
             resetFiltersButton.click((e) => { this.applyPanelSelectedFilter(); });
-            this.element.append(resetFiltersButton);
+            resetFiltersButtonContainer.append(resetFiltersButton);
+            this.element.append(resetFiltersButtonContainer);
 
             // Build the filters
             if (!Oracle.isEmpty(controlSettings.panelFilters)) {
