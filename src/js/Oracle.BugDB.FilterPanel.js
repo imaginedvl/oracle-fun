@@ -8,36 +8,45 @@ Oracle = (function (parent) {
     const result = parent.BugDB;
 
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel { width:200px; }');
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .main-title-panel { text-align:center; padding:8px; color: var(--primaryTextColor); background-color: var(--primaryBackgroundColorLighten1); font-weight: 600;  } ');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .main-title-panel { padding:8px; color: var(--primaryTextColor); background-color: var(--primaryBackgroundColorLighten1); font-weight: 600;  } ');
+
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel > .section-panel { border-top: 1px solid var(--controlBorderColor);  border-left: 1px solid var(--controlBorderColor);  border-right: 1px solid var(--controlBorderColor); padding:8px;  }');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel > .section-panel:last-child { border-bottom: 1px solid var(--controlBorderColor);   }');
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel > .section-header-panel { padding-top:4px;padding-bottom:4px; text-align:center; background-color: var(--primaryBackgroundColorLighten4); var(--primaryTextColorLighten4); font-weight: 600; }');
+
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel > .section-header-panel { text-align:center; background-color: var(--primaryBackgroundColorLighten4); var(--primaryTextColorLighten4); font-weight: 600; }');
+
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-centered-panel { text-align: center }');
+
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .date-range-panel .from { color: var(--controlTextColorLighten3); padding-right:4px } ');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .date-range-panel .to  { color: var(--controlTextColorLighten3); padding-left:4px; padding-right:4px } ');
+
+
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item {cursor: pointer;}');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item:not(:last-child)::after { color: var(--controlTextColorLighten3); content: ", "}');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item span.value { font-weight: 600; white-space: nowrap; }');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item span.count { padding-left:4px; color: var(--controlTextColorLighten3)}');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item * { pointer-events: none }');
+
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-search-panel input { width:100%; padding:8px; border: 1px solid var(--controlBorderColor); }');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-search-panel input.searchKeyword {  height: 35px; padding-left: 10px; }');
+
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-reset-panel button { padding:4px; width:100%; border: 1px solid var(--controlBorderColor); cursor:pointer; color: var(--primaryTextColor); background-color: var(--primaryBackgroundColorLighten1);  }');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-reset-panel button:hover { background-color: var(--primaryBackgroundColorLighten2); color: var(--primaryTextColorLighten2);  }');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-reset-panel button:active { background-color: var(--primaryBackgroundColorLighten4); color: var(--primaryTextColorLighten4);  }');
+    //
 
     result.PanelTypes =
     {
-        Standard: 'standard',
-        Search: 'search',
-        Summary: 'summary',
-        Custom: 'custom',
-        Reset: 'reset'
+        Standard: { id: 'standard' },
+        Search: { id: 'search', placeHolder: 'Refine search' },
+        Summary: { id: 'summary' },
+        Custom: { id: 'custom' },
+        Reset: { id: 'reset', buttonText: 'Clear filters' }
     }
 
     result.CustomFilters =
     {
-        IsCusomter: 'customer'
+        IsCustomer: { panelTitle: 'Customer', panelfilter: 'Customer Bugs', filter: 'isNotEmpty' }
     }
 
     // ---------------------------------------------------------------------------------------------------------------- //
@@ -77,7 +86,7 @@ Oracle = (function (parent) {
                         }
                         this.element.append(panelTitle);
                         const panel = $("<div class='section-panel'>");
-                        this.initializeStandardFilterPanel(panelSettings, properties, panel);
+                        this.initializeStandardFilterPanel(properties, panel);
                         this.element.append(panel);
                     }
                     else {
@@ -89,7 +98,10 @@ Oracle = (function (parent) {
                                 this.initializeSearchPanel(panelSettings);
                                 break;
                             case result.PanelTypes.Summary:
-                                this.initializeSummaryPanel(panelSettings);
+                                this.initializeSummaryPanel();
+                                break;
+                            case result.PanelTypes.Custom:
+                                this.initializeCustomPanel(panelSettings);
                                 break;
                         }
                         // Custom filter
@@ -99,7 +111,7 @@ Oracle = (function (parent) {
             Oracle.Logger.logDebug("FilterPanel initialized: " + this.id, { panel: this });
         }
 
-        initializeSummaryPanel(panelSettings) {
+        initializeSummaryPanel() {
             // Summary
             const dateRangePanel = $("<div class='section-panel section-centered-panel date-range-panel'>");
             dateRangePanel.append("<span class='from'>From</span>");
@@ -112,7 +124,7 @@ Oracle = (function (parent) {
         initializeSearchPanel(panelSettings) {
             // Search Panel
             const searchPanel = $("<div class='section-panel section-search-panel'>");
-            const searchInputBox = $("<input type='text' placeholder='Refine search'>");
+            const searchInputBox = $("<input type='text' placeholder='" + panelSettings['type'].placeHolder + "'>");
             searchInputBox.on("input", (e) => {
                 const keyword = $(e.target).val();
                 if (!Oracle.isEmptyOrWhiteSpaces(keyword)) {
@@ -133,13 +145,37 @@ Oracle = (function (parent) {
             // Reset Panel
             const resetPanel = $("<div class='section-panel section-centered-panel section-reset-panel '>");
             const resetButton = $('<button/>');
-            resetButton.text("Clear filters");
+            resetButton.text(panelSettings['type'].buttonText);
             resetButton.click((e) => { this.resetFilter(); });
             resetPanel.append(resetButton);
             this.element.append(resetPanel);
         }
 
-        initializeStandardFilterPanel(panelSettings, properties, panel) {
+        initializeCustomPanel(panelSettings) {
+            //Custom
+            const panelTitle = $("<div class='section-panel section-header-panel custom-title'>");
+            panelTitle.text(panelSettings['filters'].panelTitle);
+            this.element.append(panelTitle);
+            const panel = $("<div class='section-panel'>");
+
+            const filterItem = $("<span class='filter-item'>");
+            filterItem.attr("data-filter-field", panelSettings['field']);
+            const valueSpan = $('<span class="value">');
+            const countSpan = $('<span class="count">');
+            valueSpan.text(panelSettings['filters'].panelfilter);
+            countSpan.text("(" + this.summary.getNotEmptyCount(panelSettings['field']) + ")­");
+            filterItem.append(valueSpan);
+            filterItem.append(countSpan);
+            filterItem.click((e) => {
+                const target = $(e.target);
+                const field = target.attr("data-filter-field");
+                this.applyCustomFilter(panelSettings['filters'].filter);
+            });
+            panel.append(filterItem);
+            this.element.append(panel);
+        }
+
+        initializeStandardFilterPanel(properties, panel) {
             const distinctMetrics = this.summary.getDistinctMetrics(properties.id);
             if (!Oracle.isEmpty(distinctMetrics)) {
                 for (let i = 0; i < distinctMetrics.length; i++) {
@@ -171,6 +207,12 @@ Oracle = (function (parent) {
 
         applyFilter(fieldName, fieldValue) {
             this.grid.filter((settings) => Oracle.includes(settings.data[fieldName], fieldValue));
+        }
+
+        applyCustomFilter(filter, fieldName) {
+            if (filter === 'isNotEmpty') {
+                this.grid.filter((settings) => !Oracle.isEmpty(settings.data[fieldName]));
+            }
         }
 
         resetFilter() {

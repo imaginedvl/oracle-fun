@@ -44,7 +44,8 @@
                     Oracle.BugDB.Fields.Tags,
                     {
                         type: Oracle.BugDB.PanelTypes.Custom,
-                        filters: ['customer']
+                        filters: Oracle.BugDB.CustomFilters.IsCustomer,
+                        field: Oracle.BugDB.Fields.Customer
                     },
                 ]
         });

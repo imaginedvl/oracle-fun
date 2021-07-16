@@ -50,8 +50,7 @@ Oracle = (function (parent) {
         HCMBRONZE: { name: 'HCMBRONZE', filterTitle: 'HCMBRONZE' },
         HCMSILVER: { name: 'HCMSILVER', filterTitle: 'HCMSILVER' },
         'FRCE-SQL-CLEANUP': { name: 'FRCE-SQL-CLEANUP', filterTitle: 'FRCE-SQL-CLEANUP' },
-        VPAT_MUST: { name: 'VPAT_MUST', filterTitle: 'VPAT_MUST' },
-        CLIENT_BUGS: { name: 'CLIENT_BUGS', filterTitle: 'CLIENT_BUGS' }
+        VPAT_MUST: { name: 'VPAT_MUST', filterTitle: 'VPAT_MUST' }
     }
 
     result.Fields = {
@@ -163,6 +162,7 @@ Oracle = (function (parent) {
             for (const [key, value] of Object.entries(Oracle.BugDB.Fields)) {
                 this.computeFieldSummary(bugs, value);
             }
+
         }
 
         computeFieldSummary(bugs, fieldName) {
@@ -170,16 +170,20 @@ Oracle = (function (parent) {
                 minimum: null,
                 maximum: null,
                 distinct: [],
-                metrics: []
+                metrics: [],
+                notEmptyCount: 0
             };
 
             let sortedValues = [];
+            let notEmptyCount = 0;
             for (let i = 0; i < bugs.length; i++) {
                 const value = bugs[i][fieldName];
                 if (!Oracle.isEmpty(value)) {
                     sortedValues.pushRange(value);
+                    notEmptyCount++
                 }
             }
+            result.notEmptyCount = notEmptyCount;
 
             sortedValues = sortedValues.sort((a, b) => {
                 return Oracle.compare(a, b);
@@ -228,6 +232,10 @@ Oracle = (function (parent) {
 
         getDistincts(fieldName) {
             return this.getFieldSummary(fieldName)?.distinct;
+        }
+
+        getNotEmptyCount(fieldName) {
+            return this.getFieldSummary(fieldName)?.notEmptyCount;
         }
     };
 
