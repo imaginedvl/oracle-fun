@@ -74,7 +74,7 @@ Oracle = (function (parent) {
     const _fieldProperties = {
         number:
         {
-            id: 'number', columnTitle: 'Number', columnSelector: 'Num', formater: 'BugDBNumber', groupable: false, filterable: false
+            id: 'number', columnTitle: 'Number', columnSelector: 'Num', formater: 'BugDBNumber'
         },
         assignee:
         {
@@ -90,31 +90,31 @@ Oracle = (function (parent) {
         },
         status:
         {
-            id: 'status', columnTitle: 'Status', columnSelector: 'St', lookup: result.Status, formater: 'BugDBStatus', groupable: true, filterable: true
+            id: 'status', columnTitle: 'Status', columnSelector: 'St', filterTitle: 'Status', lookup: result.Status, formater: 'BugDBStatus', groupable: true, filterable: true
         },
         fixEta:
         {
-            id: 'fixEta', columnTitle: 'Fix ETA', columnSelector: 'Fix Eta', formater: 'BugDBDate', groupable: false, filterable: false
+            id: 'fixEta', columnTitle: 'Fix ETA', columnSelector: 'Fix Eta', formater: 'BugDBDate'
         },
         tags:
         {
             id: 'tags', columnTitle: 'Tags',
             columnSelector: "$thead tr th:equalsi('Tags'), thead tr th:equalsi('Tag')",
-            lookup: result.Tag, formater: 'BugDBTag', filterTitle: 'Tags', groupable: false, filterable: true
+            lookup: result.Tag, formater: 'BugDBTag', filterTitle: 'Tags', filterable: true
         },
-        customer: { id: 'customer', columnTitle: 'Customer', columnSelector: 'Customer', filterTitle: 'Customers', formater: 'BugDBCustomer', groupable: true, filterable: false },
+        customer: { id: 'customer', columnTitle: 'Customer', columnSelector: 'Customer', filterTitle: 'Customers', formater: 'BugDBCustomer', groupable: true },
         dateReported:
         {
             id: 'dateReported', columnTitle: 'Creation',
             columnSelector: "$thead tr th:equalsi('Date Reported'), thead tr th:equalsi('Reported Date')",
             formater: 'BugDBDate', groupable: false, filterable: false
         },
-        subject: { id: 'subject', columnTitle: 'Subject', columnSelector: '=subject', groupable: false, filterable: false },
-        selection: { id: 'selection', columnSelector: '#select_all_option', groupable: false, filterable: false },
-        lineNumber: { id: 'lineNumber', columnSelector: 'Sl No.', groupable: false, filterable: false },
-        productNumber: { id: 'productNumber', columnTitle: 'Product', columnSelector: 'Product ID', groupable: true, filterable: false },
-        supportContact: { id: 'supportContact', columnTitle: 'Support Contact', columnSelector: 'Support Contact', groupable: true, filterable: false },
-        testName: { id: 'testName', columnTitle: 'Test Name', columnSelector: 'Test Name/Doc Field', groupable: true, filterable: false }
+        subject: { id: 'subject', columnTitle: 'Subject', columnSelector: '=subject' },
+        selection: { id: 'selection', columnSelector: '#select_all_option' },
+        lineNumber: { id: 'lineNumber', columnSelector: 'Sl No.' },
+        productNumber: { id: 'productNumber', columnTitle: 'Product', columnSelector: 'Product ID', groupable: true },
+        supportContact: { id: 'supportContact', columnTitle: 'Support Contact', columnSelector: 'Support Contact', groupable: true },
+        testName: { id: 'testName', columnTitle: 'Test Name', columnSelector: 'Test Name/Doc Field', groupable: true }
     }
 
     result.FieldProperties = _fieldProperties;
