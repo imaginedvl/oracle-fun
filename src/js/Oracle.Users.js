@@ -33,7 +33,7 @@ Oracle = (function (parent) {
 
         match(keyword) {
             if (keyword) {
-                return this.keywords?.indexOf(keyword.removeAccentsAndDiacritics()) > -1;
+                return this.keywords?.indexOf(keyword.toLowerCase().removeAccentsAndDiacritics()) > -1;
             }
             else {
                 return false;
@@ -116,7 +116,7 @@ Oracle = (function (parent) {
             if (this.fullName === null) {
                 this.fullName = this.displayName;
             }
-            this.keywords = ("" + this.globalId + this.firstName + this.lastName + this.displayName + this.emailAddress + this.fullName).removeAccentsAndDiacritics();
+            this.keywords = ("" + this.globalId + this.firstName + this.lastName + this.displayName + this.emailAddress + this.fullName).toLowerCase().removeAccentsAndDiacritics();
         }
 
     };
