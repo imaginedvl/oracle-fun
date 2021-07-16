@@ -117,6 +117,8 @@ Oracle = (function (parent) {
         testName: { id: 'testName', columnTitle: 'Test Name', columnSelector: 'Test Name/Doc Field', groupable: true, filterable: false }
     }
 
+    result.FieldProperties = _fieldProperties;
+
     result.getFieldProperties = function (fieldName) {
         return _fieldProperties[fieldName];
     }
