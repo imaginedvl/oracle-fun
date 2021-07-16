@@ -53,6 +53,7 @@
                     { type: Oracle.BugDB.PanelTypes.Reset },
                     { type: Oracle.BugDB.PanelTypes.Summary },
                     { type: Oracle.BugDB.PanelTypes.Search },
+                    { type: Oracle.BugDB.PanelTypes.Standard },
                     {
                         type: Oracle.BugDB.PanelTypes.Custom,
                         title: 'Advanced Filters',

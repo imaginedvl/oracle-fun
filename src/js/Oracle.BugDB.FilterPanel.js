@@ -68,7 +68,7 @@ Oracle = (function (parent) {
             },
         },
         isLate: {
-            title: 'Past ETA',
+            title: 'Past Eta',
             predicate: (bug) => {
                 return (bug.isLate());
 
@@ -142,10 +142,10 @@ Oracle = (function (parent) {
                     else {
                         switch (panelSettings.type) {
                             case result.PanelTypes.Reset:
-                                this.initializeResetFilterPanel(panelSettings);
+                                this.initializeResetFilterPanel();
                                 break;
                             case result.PanelTypes.Search:
-                                this.initializeSearchPanel(panelSettings);
+                                this.initializeSearchPanel();
                                 break;
                             case result.PanelTypes.Summary:
                                 this.initializeSummaryPanel();
@@ -212,15 +212,18 @@ Oracle = (function (parent) {
 
         initializeSummaryPanel() {
             // Summary
-            const dateRangePanel = $("<div class='section-panel section-centered-panel date-range-panel'>");
-            dateRangePanel.append("<span class='from'>From</span>");
-            dateRangePanel.append(Oracle.HTML.formatValue(this.summary.getMinimum(Oracle.BugDB.Fields.DateReported), { formater: 'BugDBDate' }));
-            dateRangePanel.append("<span class='to'>to</span>");
-            dateRangePanel.append(Oracle.HTML.formatValue(this.summary.getMaximum(Oracle.BugDB.Fields.DateReported), { formater: 'BugDBDate' }));
-            this.element.append(dateRangePanel);
+            const minDateReported = this.summary.getMinimum(Oracle.BugDB.Fields.DateReported);
+            if (!Oracle.isEmpty(minDateReported)) {
+                const dateRangePanel = $("<div class='section-panel section-centered-panel date-range-panel'>");
+                dateRangePanel.append("<span class='from'>From</span>");
+                dateRangePanel.append(Oracle.HTML.formatValue(minDateReported, { formater: 'BugDBDate' }));
+                dateRangePanel.append("<span class='to'>to</span>");
+                dateRangePanel.append(Oracle.HTML.formatValue(this.summary.getMaximum(Oracle.BugDB.Fields.DateReported), { formater: 'BugDBDate' }));
+                this.element.append(dateRangePanel);
+            }
         }
 
-        initializeSearchPanel(panelSettings) {
+        initializeSearchPanel() {
             // Search Panel
             const searchPanel = $("<div class='section-panel section-search-panel'>");
             const searchInputBox = $("<input type='text' placeholder='Refined search...'>");
@@ -240,7 +243,7 @@ Oracle = (function (parent) {
             this.element.append(searchPanel);
         }
 
-        initializeResetFilterPanel(panelSettings) {
+        initializeResetFilterPanel() {
             // Reset Panel
             const resetPanel = $("<div class='section-panel section-centered-panel section-reset-panel '>");
             const resetButton = $('<button/>');
