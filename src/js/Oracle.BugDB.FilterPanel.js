@@ -35,11 +35,6 @@ Oracle = (function (parent) {
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-reset-panel button:active { background-color: var(--primaryBackgroundColorLighten4); color: var(--primaryTextColorLighten4);  }');
     //
 
-    result.FilterFunction =
-    {
-        NotEmpty: "NotEmpty"
-    }
-
     result.PanelTypes =
     {
         Standard: 'standard',
@@ -264,7 +259,6 @@ Oracle = (function (parent) {
             this.element.find(".section-search-panel input").val("");
             this.grid.reset();
         }
-
     }
 
     return parent;

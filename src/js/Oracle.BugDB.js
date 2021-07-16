@@ -151,7 +151,6 @@ Oracle = (function (parent) {
                 return false;
             }
         }
-
     };
 
     // ---------------------------------------------------------------------------------------------------------------- //
@@ -166,7 +165,6 @@ Oracle = (function (parent) {
             for (const [key, value] of Object.entries(Oracle.BugDB.Fields)) {
                 this.computeFieldSummary(bugs, value);
             }
-
         }
 
         computeFieldSummary(bugs, fieldName) {
@@ -174,20 +172,16 @@ Oracle = (function (parent) {
                 minimum: null,
                 maximum: null,
                 distinct: [],
-                metrics: [],
-                notEmptyCount: 0
+                metrics: []
             };
 
             let sortedValues = [];
-            let notEmptyCount = 0;
             for (let i = 0; i < bugs.length; i++) {
                 const value = bugs[i][fieldName];
                 if (!Oracle.isEmpty(value)) {
                     sortedValues.pushRange(value);
-                    notEmptyCount++
                 }
             }
-            result.notEmptyCount = notEmptyCount;
 
             sortedValues = sortedValues.sort((a, b) => {
                 return Oracle.compare(a, b);
@@ -236,10 +230,6 @@ Oracle = (function (parent) {
 
         getDistincts(fieldName) {
             return this.getFieldSummary(fieldName)?.distinct;
-        }
-
-        getNotEmptyCount(fieldName) {
-            return this.getFieldSummary(fieldName)?.notEmptyCount;
         }
     };
 
@@ -511,9 +501,7 @@ Oracle = (function (parent) {
         hide() {
             this.element.hide();
         }
-
     };
-
 
     // ---------------------------------------------------------------------------------------------------------------- //
     // Formaters

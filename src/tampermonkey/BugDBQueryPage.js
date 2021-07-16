@@ -27,7 +27,8 @@
             noItemsMessage: "No bugs are matching the criteria. I strongly suggest to spend some time creating a custom query to check if Joel is not hidding any bug with a missing or past due date!"
         });
 
-    Oracle.BugDB.addCustomPanelFilter('MyFilter', 'My filter', (bug) => {
+    //Example of custom Filter declaration
+    /*Oracle.BugDB.addCustomPanelFilter('MyFilter', 'My filter', (bug) => {
         return bug.subject.startsWith('R');
     }, (bugs) => {
         let count = 0;
@@ -37,7 +38,7 @@
             }
         }
         return count;
-    })
+    })*/
 
     // -- Filter Panel Section -- //
     //  Oracle.BubDB.BugPanel  ( TODO )
@@ -57,7 +58,7 @@
                     {
                         type: Oracle.BugDB.PanelTypes.Custom,
                         title: 'Advanced Filters',
-                        filters: [Oracle.BugDB.CustomFilters.IsCustomer, 'MyFilter']
+                        filters: [Oracle.BugDB.CustomFilters.IsCustomer]
                     },
                 ]
         });
