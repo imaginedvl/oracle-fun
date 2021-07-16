@@ -35,6 +35,11 @@ Oracle = (function (parent) {
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-reset-panel button:active { background-color: var(--primaryBackgroundColorLighten4); color: var(--primaryTextColorLighten4);  }');
     //
 
+    result.FilterFunction =
+    {
+        NotEmpty: "NotEmpty"
+    }
+
     result.PanelTypes =
     {
         Standard: { id: 'standard' },
@@ -46,7 +51,7 @@ Oracle = (function (parent) {
 
     result.CustomFilters =
     {
-        IsCustomer: { panelTitle: 'Customer', panelfilter: 'Customer Bugs', filter: 'isNotEmpty' }
+        IsCustomer: { panelTitle: 'Customer', panelfilter: 'Customer Bugs' }
     }
 
     // ---------------------------------------------------------------------------------------------------------------- //
@@ -169,13 +174,13 @@ Oracle = (function (parent) {
             filterItem.click((e) => {
                 const target = $(e.target);
                 const field = target.attr("data-filter-field");
-                this.applyCustomFilter(panelSettings['filters'].filter);
+                this.applyFilter(panelSettings, field, null);
             });
             panel.append(filterItem);
             this.element.append(panel);
         }
 
-        initializeStandardFilterPanel(properties, panel) {
+        initializeStandardFilterPanel(panelSettings, properties, panel) {
             const distinctMetrics = this.summary.getDistinctMetrics(properties.id);
             if (!Oracle.isEmpty(distinctMetrics)) {
                 for (let i = 0; i < distinctMetrics.length; i++) {
@@ -198,20 +203,23 @@ Oracle = (function (parent) {
                         const target = $(e.target);
                         const field = target.attr("data-filter-field");
                         const value = target.data("data-filter-value");
-                        this.applyFilter(field, value);
+                        this.applyFilter(panelSettings, field, value);
                     });
                     panel.append(filterItem);
                 }
             }
         }
 
-        applyFilter(fieldName, fieldValue) {
-            this.grid.filter((settings) => Oracle.includes(settings.data[fieldName], fieldValue));
-        }
-
-        applyCustomFilter(filter, fieldName) {
-            if (filter === 'isNotEmpty') {
-                this.grid.filter((settings) => !Oracle.isEmpty(settings.data[fieldName]));
+        applyFilter(panelSettings, fieldName, fieldValue) {
+            if (Oracle.isString(panelSettings)) {
+                this.grid.filter((settings) => Oracle.includes(settings.data[fieldName], fieldValue));
+            }
+            else {
+                switch (panelSettings['filterFunction']) {
+                    case result.FilterFunction.NotEmpty:
+                        this.grid.filter((settings) => !Oracle.isEmpty(settings.data[fieldName]));
+                        break;
+                }
             }
         }
 

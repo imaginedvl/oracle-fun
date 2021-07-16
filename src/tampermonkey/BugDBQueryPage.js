@@ -45,6 +45,7 @@
                     {
                         type: Oracle.BugDB.PanelTypes.Custom,
                         filters: Oracle.BugDB.CustomFilters.IsCustomer,
+                        filterFunction: Oracle.BugDB.FilterFunction.NotEmpty,
                         field: Oracle.BugDB.Fields.Customer
                     },
                 ]
