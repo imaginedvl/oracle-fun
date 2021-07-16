@@ -1,7 +1,7 @@
 (function () {
 
     const bugDbPage = new Oracle.BugDB.BugTablePage();
-    bugDbPage.hide();
+    //bugDbPage.hide();
 
     //Oracle.requires('Oracle', 'Oracle.HTML', '');
 
