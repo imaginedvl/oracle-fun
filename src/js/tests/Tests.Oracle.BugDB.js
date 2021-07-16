@@ -10,5 +10,6 @@ Oracle.Tests.execute({
         assert.isFalse(bugs[2].match("Zooktel"));
         assert.isTrue(bugs[1].match("Laurent"));
         assert.isTrue(bugs[1].match("  Laurent  "));
+        assert.isTrue(false);
     }
 });

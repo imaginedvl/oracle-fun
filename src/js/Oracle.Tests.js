@@ -160,8 +160,6 @@ Oracle = (function (parent) {
         return module;
     }
 
-
-
     const _addTestResult = function (startTimestamp, settings, testResultType, error, errorMessage) {
         const duration = Oracle.getTimestamp() - startTimestamp;
         const testResult =
@@ -182,29 +180,48 @@ Oracle = (function (parent) {
         }
     }
 
+    const _includedModules = {};
+
+    let modules = Oracle.Http.getQueryStringValue("modules");
+    if (Oracle.isEmptyOrWhiteSpaces(modules)) {
+
+    }
+    //
+
     result.execute = function (settings) {
         if (Oracle.isEmpty(settings)) {
             throw new Oracle.Errors.ValidationError("You need to provide settings for your test. (ie: { name: 'my test', test: () => {} }");
         }
         else {
             const startTimestamp = Oracle.getTimestamp();
-            if (Oracle.isEmpty(settings.name)) {
-                settings.name = 'Unknown test';
-            }
-            try {
-                if (Oracle.isFunction(settings.test)) {
-                    settings.test(assert, Oracle.Logger);
+            let skipTest = false;
+            /*_includedModules != null)
+            {
+
+            }*/
+            if (!skipTest) {
+                if (Oracle.isEmpty(settings.name)) {
+                    settings.name = 'Unknown test';
                 }
-                _addTestResult(startTimestamp, settings, result.TestResult.Success);
-            }
-            catch (error) {
-                let message = 'An error occured while executing the test';
-                const errorAsString = String(error);
-                if (!Oracle.isEmpty(errorAsString)) {
-                    message = errorAsString;
+                try {
+                    if (Oracle.isFunction(settings.test)) {
+                        settings.test(assert, Oracle.Logger);
+                    }
+                    _addTestResult(startTimestamp, settings, result.TestResult.Success);
                 }
-                _addTestResult(startTimestamp, settings, result.TestResult.Failed, error, message);
+                catch (error) {
+                    let message = 'An error occured while executing the test';
+                    const errorAsString = String(error);
+                    if (!Oracle.isEmpty(errorAsString)) {
+                        message = errorAsString;
+                    }
+                    _addTestResult(startTimestamp, settings, result.TestResult.Failed, error, message);
+                }
             }
+            else {
+                _addTestResult(startTimestamp, settings, result.TestResult.Skipped);
+            }
+
         }
     }
 
@@ -226,8 +243,20 @@ Oracle = (function (parent) {
     _addStyle('.oracle.unit-test-section { width: 100%; display:block} ');
     _addStyle('.oracle.unit-test-section table { width: 100%; } ');
     _addStyle('.oracle.unit-test-section table { border-spacing:0px; border-collapse: collapse  } ');
-    _addStyle('.oracle.unit-test-section tr td { border:1px solid gray; padding: 4px; } ');
-    _addStyle('.oracle.unit-test-section table tbody tr.module-section-header { padding-bottom: 8px;padding-top: 8px; font-size:120%  } ');
+    _addStyle('.oracle.unit-test-section tr td { border:1px solid gray; padding: 4px; padding-bottom: 8px;padding-top: 8px;  } ');
+    _addStyle('.oracle.unit-test-section table tbody tr.module-section-header {  font-size:120%; background-color:#EFEFEF; } ');
+
+    _addStyle('.oracle.unit-test-section table tbody tr.test-row {   } ');
+    _addStyle('.oracle.unit-test-section table tbody tr.test-details {   } ');
+
+    _addStyle('.oracle.unit-test-section table tbody tr.test-row .test-category { width:15%  } ');
+    _addStyle('.oracle.unit-test-section table tbody tr.test-row .test-name {  width:70% } ');
+    _addStyle('.oracle.unit-test-section table tbody tr.test-row .test-result { width:15%;text-align:center;  } ');
+    _addStyle('.oracle.unit-test-section table tbody tr.test-row .test-result-success {   background-color: #5cb85c;color:white; } ');
+    _addStyle('.oracle.unit-test-section table tbody tr.test-row .test-result-failed {   background-color: #d9534f;color:white; } ');
+    _addStyle('.oracle.unit-test-section table tbody tr.test-row .test-result-skipped { background-color: #17a2b8;color:white;  } ');
+    _addStyle('.oracle.unit-test-section table tbody tr.test-row .test-result-unknown {   background-color: #ffeb3b;color:white; } ');
+    _addStyle('.oracle.unit-test-section table tbody tr.test-row {   } ');
 
     result.displayResults = function (target) {
         target = $(target);
@@ -240,17 +269,26 @@ Oracle = (function (parent) {
         let td;
         let tr;
         for (let i = 0; i < _testResults.length; i++) {
-            const modeuleResults = _testResults[i];
+            const moduleResults = _testResults[i];
             tr = $("<tr class='module-section-header'>");
             td = $("<td colspan='4'>");
-            td.text(modeuleResults.moduleName);
+            td.text(moduleResults.moduleName);
             tr.append(td);
             tbody.append(tr);
-            for (let j = 0; j < modeuleResults.results.length; j++) {
-                const testResult = modeuleResults.results[j];
-                tr = $("<tr class='module-section-header'>");
-                td = $("<td colspan='4'>");
-                td.text(modeuleResults.moduleName);
+            for (let j = 0; j < moduleResults.results.length; j++) {
+                const testResult = moduleResults.results[j];
+                tr = $("<tr class='test-row'>");
+                // Category
+                td = $("<td class='test-category'>");
+                td.text(testResult.settings.category);
+                tr.append(td);
+                // Name
+                td = $("<td class='test-name'>");
+                td.text(testResult.settings.name);
+                tr.append(td);
+                // Result
+                td = $("<td class='test-result test-result-" + testResult.result.toLowerCase() + "'>");
+                td.text(testResult.result);
                 tr.append(td);
                 tbody.append(tr);
             }
