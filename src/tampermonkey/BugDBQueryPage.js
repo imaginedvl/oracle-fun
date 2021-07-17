@@ -1,7 +1,9 @@
 (function () {
 
     const bugDbPage = new Oracle.BugDB.BugTablePage();
-    bugDbPage.hide();
+    if (!Oracle.Conversion.toBoolean(Oracle.Http.getQueryStringValue("showOriginal"))) {
+        bugDbPage.hide();
+    }
 
     //Oracle.requires('Oracle', 'Oracle.HTML', '');
 

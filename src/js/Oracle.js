@@ -475,6 +475,21 @@ if (!Array.prototype.pushRange) {
     };
 }
 
+if (!String.prototype.caseInsensitiveEquals) {
+    String.prototype.caseInsensitiveEquals = function (value) {
+        if (Oracle.isEmpty(this) && Oracle.isEmpty(value)) {
+            return true;
+        }
+        else if (Oracle.isEmpty(this) || Oracle.isEmpty(value)) {
+            return false;
+        }
+        else {
+            return this.toUpperCase() === value.toUpperCase()
+        }
+    }
+}
+
+
 if (!String.prototype.toUpperCaseFirstLetter) {
     String.prototype.toUpperCaseFirstLetter = function () {
         if (Oracle.isEmpty(this)) {
