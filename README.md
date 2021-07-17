@@ -26,7 +26,6 @@ Makes use of the Grease Monkey browser plugin provide a better user experience w
 // @require      file://C:\{your_folder_path}\src\js\Oracle.JQuery.js
 // @require      file://C:\{your_folder_path}\src\js\Oracle.js
 // @require      file://C:\{your_folder_path}\src\js\Oracle.Settings.js
-// @require      file://C:\{your_folder_path}\src\js\Oracle.Tampermonkey.js
 // @require      file://C:\{your_folder_path}\src\js\Oracle.Conversion.js
 // @require      file://C:\{your_folder_path}\src\js\Oracle.Formating.js
 // @require      file://C:\{your_folder_path}\src\js\Oracle.HTML.js
@@ -38,6 +37,8 @@ Makes use of the Grease Monkey browser plugin provide a better user experience w
 // @require      file://C:\{your_folder_path}\src\js\Oracle.BugDB.js
 // @require      file://C:\{your_folder_path}\src\js\Oracle.BugDB.BugGrid.js
 // @require      file://C:\{your_folder_path}\src\js\Oracle.BugDB.FilterPanel.js
+
+// @require      file://C:\{your_folder_path}\src\js\Oracle.Tampermonkey.js
 // @require      file://C:\{your_folder_path}\src\tampermonkey\BugDBQueryPage.js
 
 // ==/UserScript== 
