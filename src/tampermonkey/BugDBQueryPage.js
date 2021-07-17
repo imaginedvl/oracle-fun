@@ -8,20 +8,8 @@
     const table = new Oracle.BugDB.BugGrid(
         {
             classes: 'groupable sortable groupable-headers',
-            columns:
-                [
-                    { id: 'number', columnTitle: 'Number', formater: 'BugDBNumber', },
-                    { id: 'dateReported', columnTitle: 'Creation', formater: 'BugDBDate' },
-                    { id: 'severity', columnTitle: 'Severity', formater: 'BugDBSeverity', groupable: true },
-                    { id: 'status', columnTitle: 'Status', formater: 'BugDBStatus', groupable: true },
-                    { id: 'assignee', columnTitle: 'Assignee', groupable: true },
-                    { id: 'fixEta', columnTitle: 'Fix ETA', formater: 'BugDBDate' },
-                    { id: 'component', columnTitle: 'Component', groupable: true },
-                    { id: 'tags', columnTitle: 'Tags', formater: 'BugDBTags' },
-                    { id: 'subject', columnTitle: 'Subject' },
-                    { id: 'customer', columnTitle: 'Customer', formater: 'BugDBCustomer', groupable: true }
-                ],
-            data: bugDbPage.bugs,
+            fields: bugDbPage.table.fields,
+            bugs: bugDbPage.bugs,
             sort:
             {
                 column: 'severity'

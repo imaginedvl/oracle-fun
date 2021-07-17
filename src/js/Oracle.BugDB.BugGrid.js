@@ -14,13 +14,15 @@ Oracle = (function (parent) {
 
         constructor(controlSettings) {
             if (Oracle.isEmpty(controlSettings)) controlSettings = {};
-            /* for(let i = 0; i< controlSettings.fields.length; i++)
-             {
-                 if(Oracle.isEmpty(controlSettings.columns)) {
-                     controlSettings.columns = [] ;
-                 }
-                 controlSettings.columns.push(Oracle.BugDB.getFieldProperties(controlSettings.fields[i]));
-             }*/
+            if (!controlSettings.data) {
+                controlSettings.data = controlSettings.bugs;
+            }
+            for (let i = 0; i < controlSettings.fields.length; i++) {
+                if (Oracle.isEmpty(controlSettings.columns)) {
+                    controlSettings.columns = [];
+                }
+                controlSettings.columns.push(Oracle.BugDB.getFieldProperties(controlSettings.fields[i]));
+            }
             super(controlSettings);
         }
     }
