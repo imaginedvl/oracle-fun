@@ -300,7 +300,7 @@ Oracle = (function (parent) {
 
         initializeIndexes() {
             this.indexes = {};
-            this.fields = [];
+            const fields = [];
             for (const [key, value] of Object.entries(Oracle.BugDB.Fields)) {
                 let columnSelector = _fieldProperties[value]?.columnSelector;
                 if (!Oracle.isEmpty(columnSelector)) {
@@ -325,8 +325,14 @@ Oracle = (function (parent) {
                     this.indexes[value] - 1;
                 }
                 if (this.indexes[value] > -1) {
-                    this.fields.push(value);
+                    fields.push({ name: value, index: this.indexes[value] });
                 }
+
+            }
+            fields.sort((a, b) => Oracle.compare(a.index, b.index));
+            this.fields = [];
+            for (let i = 0; i < fields.length; i++) {
+                this.fields.push(fields[i].name);
             }
             Oracle.Logger.logDebug("BugDBTable: Indexes initialized", { indexes: this.indexes, fields: this.fields });
         }
