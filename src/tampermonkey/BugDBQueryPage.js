@@ -1,5 +1,7 @@
 (function () {
 
+
+
     const bugDbPage = new Oracle.BugDB.BugTablePage();
     if (!Oracle.Conversion.toBoolean(Oracle.Http.getQueryStringValue("showOriginal"))) {
         bugDbPage.hide();
@@ -10,7 +12,7 @@
     const table = new Oracle.BugDB.BugGrid(
         {
             classes: 'groupable sortable groupable-headers',
-            fields: bugDbPage.table.fields,
+            fields: bugDbPage.fields,
             bugs: bugDbPage.bugs,
             sort:
             {

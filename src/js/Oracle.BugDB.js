@@ -524,6 +524,7 @@ Oracle = (function (parent) {
             $('body').removeAttr('onload');
             this.table = new Oracle.BugDB.BugTable(null, this.element);
             this.bugs = this.table.bugs;
+            this.fields = this.table.fields;
             this.title = this.element.children('h2').text();
         }
 
