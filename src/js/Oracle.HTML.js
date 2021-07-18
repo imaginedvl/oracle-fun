@@ -12,7 +12,7 @@ Oracle = (function (parent) {
         if (!Oracle.isEmpty(css)) {
             const style = document.getElementById("OracleStyles") || (function () {
                 const style = document.createElement('style');
-                style.type = 'text/css';
+                style.setAttribute("type", 'text/css');
                 style.id = "OracleStyles";
                 document.head.appendChild(style);
                 return style;

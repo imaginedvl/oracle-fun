@@ -17,6 +17,8 @@
     <!-- Oracle-Fun Framework-->
     <script src='../src/js/Oracle.js'></script>
     <script src='../src/js/Oracle.Conversion.js'></script>
+    <script src='../src/js/Oracle.Storage.js'></script>
+    <script src='../src/js/Oracle.Settings.js'></script>
     <script src='../src/js/Oracle.Formating.js'></script>
     <script src='../src/js/Oracle.HTML.js'></script>
     <script src='../src/js/Oracle.Controls.js'></script>
@@ -28,9 +30,13 @@
     <script src='../src/js/Oracle.BugDb.js'></script>
 
     <script src='../src/js/Oracle.Tests.js'></script>
+    <script src='../src/js/Oracle.Tests.Runners.js'></script>
 
-    <!-- Tests -->
+    <!-- Framework -->
     <script src='../src/js/tests/Tests.Oracle.js'></script>
+    <script src='../src/js/tests/Tests.Oracle.Storage.js'></script>
+
+    <!-- BugDB -->
     <script src='../src/js/tests/Tests.Oracle.BugDB.MockData.js'></script>
     <script src='../src/js/tests/Tests.Oracle.BugDB.js'></script>
 
@@ -38,10 +44,8 @@
     <div id='oracle-test-unit-results'></div>
 
     <script>
-        Oracle.Tests.displayResults('#oracle-test-unit-results');
-
+        new Oracle.Tests.Runners.StandaloneRunner({ target: '#oracle-test-unit-results' });
     </script>
-
 
 
 </body>

@@ -1,6 +1,6 @@
 'use strict';
 
-Oracle.Tests.execute({
+Oracle.Tests.registerTest({
     module: 'Oracle.BugDB',
     category: 'Bug',
     name: 'Bug.match',

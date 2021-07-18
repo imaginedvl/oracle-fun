@@ -102,7 +102,13 @@ Oracle = (function (parent) {
         }
     }
 
-    let _element = Oracle.toNullableValue($('#oracle-unit-test'));
+    const _testStatus = {
+        Ready: 'Ready', // Test is registered and ready to be executed
+        Success: 'Success',
+        Skipped: 'Skipped',
+        Failed: 'Failed',
+        PartialSuccess: 'PartialSuccess'
+    }
 
     // ---------------------------------------------------------------------------------------------------------------- //
     // Test Execution
@@ -110,7 +116,7 @@ Oracle = (function (parent) {
 
     const _mockData = {};
 
-    result.addMockData = function (id, data) {
+    result.registerMockData = function (id, data) {
         _mockData[id] = data;
     }
 
@@ -118,24 +124,14 @@ Oracle = (function (parent) {
         return Oracle.toNullableValue(_mockData[id]);
     }
 
-    result.TestResult = {
-        Unknown: 'Unknown',
-        Success: 'Success',
-        Skipped: 'Skipped',
-        Failed: 'Failed'
-    }
+    const _allModules = [];
+    const _allTests = [];
 
-    const _testResults = [];
-    const _uncategorizedModuleName = 'Uncategorized';
-
-    const _getTestResultModule = function (moduleName) {
-        if (moduleName === null) {
-            moduleName = _uncategorizedModuleName;
-        }
+    const _getOrCreateTestModule = function (moduleName) {
         let module = null;
-        for (let i = 0; i < _testResults.length; i++) {
-            if (_testResults[i].moduleName.toLowerCase() === moduleName.toLowerCase()) {
-                module = _testResults[i];
+        for (let i = 0; i < _allModules.length; i++) {
+            if (_allModules[i].name.toLowerCase() === moduleName.toLowerCase()) {
+                module = _allModules[i];
                 break;
             }
         }
@@ -149,153 +145,149 @@ Oracle = (function (parent) {
             }
             module =
             {
-                moduleName: moduleName,
-                results: [],
-                sortString: sortString
+                name: moduleName,
+                tests: [],
+                sortString: sortString,
+                status: _testStatus.Ready,
+                successCount: 0,
+                failedCount: 0,
+                skippedCount: 0
             };
-            _testResults.push(module);
-            _testResults.sort((a, b) => a.sortString.localeCompare(b));
+            _allModules.push(module);
+            _allModules.sort((a, b) => a.sortString.localeCompare(b));
         }
-
         return module;
     }
 
-    const _addTestResult = function (startTimestamp, settings, testResultType, error, errorMessage) {
-        const duration = Oracle.getTimestamp() - startTimestamp;
-        const testResult =
-        {
-            settings: settings,
-            result: testResultType,
-            duration: duration
-        };
-        const module = _getTestResultModule(testResult.settings?.module);
-        module.results.push(testResult);
-        if (testResultType === result.TestResult.Failed) {
-            testResult.error = error;
-            testResult.errorMessage = errorMessage;
-            Oracle.Logger.logError("TEST [" + testResultType.toUpperCase() + "] | " + settings.name + " -> " + errorMessage);
+    const _updateModuleStatus = function (moduleName) {
+        const module = _getOrCreateTestModule(moduleName);
+        let status = _testStatus.Ready;
+        let successCount = 0;
+        let failedCount = 0;
+        let skippedCount = 0;
+        for (let i = 0; i < module.tests.length; i++) {
+            const test = module.tests[i];
+            if (test.status === _testStatus.Success) {
+                successCount++;
+            }
+            else if (test.status === _testStatus.Failed) {
+                failedCount++;
+            }
+            else if (test.status === _testStatus.Skipped) {
+                skippedCount++;
+            }
         }
-        else {
-            Oracle.Logger.logInformation("TEST [" + testResultType.toUpperCase() + "] | " + settings.name);
+        if (failedCount > 0) {
+            status = _testStatus.Failed;
         }
+        else if (successCount === module.tests.length) {
+            status = _testStatus.Success;
+        }
+        else if (skippedCount === module.tests.length) {
+            status = _testStatus.Skipped;
+        }
+        else if (successCount > 0) {
+            status = _testStatus.PartialSuccess;
+        }
+        module.successCount = successCount;
+        module.failedCount = failedCount;
+        module.skippedCount = skippedCount;
+        module.status = status;
     }
 
-    const _includedModules = {};
 
-    let modules = Oracle.Http.getQueryStringValue("modules");
-    if (Oracle.isEmptyOrWhiteSpaces(modules)) {
+    const _uncategorizedModuleName = 'Uncategorized';
+    const _uncategorizedCategoryName = 'Uncategorized';
+    const _adhocTestName = 'Adhoc test #';
+    let _nextUnknownTestId = 0;
 
-    }
-    //
+    // ---------------------------------------------------------------------------------------------------------------- //
+    // Class: Test
+    // ---------------------------------------------------------------------------------------------------------------- //
+    const _testClass = class {
 
-    result.execute = function (settings) {
-        if (Oracle.isEmpty(settings)) {
-            throw new Oracle.Errors.ValidationError("You need to provide settings for your test. (ie: { name: 'my test', test: () => {} }");
+        constructor(settings) {
+            this.module = Oracle.toNullableValue(settings?.module);
+            this.category = Oracle.toNullableValue(settings?.category);
+            this.test = Oracle.toNullableValue(settings?.test);
+            this.name = Oracle.toNullableValue(settings?.name);
+            this.status = _testStatus.Ready;
+            this.resultError = null;
+            this.resultMessage = null;
+            this.logs = [];
+            if (this.name === null) {
+                _nextUnknownTestId++;
+                this.name = _adhocTestName + _nextUnknownTestId;
+            }
+            if (this.module === null) {
+                this.module = _uncategorizedModuleName;
+            }
+            if (this.category === null) {
+                this.category = _uncategorizedCategoryName;
+            }
         }
-        else {
+
+        execute() {
             const startTimestamp = Oracle.getTimestamp();
-            let skipTest = false;
-            /*_includedModules != null)
-            {
-
-            }*/
-            if (!skipTest) {
-                if (Oracle.isEmpty(settings.name)) {
-                    settings.name = 'Unknown test';
+            try {
+                if (Oracle.isFunction(this.test)) {
+                    this.test(assert, Oracle.Logger);
                 }
-                try {
-                    if (Oracle.isFunction(settings.test)) {
-                        settings.test(assert, Oracle.Logger);
-                    }
-                    _addTestResult(startTimestamp, settings, result.TestResult.Success);
-                }
-                catch (error) {
-                    let message = 'An error occured while executing the test';
-                    const errorAsString = String(error);
-                    if (!Oracle.isEmpty(errorAsString)) {
-                        message = errorAsString;
-                    }
-                    _addTestResult(startTimestamp, settings, result.TestResult.Failed, error, message);
-                }
+                this.duration = Oracle.getTimestamp() - startTimestamp;
+                this.status = _testStatus.Success;
+                Oracle.Logger.logInformation("TEST [" + this.status + "] | " + this.name);
             }
-            else {
-                _addTestResult(startTimestamp, settings, result.TestResult.Skipped);
+            catch (error) {
+                this.duration = Oracle.getTimestamp() - startTimestamp;
+                this.status = _testStatus.Failed;
+                let message = 'An error occured while executing the test';
+                const errorAsString = String(error);
+                if (!Oracle.isEmpty(errorAsString)) {
+                    message = errorAsString;
+                }
+                this.resultError = error;
+                this.resultMessage = message;
+                Oracle.Logger.logError("TEST [" + this.status + "] | " + this.name + " -> " + message);
             }
+            _updateModuleStatus(this.module);
+        }
 
+    }
+
+    result.registerTest = function (settings) {
+        let test;
+        if (Oracle.isObject(settings)) {
+            test = new _testClass(settings);
+        }
+        else if (Oracle.isFunction(settings)) {
+            test = new _testClass({ test: settings });
+        }
+        else {
+            throw new Oracle.Errors.ValidationError("You need to provide settings for your test. (ie: { module: '[module name]', category: '[category name]', name: '[test name]', test: () => { [your test code]} }");
+        }
+        const module = _getOrCreateTestModule(test.module);
+        module.tests.push(test);
+        _allTests.push(test);
+    }
+
+    result.getStatusText = function (status) {
+        switch (status) {
+            case _testStatus.Success:
+                return "Success";
+            case _testStatus.Failed:
+                return "Failed";
+            case _testStatus.PartialSuccess:
+                return "Partial Success";
+            case _testStatus.Ready:
+                return "Ready";
+            default:
+                return "Unknown";
         }
     }
 
-    /* To avoid dependencies on anything else but Oracle.js, let's deal with styles locally */
-    const _addStyle = function (css) {
-        if (!Oracle.isEmpty(css)) {
-            const style = document.getElementById("OracleUnitTestStyles") || (function () {
-                const style = document.createElement('style');
-                style.type = 'text/css';
-                style.id = "OracleUnitTestStyles";
-                document.head.appendChild(style);
-                return style;
-            })();
-            const sheet = style.sheet;
-            sheet.insertRule(css, (sheet.rules || sheet.cssRules || []).length);
-        }
-    }
-
-    _addStyle('.oracle.unit-test-section { width: 100%; display:block} ');
-    _addStyle('.oracle.unit-test-section table { width: 100%; } ');
-    _addStyle('.oracle.unit-test-section table { border-spacing:0px; border-collapse: collapse  } ');
-    _addStyle('.oracle.unit-test-section tr td { border:1px solid gray; padding: 4px; padding-bottom: 8px;padding-top: 8px;  } ');
-    _addStyle('.oracle.unit-test-section table tbody tr.module-section-header {  font-size:120%; background-color:#EFEFEF; } ');
-
-    _addStyle('.oracle.unit-test-section table tbody tr.test-row {   } ');
-    _addStyle('.oracle.unit-test-section table tbody tr.test-details {   } ');
-
-    _addStyle('.oracle.unit-test-section table tbody tr.test-row .test-category { width:15%  } ');
-    _addStyle('.oracle.unit-test-section table tbody tr.test-row .test-name {  width:70% } ');
-    _addStyle('.oracle.unit-test-section table tbody tr.test-row .test-result { width:15%;text-align:center;  } ');
-    _addStyle('.oracle.unit-test-section table tbody tr.test-row .test-result-success {   background-color: #5cb85c;color:white; } ');
-    _addStyle('.oracle.unit-test-section table tbody tr.test-row .test-result-failed {   background-color: #d9534f;color:white; } ');
-    _addStyle('.oracle.unit-test-section table tbody tr.test-row .test-result-skipped { background-color: #17a2b8;color:white;  } ');
-    _addStyle('.oracle.unit-test-section table tbody tr.test-row .test-result-unknown {   background-color: #ffeb3b;color:white; } ');
-    _addStyle('.oracle.unit-test-section table tbody tr.test-row {   } ');
-
-    result.displayResults = function (target) {
-        target = $(target);
-        target.addClass("oracle unit-test-section");
-        const table = $("<table style=''>");
-        const thead = $('<thead>');
-        table.append(thead);
-        const tbody = $('<tbody>');
-        table.append(tbody);
-        let td;
-        let tr;
-        for (let i = 0; i < _testResults.length; i++) {
-            const moduleResults = _testResults[i];
-            tr = $("<tr class='module-section-header'>");
-            td = $("<td colspan='4'>");
-            td.text(moduleResults.moduleName);
-            tr.append(td);
-            tbody.append(tr);
-            for (let j = 0; j < moduleResults.results.length; j++) {
-                const testResult = moduleResults.results[j];
-                tr = $("<tr class='test-row'>");
-                // Category
-                td = $("<td class='test-category'>");
-                td.text(testResult.settings.category);
-                tr.append(td);
-                // Name
-                td = $("<td class='test-name'>");
-                td.text(testResult.settings.name);
-                tr.append(td);
-                // Result
-                td = $("<td class='test-result test-result-" + testResult.result.toLowerCase() + "'>");
-                td.text(testResult.result);
-                tr.append(td);
-                tbody.append(tr);
-            }
-        }
-        target.append(table);
-        Oracle.Logger.logDebug("All test results", _testResults);
-    }
+    result.getAllTests = () => _allTests;
+    result.getAllModules = () => _allModules;
+    result.TestStatus = _testStatus;
 
     return parent;
 }(Oracle));

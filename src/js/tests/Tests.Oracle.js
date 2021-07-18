@@ -1,5 +1,6 @@
+'use strict';
 
-Oracle.Tests.execute({
+Oracle.Tests.registerTest({
     module: 'Oracle',
     category: 'Distincts',
     name: 'Distincts tests (simple types)',
@@ -14,7 +15,7 @@ Oracle.Tests.execute({
     }
 });
 
-Oracle.Tests.execute({
+Oracle.Tests.registerTest({
     module: 'Oracle',
     category: 'Distincts',
     name: 'Distincts tests (objects using knowclasses)',
@@ -25,9 +26,8 @@ Oracle.Tests.execute({
         assert.areEqual(3, objects.distinct().length);
     }
 });
-'use strict';
 
-Oracle.Tests.execute({
+Oracle.Tests.registerTest({
     module: 'Oracle',
     category: 'Distincts',
     name: 'Distincts tests (objects with custom comparer)',
@@ -35,10 +35,11 @@ Oracle.Tests.execute({
         const MyObject = class { constructor(a, b, c) { this.a = a; this.b = b; this.c = c; } }
         const objects = [new MyObject('a', 'b', 'c'), new MyObject('x', 'y', 'z'), new MyObject('a', 'b', 'c'), new MyObject('1', '2', '3'), new MyObject('x', 'y', 'z'),];
         assert.areEqual(3, objects.distinct((a, b) => Oracle.compare(a.a + a.b + a.c, b.a + b.b + b.c)).length);
+        assert.isTrue(false);
     }
 });
 
-Oracle.Tests.execute({
+Oracle.Tests.registerTest({
     module: 'Oracle',
     category: 'Array extensions',
     name: 'PushRange',
@@ -54,7 +55,7 @@ Oracle.Tests.execute({
     }
 });
 
-Oracle.Tests.execute({
+Oracle.Tests.registerTest({
     module: 'Oracle',
     category: 'Array extensions',
     name: 'Includes',
@@ -63,10 +64,10 @@ Oracle.Tests.execute({
         const b = 'Y';
         const c = 'A';
         const d = 'Y';
-        assert.isTrue(Oracle.includes(a,b));
-        assert.isFalse(Oracle.includes(a,c));
-        assert.isFalse(Oracle.includes(null,c));
-        assert.isTrue(Oracle.includes(b,d));
-        assert.isFalse(Oracle.includes(b,c));
+        assert.isTrue(Oracle.includes(a, b));
+        assert.isFalse(Oracle.includes(a, c));
+        assert.isFalse(Oracle.includes(null, c));
+        assert.isTrue(Oracle.includes(b, d));
+        assert.isFalse(Oracle.includes(b, c));
     }
 });

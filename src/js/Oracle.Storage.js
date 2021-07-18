@@ -8,42 +8,35 @@ Oracle = (function (parent) {
 
     const _result = parent.Storage;
 
+    _result.useMemory = typeof (Storage) === "undefined";
+
+    // To make this compatible with everything, we will use "string" to store the data (cookie, storage, memory)
+    // Then this module will have typed method
+
     // Those 2 methods can be overriden later
-    _result.onReadLocalStringValue = function (name) {
+    _result.onReadLocalStringValueFromStorage = function (name) {
         // To be overriden for now
         return defaultValue;
     }
 
-    _result.onWriteLocalStringValue = function (name, value) {
+    _result.onWriteLocalStringValueToStorage = function (name, value) {
     }
 
-    _result.onListStringValues = function () {
-        return [];
+    const _localValueNameValidChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-.|';
+    const _localPrefixes =
+    {
+        Null: 'n',
+        Undefined: 'u',
+        String: 'S',
+        Number: 'N',
+        Boolean: 'B',
+        Date: 'D',
+        JSON: 'J'
     }
 
-    // If the browser supports local storage, let's use it. If not I will have everything in memory (and then not really stored)
-    if (typeof (Storage) !== "undefined" && false) {
-    }
-    else {
-        const _memoryData = {};
-        _result.onReadLocalStringValue = function (name) {
-            if (_memoryData.hasOwnProperty(name)) {
-                return _memoryData[name];
-            }
-            else {
-                return defaultValue;
-            }
-        }
-
-        _result.onWriteLocalStringValue = function (name, value) {
-            _memoryData[name] = value;
-        }
-    }
-
-
-
-    const _normalizeLocalName = function (name) {
+    const _normalizeLocalValueName = function (name) {
         if (Oracle.isString(name) && !Oracle.isEmptyOrWhiteSpaces(name)) {
+            // TODO: LD: normalize the string with the valid chars only and replace invalid chars with "_"
             return name;
         }
         else {
@@ -51,28 +44,70 @@ Oracle = (function (parent) {
         }
     }
 
-    _result.readLocalStringValue = function (name, defaultValue = null) {
-        name = _normalizeLocalName(name);
-        if (_result.onReadLocalStringValue) {
-            const resultValue = _result.onReadLocalStringValue(name);
-            if (resultValue === undefined) {
-                return defaultValue;
+    const _memoryData = {};
+    const _readLocalStringValueFromStorage = function (name) {
+        name = _normalizeLocalValueName(name);
+        if (_result.useMemory) {
+            if (_memoryData.hasOwnProperty(name)) {
+                return _memoryData[name];
+            }
+            else {
+                return null;
+            }
+        }
+        else if (_result.onReadLocalStringValueFromStorage) {
+            const resultValue = _result.onReadLocalStringValueFromStorage(name);
+            if (Oracle.isEmptyOrWhiteSpaces(resultValue)) {
+                return null;
             }
             else {
                 return resultValue;
             }
         }
         else {
-            throw new Oracle.Errors.RuntimeError("Local storage read/write function not set.");
+            throw new Oracle.Errors.RuntimeError("Local storage write function not set.");
         }
     }
 
-    _result.writeLocalStringValue = function (name, value) {
-        name = _normalizeLocalName(name);
+    const _writeLocalStringValueToStorage = function (name, value) {
+        name = _normalizeLocalValueName(name);
         value = Oracle.toNullableValue(value);
-        if (_result.onWriteLocalStringValue) {
-            _result.onWriteLocalStringValue(name, value);
+        if (_result.useMemory) {
+            _memoryData[name] = value;
         }
+        else if (_result.onWriteLocalStringValueToStorage) {
+            _result.onWriteLocalStringValueToStorage(name, value);
+        }
+        else {
+            throw new Oracle.Errors.RuntimeError("Local storage read function not set.");
+        }
+    }
+
+    // ---------------------------------------------------------------------------------------------------------------- //
+    // Read / Write method for each supported type 
+    // ---------------------------------------------------------------------------------------------------------------- //
+
+    /* String */
+    _result.readLocalValue = function (name, defaultValue = null) {
+        return "X";
+    }
+
+    _result.writeLocalValue = function (name, value) {
+        let storedValue;
+        if (value === undefined) {
+            storedValue = _localPrefixes.Undefined;
+        }
+        else if (value === null) {
+            storedValue = _localPrefixes.Null;
+        }
+        else if (typeof (value) === 'boolean') {
+            storedValue = _localPrefixes.Boolean + value;
+        }
+        else {
+
+        }
+        Oracle.Logger.logDebug("Storing local value.", { name: name, storedValue: storedValue });
+        _writeLocalStringValueToStorage(name, storedValue);
     }
 
     return parent;
