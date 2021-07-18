@@ -82,8 +82,6 @@ var Oracle = (function () {
 
     const _knownClasses =
     {
-        Date: 'Date',
-        Array: 'Array'
     }
 
     const _addKnownClass = function (className, actualClass, compareCallback, generateHashCallback) {
@@ -210,7 +208,19 @@ var Oracle = (function () {
     result.getKnownClass = _getKnownClass;
     result.KnownClasses = _knownClasses;
 
-    _addKnownClass("Date", Date);
+    _addKnownClass("Date", Date, (a, b) => {
+        const aValue = a.getTime();
+        const bValue = b.getTime();
+        if (aValue > bValue) {
+            return 1;
+        }
+        else if (aValue < bValue) {
+            return -1
+        }
+        else {
+            return 0;
+        }
+    });
     _addKnownClass("Array", Array);
 
     // ------------------------------------------------------------------------------------------------

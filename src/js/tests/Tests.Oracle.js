@@ -2,6 +2,20 @@
 
 Oracle.Tests.registerTest({
     module: 'Oracle',
+    category: 'Compare',
+    name: 'Dates',
+    test: (assert, logger) => {
+        const currentDate = new Date();
+        const fromStringDate = new Date(currentDate.toISOString());
+        assert.areStrictlyEqual(currentDate.getTime(), fromStringDate.getTime());
+        assert.areNotEqual(currentDate, fromStringDate);
+        assert.areComparable(currentDate, fromStringDate);
+    }
+});
+
+
+Oracle.Tests.registerTest({
+    module: 'Oracle',
     category: 'Distincts',
     name: 'Distincts tests (simple types)',
     test: (assert, logger) => {
@@ -68,18 +82,5 @@ Oracle.Tests.registerTest({
         assert.isFalse(Oracle.includes(null, c));
         assert.isTrue(Oracle.includes(b, d));
         assert.isFalse(Oracle.includes(b, c));
-    }
-});
-
-Oracle.Tests.registerTest({
-    module: 'Oracle',
-    category: 'Tests',
-    name: 'Test failing on purpose',
-    test: (assert, logger) => {
-        logger.logWarning("This is a warning log entry");
-        logger.logInformation("This is a information log entry");
-        logger.logError("This is a error log entry");;
-        logger.logDebug("This is a debug log entry");
-        assert.isTrue(false);
     }
 });

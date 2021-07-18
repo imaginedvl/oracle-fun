@@ -31,7 +31,7 @@ Oracle = (function (parent) {
     }
 
     assert.isUndefined = function (actual, message) {
-        if (actual !== isUndefined) {
+        if (actual !== undefined) {
             throw new Oracle.Errors.AssertionError(message ? message : "Assert.isUndefined failed. Actual:<" + actual + ">. ", { actual: actual }, false);
         }
     }
@@ -79,8 +79,8 @@ Oracle = (function (parent) {
     }
 
     assert.areComparable = function (expected, actual, message) {
-        if (Oracle.compare(expected, actual) === 0) {
-            throw new Oracle.Errors.AssertionError(message ? message : "Assert.areComprable failed. Expected:<" + expected + ">. Actual:<" + actual + ">. ", { expected: expected, actual: actual }, false);
+        if (Oracle.compare(expected, actual) !== 0) {
+            throw new Oracle.Errors.AssertionError(message ? message : "Assert.areComparable failed. Expected:<" + expected + ">. Actual:<" + actual + ">. ", { expected: expected, actual: actual }, false);
         }
     }
 
@@ -97,7 +97,7 @@ Oracle = (function (parent) {
     }
 
     assert.areNotComparable = function (expected, actual, message) {
-        if (Oracle.compare(expected, actual) !== 0) {
+        if (Oracle.compare(expected, actual) === 0) {
             throw new Oracle.Errors.AssertionError(message ? message : "Assert.areNotComprable failed. Expected:<" + expected + ">. Actual:<" + actual + ">. ", { expected: expected, actual: actual }, false);
         }
     }
@@ -114,8 +114,8 @@ Oracle = (function (parent) {
     // Test Execution
     // ---------------------------------------------------------------------------------------------------------------- //
 
+    const _allModules = [];
     const _mockData = {};
-
     result.registerMockData = function (id, data) {
         _mockData[id] = data;
     }
@@ -124,11 +124,77 @@ Oracle = (function (parent) {
         return Oracle.toNullableValue(_mockData[id]);
     }
 
-    const _allModules = [];
+
+    // ---------------------------------------------------------------------------------------------------------------- //
+    // Class: Module
+    // ---------------------------------------------------------------------------------------------------------------- //
+    const _moduleClass = class {
+
+        constructor(settings) {
+            this.name = settings.name;
+            this.tests = [];
+            this.successCount = 0;
+            this.failedCount = 0;
+            this.skippedCount = 0;
+            this.status = _testStatus.Ready;
+            if (this.name === _uncategorizedModuleName) {
+                this.sortString = 'Z' + this.name.toLowerCase();
+            }
+            else {
+                this.sortString = 'A' + this.name.toLowerCase();
+            }
+        }
+
+        execute() {
+            for (let i = 0; i < this.tests.length; i++) {
+                this.tests[i].execute();
+            }
+        }
+
+        update() {
+            let status = _testStatus.Ready;
+            let successCount = 0;
+            let failedCount = 0;
+            let skippedCount = 0;
+            for (let i = 0; i < this.tests.length; i++) {
+                const test = this.tests[i];
+                if (test.status === _testStatus.Success) {
+                    successCount++;
+                }
+                else if (test.status === _testStatus.Failed) {
+                    failedCount++;
+                }
+                else if (test.status === _testStatus.Skipped) {
+                    skippedCount++;
+                }
+            }
+            if (failedCount > 0) {
+                status = _testStatus.Failed;
+            }
+            else if (successCount === this.tests.length) {
+                status = _testStatus.Success;
+            }
+            else if (skippedCount === this.tests.length) {
+                status = _testStatus.Skipped;
+            }
+            else if (successCount > 0) {
+                status = _testStatus.PartialSuccess;
+            }
+            this.successCount = successCount;
+            this.failedCount = failedCount;
+            this.skippedCount = skippedCount;
+            this.status = status;
+        }
+
+    }
+
     const _allTests = [];
 
     const _getOrCreateTestModule = function (moduleName) {
         let module = null;
+        if (Oracle.isEmptyOrWhiteSpaces(moduleName)) {
+            moduleName = _uncategorizedModuleName;
+        }
         for (let i = 0; i < _allModules.length; i++) {
             if (_allModules[i].name.toLowerCase() === moduleName.toLowerCase()) {
                 module = _allModules[i];
@@ -136,65 +202,20 @@ Oracle = (function (parent) {
             }
         }
         if (module === null) {
-            let sortString = moduleName.toLowerCase();
-            if (moduleName === _uncategorizedModuleName) {
-                sortString = 'Z' + sortString;
-            }
-            else {
-                sortString = 'A' + sortString;
-            }
-            module =
-            {
-                name: moduleName,
-                tests: [],
-                sortString: sortString,
-                status: _testStatus.Ready,
-                successCount: 0,
-                failedCount: 0,
-                skippedCount: 0
-            };
+            module = new _moduleClass(
+                {
+                    name: moduleName,
+                });
             _allModules.push(module);
             _allModules.sort((a, b) => a.sortString.localeCompare(b));
         }
         return module;
     }
 
-    const _updateModuleStatus = function (moduleName) {
-        const module = _getOrCreateTestModule(moduleName);
-        let status = _testStatus.Ready;
-        let successCount = 0;
-        let failedCount = 0;
-        let skippedCount = 0;
-        for (let i = 0; i < module.tests.length; i++) {
-            const test = module.tests[i];
-            if (test.status === _testStatus.Success) {
-                successCount++;
-            }
-            else if (test.status === _testStatus.Failed) {
-                failedCount++;
-            }
-            else if (test.status === _testStatus.Skipped) {
-                skippedCount++;
-            }
-        }
-        if (failedCount > 0) {
-            status = _testStatus.Failed;
-        }
-        else if (successCount === module.tests.length) {
-            status = _testStatus.Success;
-        }
-        else if (skippedCount === module.tests.length) {
-            status = _testStatus.Skipped;
-        }
-        else if (successCount > 0) {
-            status = _testStatus.PartialSuccess;
-        }
-        module.successCount = successCount;
-        module.failedCount = failedCount;
-        module.skippedCount = skippedCount;
-        module.status = status;
+    result.registerModule = function (settings) {
+        const module = _getOrCreateTestModule(settings?.name);
+        module.testInitialization = settings.testInitialization;
     }
-
 
     const _uncategorizedModuleName = 'Uncategorized';
     const _uncategorizedCategoryName = 'Uncategorized';
@@ -206,8 +227,8 @@ Oracle = (function (parent) {
     // ---------------------------------------------------------------------------------------------------------------- //
     const _testClass = class {
 
-        constructor(settings) {
-            this.module = Oracle.toNullableValue(settings?.module);
+        constructor(module, settings) {
+            this.module = module;
             this.category = Oracle.toNullableValue(settings?.category);
             this.test = Oracle.toNullableValue(settings?.test);
             this.name = Oracle.toNullableValue(settings?.name);
@@ -218,9 +239,6 @@ Oracle = (function (parent) {
             if (this.name === null) {
                 _nextUnknownTestId++;
                 this.name = _adhocTestName + _nextUnknownTestId;
-            }
-            if (this.module === null) {
-                this.module = _uncategorizedModuleName;
             }
             if (this.category === null) {
                 this.category = _uncategorizedCategoryName;
@@ -234,6 +252,9 @@ Oracle = (function (parent) {
             this.status = _testStatus.Running;
             const startTimestamp = Oracle.getTimestamp();
             try {
+                if (Oracle.isFunction(this.module.testInitialization)) {
+                    this.module.testInitialization(assert, this);
+                }
                 if (Oracle.isFunction(this.test)) {
                     this.test(assert, this);
                 }
@@ -253,7 +274,7 @@ Oracle = (function (parent) {
                 this.resultMessage = message;
                 Oracle.Logger.logError("TEST [" + this.status + "] | " + this.name + " -> " + message);
             }
-            _updateModuleStatus(this.module);
+            this.module.update();
         }
 
         log(level, message, data) {
@@ -287,17 +308,17 @@ Oracle = (function (parent) {
     }
 
     result.registerTest = function (settings) {
+        const module = _getOrCreateTestModule(settings?.module);
         let test;
         if (Oracle.isObject(settings)) {
-            test = new _testClass(settings);
+            test = new _testClass(module, settings);
         }
         else if (Oracle.isFunction(settings)) {
-            test = new _testClass({ test: settings });
+            test = new _testClass(module, { test: settings });
         }
         else {
             throw new Oracle.Errors.ValidationError("You need to provide settings for your test. (ie: { module: '[module name]', category: '[category name]', name: '[test name]', test: () => { [your test code]} }");
         }
-        const module = _getOrCreateTestModule(test.module);
         module.tests.push(test);
         _allTests.push(test);
     }

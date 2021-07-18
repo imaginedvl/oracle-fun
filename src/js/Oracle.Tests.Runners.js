@@ -151,7 +151,12 @@ Oracle = (function (parent) {
                     const level = $("<span class='level level-" + logEntry.level + "'>");
                     level.html(_getLevelText(logEntry.level));
                     const text = $("<span class='text'>");
-                    text.text(logEntry.message)
+                    if (Oracle.isObject(logEntry)) {
+                        text.text(JSON.stringify(logEntry.message))
+                    }
+                    else {
+                        text.text(logEntry.message)
+                    }
                     entry.append(level);
                     entry.append(text);
                     log.append(entry);
@@ -397,7 +402,6 @@ Oracle = (function (parent) {
                 const module = modules[i];
                 let addModule = true;
                 if (Array.isArray(includeModules) && includeModules.length > 0) {
-                    console.log({ includeModules: includeModules, name: module.name })
                     addModule = Oracle.includes(includeModules, module.name, (a, b) => b.startsWith(a));
                 }
                 if (addModule) {
