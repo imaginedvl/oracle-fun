@@ -12,6 +12,9 @@ Oracle = (function (parent) {
 
     // To make this compatible with everything, we will use "string" to store the data (cookie, storage, memory)
     // Then this module will have typed method
+    // For now, we will assume 2 things:
+    // 1 - We are limited by a simple key, value (where both are strings)
+    // 2 - The value has a limit in size
 
     // Those 2 methods can be overriden later
     _result.onReadLocalStringValueFromStorage = function (name) {
@@ -45,6 +48,16 @@ Oracle = (function (parent) {
     }
 
     const _memoryData = {};
+    let _localStorageContext = "Oracle";
+
+    _result.setLocalStorageContext = function (context) {
+        if (Oracle.isString(context) && !Oracle.isEmptyOrWhiteSpaces(context)) {
+
+        }
+        else {
+            _localStorageContext = "Oracle";
+        }
+    }
     const _readLocalStringValueFromStorage = function (name) {
         name = _normalizeLocalValueName(name);
         if (_result.useMemory) {
@@ -87,7 +100,7 @@ Oracle = (function (parent) {
     // Read / Write method for each supported type 
     // ---------------------------------------------------------------------------------------------------------------- //
 
-    /* String */
+    /* Object */
     _result.readLocalValue = function (name, defaultValue = null) {
         return "X";
     }
@@ -103,12 +116,16 @@ Oracle = (function (parent) {
         else if (typeof (value) === 'boolean') {
             storedValue = _localPrefixes.Boolean + value;
         }
+        else if (typeof (value) === 'string' || value instanceof String) {
+            storedValue = _localPrefixes.String + value;
+        }
         else {
-
+            throw new Oracle.Errors.RuntimeError("Cannot store value because it is not supported.");
         }
         Oracle.Logger.logDebug("Storing local value.", { name: name, storedValue: storedValue });
         _writeLocalStringValueToStorage(name, storedValue);
     }
 
+    _result.setLocalStorageContext();
     return parent;
 }(Oracle));

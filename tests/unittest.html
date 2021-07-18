@@ -44,7 +44,13 @@
     <div id='oracle-test-unit-results'></div>
 
     <script>
-        new Oracle.Tests.Runners.StandaloneRunner({ target: '#oracle-test-unit-results' });
+        let settings = {
+            target: '#oracle-test-unit-results',
+            useUrlSettings: true,
+            useStorageSettings: true
+        };
+        const runner = new Oracle.Tests.Runners.StandaloneRunner(settings);
+
     </script>
 
 

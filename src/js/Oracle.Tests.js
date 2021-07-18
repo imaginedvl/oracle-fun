@@ -228,10 +228,14 @@ Oracle = (function (parent) {
         }
 
         execute() {
+            this.resultError = null;
+            this.resultMessage = null;
+            this.logs = [];
+            this.status = _testStatus.Running;
             const startTimestamp = Oracle.getTimestamp();
             try {
                 if (Oracle.isFunction(this.test)) {
-                    this.test(assert, Oracle.Logger);
+                    this.test(assert, this);
                 }
                 this.duration = Oracle.getTimestamp() - startTimestamp;
                 this.status = _testStatus.Success;
@@ -250,6 +254,34 @@ Oracle = (function (parent) {
                 Oracle.Logger.logError("TEST [" + this.status + "] | " + this.name + " -> " + message);
             }
             _updateModuleStatus(this.module);
+        }
+
+        log(level, message, data) {
+            this.logs.push({
+                level: level,
+                message: message,
+                data: data
+            });
+        }
+
+        logWarning(message, data) {
+            Oracle.Logger.logWarning(message, data);
+            this.log(Oracle.Logger.Level.Warning, message, data);
+        }
+
+        logError(message, data) {
+            Oracle.Logger.logError(message, data);
+            this.log(Oracle.Logger.Level.Error, message, data);
+        }
+
+        logInformation(message, data) {
+            Oracle.Logger.logInformation(message, data);
+            this.log(Oracle.Logger.Level.Information, message, data);
+        }
+
+        logDebug(message, data) {
+            Oracle.Logger.logDebug(message, data);
+            this.log(Oracle.Logger.Level.Debug, message, data);
         }
 
     }

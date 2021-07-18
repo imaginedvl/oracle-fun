@@ -35,7 +35,6 @@ Oracle.Tests.registerTest({
         const MyObject = class { constructor(a, b, c) { this.a = a; this.b = b; this.c = c; } }
         const objects = [new MyObject('a', 'b', 'c'), new MyObject('x', 'y', 'z'), new MyObject('a', 'b', 'c'), new MyObject('1', '2', '3'), new MyObject('x', 'y', 'z'),];
         assert.areEqual(3, objects.distinct((a, b) => Oracle.compare(a.a + a.b + a.c, b.a + b.b + b.c)).length);
-        assert.isTrue(false);
     }
 });
 
@@ -69,5 +68,18 @@ Oracle.Tests.registerTest({
         assert.isFalse(Oracle.includes(null, c));
         assert.isTrue(Oracle.includes(b, d));
         assert.isFalse(Oracle.includes(b, c));
+    }
+});
+
+Oracle.Tests.registerTest({
+    module: 'Oracle',
+    category: 'Tests',
+    name: 'Test failing on purpose',
+    test: (assert, logger) => {
+        logger.logWarning("This is a warning log entry");
+        logger.logInformation("This is a information log entry");
+        logger.logError("This is a error log entry");;
+        logger.logDebug("This is a debug log entry");
+        assert.isTrue(false);
     }
 });

@@ -140,20 +140,36 @@ var Oracle = (function () {
         return result;
     }
 
-    result.includes = function (a, b) {
+    result.includes = function (a, b, comparer = null) {
         if (a === null || a === undefined) {
             return false;
         }
         else if (b === null || b === undefined) {
             return true;
         }
-        if (Array.isArray(a)) {
-            return a.includes(b);
+        if (Oracle.isFunction(comparer)) {
+            if (Array.isArray(a)) {
+                for (let i = 0; i < a.length; i++) {
+                    const result = comparer(a[i], b);
+                    if (result === 0 || result === true) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            else {
+                const result = comparer(a, b);
+                return result === 0 || result === true;
+            }
         }
         else {
-            return Oracle.compare(a, b) === 0;
+            if (Array.isArray(a)) {
+                return a.includes(b);
+            }
+            else {
+                return Oracle.compare(a, b) === 0;
+            }
         }
-        return false;
     }
 
     result.compare = function (a, b) {
@@ -366,6 +382,18 @@ var Oracle = (function () {
     // Module: Oracle.Logger
     // ---------------------------------------------------------------------------------------------------------------- //
     result.Logger = {};
+
+    result.Logger.Level =
+    {
+        Critical: 0,
+        Error: 1,
+        Warning: 2,
+        Information: 3,
+        Debug: 4,
+        Trace: 5,
+        None: 6
+    }
+
 
     result.Logger.logWarning = function (message, data) {
         if (data === undefined) {
