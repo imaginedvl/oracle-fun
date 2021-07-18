@@ -14,10 +14,10 @@ Oracle = (function (parent) {
 
     // Overriding storage methods if Oracle.Storage is being used/loaded
     if (parent.hasOwnProperty('Storage')) {
-        parent.Storage.onReadLocalStringValue = function (name, defaultValue = null) {
-            return GM_getValue(name, defaultValue);
+        parent.Storage.onReadLocalStringValue = function (name) {
+            return GM_getValue(name, undefined);
         }
-        parent.Storage.onSetLocalStringValue = function (name, value) {
+        parent.Storage.onWriteLocalStringValue = function (name, value) {
             GM_setValue(name, value);
         }
     }
