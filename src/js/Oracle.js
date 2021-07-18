@@ -332,7 +332,7 @@ var Oracle = (function () {
     result.Errors = {};
     result.Errors.BaseError = class extends Error {
         constructor(errorType, message, data, logError = true) {
-            if (Oracle.isObject(data)) {
+            if (Oracle.isObject(data) || Oracle.isEmpty(data)) {
                 super(message);
             }
             else {

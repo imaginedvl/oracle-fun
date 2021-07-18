@@ -1,7 +1,5 @@
 (function () {
 
-
-
     const bugDbPage = new Oracle.BugDB.BugTablePage();
     if (!Oracle.Conversion.toBoolean(Oracle.Http.getQueryStringValue("showOriginal"))) {
         bugDbPage.hide();

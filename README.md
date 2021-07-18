@@ -18,15 +18,16 @@ Makes use of the Grease Monkey browser plugin provide a better user experience w
 // @author       Laurent Devigne / 2021-07-05
 // @match        https://bug.oraclecorp.com/pls/bug/webbug_reports.do_custom_report*
 // @match        https://bug.oraclecorp.com/pls/bug/WEBBUG_REPORTS.do_edit_report*
-// @match        file:///*oracle-fun/tests/data*
+// @match        file:///*oracle-fun/tests/data/BugDB*
 // @grant GM_setValue
 // @grant GM_getValue
 // @require      http://code.jquery.com/jquery-2.2.4.min.js
 
 // @require      file://C:\{your_folder_path}\src\js\Oracle.JQuery.js
 // @require      file://C:\{your_folder_path}\src\js\Oracle.js
-// @require      file://C:\{your_folder_path}\src\js\Oracle.Settings.js
 // @require      file://C:\{your_folder_path}\src\js\Oracle.Conversion.js
+// @require      file://C:\{your_folder_path}\src\js\Oracle.Storage.js
+// @require      file://C:\{your_folder_path}\src\js\Oracle.Settings.js
 // @require      file://C:\{your_folder_path}\src\js\Oracle.Formating.js
 // @require      file://C:\{your_folder_path}\src\js\Oracle.HTML.js
 // @require      file://C:\{your_folder_path}\src\js\Oracle.Controls.js
