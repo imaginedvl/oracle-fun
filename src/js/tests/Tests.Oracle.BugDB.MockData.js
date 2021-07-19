@@ -31,7 +31,7 @@ Oracle.Tests.registerMockData('Oracle.BugDB.Bugs',
         3: new Oracle.BugDB.Bug(
             {
                 number: 3,
-                component: 'HIRING',
+                component: 'LIFECYCLE',
                 assignee: Oracle.Users.getOrCreateUser({ globalId: 'LDEVIGNE' }),
                 subject: 'Bug #3 subject',
                 severity: 4,

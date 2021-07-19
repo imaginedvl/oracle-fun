@@ -76,6 +76,7 @@
         storage.writeValue("Test.Oracle.Storage", "TestValueA", "TEST");
         storage.writeValue("Test.Oracle.Storage", "TestValueB", 125.20);
         storage.writeValue("Test.Oracle.Storage", "TestValueC", false);
+        storage.writeValue("Test.Oracle.ShouldNotAppear", "TestValueD", false);
         const keys = storage.getValueNamesByPath("Test.Oracle.Storage");
         assert.areStrictlyEqual(3, keys.length);
         logger.logDebug(keys);
