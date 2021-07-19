@@ -90,7 +90,9 @@ Oracle = (function (parent) {
         },
         status:
         {
-            id: 'status', columnTitle: 'Status', columnSelector: 'St', filterTitle: 'Status', lookup: result.Statuses, formater: 'BugDBStatus', groupable: true, filterable: true
+            id: 'status', columnTitle: 'Status', 
+            columnSelector: "$thead tr th:equalsi('Status'), thead tr th:equalsi('St')",
+            filterTitle: 'Status', lookup: result.Statuses, formater: 'BugDBStatus', groupable: true, filterable: true
         },
         fixEta:
         {
