@@ -12,6 +12,7 @@
             classes: 'groupable sortable groupable-headers',
             fields: bugDbPage.fields,
             bugs: bugDbPage.bugs,
+            name: 'BugDBGrid',
             sort:
             {
                 column: 'severity'
@@ -38,6 +39,7 @@
         {
             grid: table,
             data: bugDbPage.bugs,
+            name: 'BugDBPanel',
             panels:
                 [
                     { type: Oracle.BugDB.PanelTypes.Reset },

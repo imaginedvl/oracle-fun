@@ -12,16 +12,17 @@
 // ---------------------------------------------------------------------------------------------------------------- //
 Oracle = (function (parent) {
 
-    // Overriding storage methods if Oracle.Storage is being used/loaded
-    if (parent.hasOwnProperty('Storage')) {
-        parent.Storage.onReadLocalStringValueFromStorage = function (name) {
-            return GM_getValue(name, undefined);
-        }
-        parent.Storage.onWriteLocalStringValueToStorage = function (name, value) {
-            GM_setValue(name, value);
+    // Overriding storage methods if Oracle.Storage is being used/loaded and if the local storage is not available
+    if (typeof (Storage) === "undefined") {
+        if (parent.hasOwnProperty('Storage')) {
+            parent.Storage.onReadStringValueFromLocalStorage = function (name) {
+                return GM_getValue(name, undefined);
+            }
+            parent.Storage.onWriteStringValueToLocalStorage = function (name, value) {
+                GM_setValue(name, value);
+            }
         }
     }
-
     return parent;
 }(Oracle));
 

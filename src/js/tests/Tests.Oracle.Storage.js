@@ -57,9 +57,63 @@
         storage.writeValue("Test.Oracle.Storage", valueName, a);
     }
 
+    const _clearValuesTest = function (storage, assert, logger) {
+        storage.writeValue("Test.Oracle.Storage", "TestValue", "TEST");
+        assert.areEqual("TEST", storage.readValue("Test.Oracle.Storage", "TestValue", null));
+        storage.clear();
+        assert.isNull(storage.readValue("Test.Oracle.Storage", "TestValue", null));
+    }
+
+    const _removeValueTest = function (storage, assert, logger) {
+        storage.writeValue("Test.Oracle.Storage", "TestValue", "TEST");
+        assert.areEqual("TEST", storage.readValue("Test.Oracle.Storage", "TestValue", null));
+        storage.removeValue("Test.Oracle.Storage", "TestValue");
+        assert.isNull(storage.readValue("Test.Oracle.Storage", "TestValue", null));
+    }
+
+    const _listValuesTest = function (storage, assert, logger) {
+        storage.clear();
+        storage.writeValue("Test.Oracle.Storage", "TestValueA", "TEST");
+        storage.writeValue("Test.Oracle.Storage", "TestValueB", 125.20);
+        storage.writeValue("Test.Oracle.Storage", "TestValueC", false);
+        const keys = storage.getValueNamesByPath("Test.Oracle.Storage");
+        assert.areStrictlyEqual(3, keys.length);
+        logger.logDebug(keys);
+        assert.isTrue(Oracle.includes(keys, "TestValueA"));
+        assert.isTrue(Oracle.includes(keys, "TestValueB"));
+        assert.isTrue(Oracle.includes(keys, "TestValueC"));
+    }
+
     // -----------------------------------------------------
     // Local Storage 
     // -----------------------------------------------------
+    Oracle.Tests.registerTest({
+        module: 'Oracle.Storage',
+        category: 'Local Storage',
+        name: 'List all keys',
+        test: (assert, logger) => {
+            _listValuesTest(Oracle.Storage.Local, assert, logger);
+        }
+    });
+
+    Oracle.Tests.registerTest({
+        module: 'Oracle.Storage',
+        category: 'Local Storage',
+        name: 'Removing value',
+        test: (assert, logger) => {
+            _removeValueTest(Oracle.Storage.Local, assert, logger);
+        }
+    });
+
+    Oracle.Tests.registerTest({
+        module: 'Oracle.Storage',
+        category: 'Local Storage',
+        name: 'Clearing all values',
+        test: (assert, logger) => {
+            _clearValuesTest(Oracle.Storage.Local, assert, logger);
+        }
+    });
+
     Oracle.Tests.registerTest({
         module: 'Oracle.Storage',
         category: 'Local Storage',
@@ -90,6 +144,33 @@
     // -----------------------------------------------------
     // Session Storage 
     // -----------------------------------------------------
+    Oracle.Tests.registerTest({
+        module: 'Oracle.Storage',
+        category: 'Session Storage',
+        name: 'List all keys',
+        test: (assert, logger) => {
+            _listValuesTest(Oracle.Storage.Session, assert, logger);
+        }
+    });
+
+    Oracle.Tests.registerTest({
+        module: 'Oracle.Storage',
+        category: 'Session Storage',
+        name: 'Removing value',
+        test: (assert, logger) => {
+            _removeValueTest(Oracle.Storage.Session, assert, logger);
+        }
+    });
+
+    Oracle.Tests.registerTest({
+        module: 'Oracle.Storage',
+        category: 'Session Storage',
+        name: 'Clearing all values',
+        test: (assert, logger) => {
+            _clearValuesTest(Oracle.Storage.Session, assert, logger);
+        }
+    });
+
     Oracle.Tests.registerTest({
         module: 'Oracle.Storage',
         category: 'Session Storage',
