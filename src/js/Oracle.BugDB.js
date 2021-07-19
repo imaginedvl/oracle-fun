@@ -114,7 +114,7 @@ Oracle = (function (parent) {
         subject: { id: 'subject', columnTitle: 'Subject', columnSelector: '=subject' },
         selection: { id: 'selection', columnSelector: '#select_all_option' },
         lineNumber: { id: 'lineNumber', columnSelector: 'Sl No.' },
-        productNumber: { id: 'productNumber', columnTitle: 'Product', columnSelector: 'Product ID', groupable: true },
+        productNumber: { id: 'productNumber', columnTitle: 'Product', columnSelector: '=Product ID', groupable: true },
         supportContact: { id: 'supportContact', columnTitle: 'Support Contact', columnSelector: 'Support Contact', groupable: true },
         testName: { id: 'testName', columnTitle: 'Test Name', columnSelector: 'Test Name/Doc Field', groupable: true }
     }
