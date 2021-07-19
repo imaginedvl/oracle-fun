@@ -10,21 +10,21 @@ Oracle = (function (parent) {
 
     result.Statuses =
     {
-        11: { name: 'Open', number: 11 },
+        11: { name: 'Open', number: 11, filterTitle: 'Open', filterVisible: true },
         15: { name: 'Enhancement Request', number: 15 },
-        30: { name: 'More Info Requested', number: 30 },
+        30: { name: 'More Info Requested', number: 30, filterVisible: true },
         31: { name: 'Could Not Reproduce', number: 31 },
         32: { name: 'Not a Bug', number: 32 },
         33: { name: 'Suspended', number: 33 },
         36: { name: 'Duplicate Bug', number: 36 },
-        37: { name: 'Merged', number: 37 },
-        39: { name: 'Waiting For Codeline', number: 39 },
-        40: { name: 'Waiting', number: 40 },
+        37: { name: 'Merged', number: 37, filterVisible: true },
+        39: { name: 'Waiting For Codeline', number: 39, filterVisible: true },
+        40: { name: 'Waiting', number: 40, filterVisible: true },
         41: { name: 'Base Bug fixed', number: 41 },
         71: { name: 'Closed, data fix', number: 71 },
         72: { name: 'Closed, data fix', number: 72 },
         78: { name: 'Closed Environment Issue', number: 78 },
-        80: { name: 'Ready To Validate', number: 80 },
+        80: { name: 'Ready To Validate', number: 80, filterVisible: true },
         84: { name: 'Closed, not feasible to fix', number: 84 },
         90: { name: 'Closed, Verified by Filer', number: 90 },
         91: { name: 'Closed, Could Not Reproduce', number: 91 },
@@ -36,21 +36,21 @@ Oracle = (function (parent) {
 
     result.Severity =
     {
-        1: { name: 'Complete Loss of Service', number: '1', filterTitle: 'Sev-1' },
-        2: { name: 'Severe', number: '2', filterTitle: 'Sev-2' },
-        3: { name: 'Minimal', number: '3', filterTitle: 'Sev-3' },
-        4: { name: 'Minor', number: '4', filterTitle: 'Sev-4' }
+        1: { name: 'Complete Loss of Service', number: '1', filterTitle: 'Sev-1', filterVisible: true },
+        2: { name: 'Severe', number: '2', filterTitle: 'Sev-2', filterVisible: true },
+        3: { name: 'Minimal', number: '3', filterTitle: 'Sev-3', filterVisible: true },
+        4: { name: 'Minor', number: '4', filterTitle: 'Sev-4', filterVisible: true }
     }
 
     result.Tag =
     {
-        REGRN: { name: 'REGRN', filterTitle: 'REGRN' },
-        P1: { name: 'P1', filterTitle: 'P1' },
-        QABLK: { name: 'QABLK', filterTitle: 'QABLK' },
-        HCMBRONZE: { name: 'HCMBRONZE', filterTitle: 'HCMBRONZE' },
-        HCMSILVER: { name: 'HCMSILVER', filterTitle: 'HCMSILVER' },
-        'FRCE-SQL-CLEANUP': { name: 'FRCE-SQL-CLEANUP', filterTitle: 'FRCE-SQL-CLEANUP' },
-        VPAT_MUST: { name: 'VPAT_MUST', filterTitle: 'VPAT_MUST' }
+        REGRN: { name: 'REGRN', filterTitle: 'REGRN', filterVisible: true },
+        P1: { name: 'P1', filterTitle: 'P1', filterVisible: true },
+        QABLK: { name: 'QABLK', filterTitle: 'QABLK', filterVisible: true },
+        HCMBRONZE: { name: 'HCMBRONZE', filterTitle: 'HCMBRONZE', filterVisible: true },
+        HCMSILVER: { name: 'HCMSILVER', filterTitle: 'HCMSILVER', filterVisible: true },
+        'FRCE-SQL-CLEANUP': { name: 'FRCE-SQL-CLEANUP', filterTitle: 'FRCE-SQL-CLEANUP', filterVisible: true },
+        VPAT_MUST: { name: 'VPAT_MUST', filterTitle: 'VPAT_MUST', filterVisible: true }
     }
 
     result.Fields = {
@@ -90,7 +90,7 @@ Oracle = (function (parent) {
         },
         status:
         {
-            id: 'status', columnTitle: 'Status', columnSelector: 'St', filterTitle: 'Status', lookup: result.Status, formater: 'BugDBStatus', groupable: true, filterable: true
+            id: 'status', columnTitle: 'Status', columnSelector: 'St', filterTitle: 'Status', lookup: result.Statuses, formater: 'BugDBStatus', groupable: true, filterable: true
         },
         fixEta:
         {

@@ -39,6 +39,7 @@
         {
             grid: table,
             data: bugDbPage.bugs,
+            fields: bugDbPage.fields,
             name: 'BugDBPanel',
             panels:
                 [

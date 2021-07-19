@@ -115,6 +115,7 @@ Oracle = (function (parent) {
             }
             this.grid = controlSettings.grid;
             this.bugs = controlSettings.data;
+            this.fields = controlSettings.fields;
             this.summary = new Oracle.BugDB.BugSummary(this.bugs);
 
             // Title
@@ -182,31 +183,35 @@ Oracle = (function (parent) {
 
         initializeStandardPanel() {
             for (const [key, properties] of Object.entries(Oracle.BugDB.FieldProperties)) {
-                if (properties.filterable === true) {
-                    let title;
-                    if (Oracle.isEmpty(properties.filterTitle)) {
-                        title = properties.headerTitle;
-                    }
-                    else {
-                        title = properties.filterTitle;
-                    }
-                    const panel = this.initializeBasePanel(title);
-                    const distinctMetrics = this.summary.getDistinctMetrics(properties.id);
-                    if (!Oracle.isEmpty(distinctMetrics)) {
-                        for (let i = 0; i < distinctMetrics.length; i++) {
-                            const metrics = distinctMetrics[i];
-                            let value;
-                            if (properties.lookup) {
-                                value = properties.lookup[metrics.value].filterTitle;
-                            }
-                            else {
-                                value = Oracle.Formating.formatValue(metrics.value);
-                            }
-                            const item = this.createBaseFilterItem(value, metrics.value, metrics.count, properties.id, null);
-                            panel.append(item);
+                if(Oracle.includes(this.fields, properties.id)) {
+                    if (properties.filterable === true) {
+                        let title;
+                        if (Oracle.isEmpty(properties.filterTitle)) {
+                            title = properties.headerTitle;
                         }
+                        else {
+                            title = properties.filterTitle;
+                        }
+                        const panel = this.initializeBasePanel(title);
+                        const distinctMetrics = this.summary.getDistinctMetrics(properties.id);
+                        if (!Oracle.isEmpty(distinctMetrics)) {
+                            for (let i = 0; i < distinctMetrics.length; i++) {
+                                const metrics = distinctMetrics[i];
+                                let value;
+                                if (properties.lookup && properties.lookup[metrics.value].filterTitle) {
+                                    value = properties.lookup[metrics.value].filterTitle;
+                                }
+                                else {
+                                    value = Oracle.Formating.formatValue(metrics.value);
+                                }
+                                if(Oracle.compare(metrics.count, 0) === 1 || (properties.lookup && properties.lookup[metrics.value].filterVisible)) {
+                                    const item = this.createBaseFilterItem(value, metrics.value, metrics.count, properties.id, null);
+                                    panel.append(item);
+                                }
+                            }
+                        }
+                        this.element.append(panel);
                     }
-                    this.element.append(panel);
                 }
             }
         }
