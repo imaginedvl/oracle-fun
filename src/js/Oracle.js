@@ -550,7 +550,7 @@ var Oracle = (function () {
     // ---------------------------------------------------------------------------------------------------------------- //
     result.Dates = {};
 
-    const _months = [{ n: 'January', a: 'Jan' }, { n: 'January', a: 'Jan' }, { n: 'February', a: 'Feb' }, { n: 'March', a: 'Mar' }, { n: 'April', a: 'Apr' }, { n: 'May', a: 'May' }, { n: 'June', a: 'Jun' },
+    const _months = [{ n: 'January', a: 'Jan' }, { n: 'February', a: 'Feb' }, { n: 'March', a: 'Mar' }, { n: 'April', a: 'Apr' }, { n: 'May', a: 'May' }, { n: 'June', a: 'Jun' },
     { n: 'July', a: 'Jul' }, { n: 'August', a: 'Aug' }, { n: 'September', a: 'Sep' }, { n: 'October', a: 'Oct' }, { n: 'November', a: 'Nov' }, { n: 'December', a: 'Dev' }];
 
     result.Dates.getMonthName = function (monthIndex) {
