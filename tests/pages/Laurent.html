@@ -18,9 +18,14 @@
     <script>
 
 
-        const myString = "\n                             \n                 ";
-        const trimedString = Oracle.Strings.trimStart(myString);
-        console.log({ string: myString, trimed: trimedString });
+        const value = "- TEST -";
+        const trimed = value.trim(['-', ' ']);
+        const trimedEnd = value.trimEnd(['-', ' ']);
+        const trimedStart = value.trimStart(['-', ' ']);
+
+
+        console.log({ value: value, trimed: trimed, trimedEnd: trimedEnd, trimedStart: trimedStart })
+
 
     </script>
 

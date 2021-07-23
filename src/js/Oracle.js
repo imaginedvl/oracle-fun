@@ -550,18 +550,19 @@ var Oracle = (function () {
     // ---------------------------------------------------------------------------------------------------------------- //
     result.Dates = {};
 
-    const _months = {
+    const _months =
+    {
         0: { n: 'January', a: 'Jan' },
-        1: { n: 'February', a: 'Feb' }, 
-        2: { n: 'March', a: 'Mar' }, 
-        3: { n: 'April', a: 'Apr' }, 
-        4: { n: 'May', a: 'May' }, 
+        1: { n: 'February', a: 'Feb' },
+        2: { n: 'March', a: 'Mar' },
+        3: { n: 'April', a: 'Apr' },
+        4: { n: 'May', a: 'May' },
         5: { n: 'June', a: 'Jun' },
-        6: { n: 'July', a: 'Jul' }, 
-        7: { n: 'August', a: 'Aug' }, 
-        8: { n: 'September', a: 'Sep' }, 
-        9: { n: 'October', a: 'Oct' }, 
-        10: { n: 'November', a: 'Nov' }, 
+        6: { n: 'July', a: 'Jul' },
+        7: { n: 'August', a: 'Aug' },
+        8: { n: 'September', a: 'Sep' },
+        9: { n: 'October', a: 'Oct' },
+        10: { n: 'November', a: 'Nov' },
         11: { n: 'December', a: 'Dec' }
     };
 
@@ -571,8 +572,8 @@ var Oracle = (function () {
 
     result.Dates.getMonthAbbreviation = function (monthIndex) {
         return _months[monthIndex]?.a;
-
     }
+
     return result;
 }());
 
