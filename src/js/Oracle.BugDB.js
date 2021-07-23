@@ -90,7 +90,7 @@ Oracle = (function (parent) {
         },
         status:
         {
-            id: 'status', columnTitle: 'Status', 
+            id: 'status', columnTitle: 'Status',
             columnSelector: "$thead tr th:equalsi('Status'), thead tr th:equalsi('St')",
             filterTitle: 'Status', lookup: result.Statuses, formater: 'BugDBStatus', groupable: true, filterable: true
         },
@@ -367,6 +367,7 @@ Oracle = (function (parent) {
                 bug[Oracle.BugDB.Fields.Severity] = row.getAsNumber(Oracle.BugDB.Fields.Severity);
                 bug[Oracle.BugDB.Fields.Subject] = row.getAsString(Oracle.BugDB.Fields.Subject);
                 bug[Oracle.BugDB.Fields.Customer] = row.getAsString(Oracle.BugDB.Fields.Customer);
+                bug[Oracle.BugDB.Fields.TestName] = row.getAsTest(Oracle.BugDB.Fields.TestName);
                 if (!Oracle.isEmpty(bug[Oracle.BugDB.Fields.Customer])
                     && bug[Oracle.BugDB.Fields.Customer].startsWith("INTERNAL")) {
                     bug[Oracle.BugDB.Fields.Customer] = null;
@@ -429,6 +430,26 @@ Oracle = (function (parent) {
                 }
             }
             return result;
+        }
+
+        getAsTest(fieldName) {
+            const cell = this.cells[fieldName];
+            if (cell) {
+                let value = cell.text();
+                value = Oracle.Strings.trim(value);
+                if (!Oracle.isEmptyOrWhiteSpaces(value)) {
+                    const result = { name: null, jiraId: null };
+                    if (value.startsWith("FRCE")) {
+                        const tokens = value.split('-', 2);
+                        result.jiraId = tokens[0];
+                        if (tokens.length > 0) {
+                            result.name = tokens[1];
+                        }
+                    }
+                    return result;
+                }
+            }
+            return null;
         }
 
         getAsUser(fieldName) {
@@ -500,16 +521,17 @@ Oracle = (function (parent) {
             const cell = this.cells[fieldName];
             if (cell) {
                 const text = cell.text();
-                if (Oracle.isEmptyOrWhiteSpaces(text)) {
-                    return null;
-                }
-                else {
-                    return new Date(text);
+                if (!Oracle.isEmptyOrWhiteSpaces(text)) {
+                    const date = new Date(text);
+                    if (date.isValid()) {
+                        return date;
+                    }
+                    else {
+                        console.log("XXXXXXXX", { text: text });
+                    }
                 }
             }
-            else {
-                return null;
-            }
+            return null;
         }
     }
 
@@ -564,7 +586,7 @@ Oracle = (function (parent) {
     Oracle.Controls.Themes.addStaticCSSRule('.bugdb-tags .bugdb-tag-frce-sql-cleanup {  color: var(--infoTextColor); background-color: var(--infoBackgroundColor) }');
 
     Oracle.Formating.addFormater('BugDBDate', null, null, (value, settings) => {
-        if (value) {
+        if (value instanceof Date && value.isValid()) {
             const dateDay = value.getDate(), month = value.getMonth() + 1, year = value.getFullYear();
             return $(`<span class='bugdb-date'><span class='day'>${String(dateDay).padStart(2, '0')}</span><span class='month'>${Oracle.Dates.getMonthAbbreviation(month).toUpperCase()}</span><span class='year'>${year}</span></span>`);
         }

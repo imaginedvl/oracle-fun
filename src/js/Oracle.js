@@ -36,7 +36,9 @@ var Oracle = (function () {
             return value.length === 0;
         }
         if (typeof (value) === 'string') {
-            return Oracle.Strings.trim(value) === '';
+            const trimvalue = Oracle.Strings.trim(value);
+            console.log({ value: value, trimvalue: trimvalue });
+            return trimvalue === '';
         }
         return false;
     };
@@ -476,8 +478,71 @@ var Oracle = (function () {
     // ---------------------------------------------------------------------------------------------------------------- //
     result.Strings = {};
 
-    result.Strings.trim = function (value) {
-        return value.replace(/[\s\n\r\t]*$/, '').replace(/^[\s\n\r\t]*/, '');
+    const _defaultTrimCharacters = [' ', '\t', '\n', '\r', String.fromCharCode(160)];
+
+    const _isTrimableChar = function (char, characters) {
+        for (let j = 0; j < characters.length; j++) {
+            if (characters[j] == char) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    result.Strings.trimEnd = function (value, characters, extraCharacters) {
+        if (value === null || value === undefined || !Oracle.isString(value)) {
+            return null;
+        }
+        if (characters === null || characters === undefined || !Array.isArray(characters)) {
+            characters = _defaultTrimCharacters
+        }
+        let endIndex = value.length;
+        for (let i = value.length - 1; i > -1; i--) {
+            if (_isTrimableChar(value.charAt(i), characters)) {
+                endIndex = i;
+                break;
+            }
+        }
+        if (endIndex > value.length - 1) {
+            return "";
+        }
+        else {
+            return value.substring(0, endIndex + 1);
+        }
+    }
+
+    result.Strings.trimStart = function (value, characters) {
+        if (value === null || value === undefined || !Oracle.isString(value)) {
+            return null;
+        }
+        if (characters === null || characters === undefined || !Array.isArray(characters)) {
+            characters = _defaultTrimCharacters
+        }
+        let startIndex = -1;
+        for (let i = 0; i < value.length; i++) {
+            if (_isTrimableChar(value.charAt(i), characters)) {
+                startIndex = i;
+                break;
+            }
+        }
+        if (startIndex === -1) {
+            return "";
+        }
+        else {
+            return value.substring(startIndex);
+        }
+    }
+
+    result.Strings.trim = function (value, characters) {
+        if (value === null || value === undefined || !Oracle.isString(value)) {
+            return null;
+        }
+        if (characters === null || characters === undefined || !Array.isArray(characters)) {
+            characters = _defaultTrimCharacters
+        }
+        const trimStart = Oracle.Strings.trimStart(value, characters);
+        const trimEnd = Oracle.Strings.trimEnd(trimStart, characters);
+        return trimEnd;
     }
 
     // ---------------------------------------------------------------------------------------------------------------- //
@@ -489,11 +554,12 @@ var Oracle = (function () {
     { n: 'July', a: 'Jul' }, { n: 'August', a: 'Aug' }, { n: 'September', a: 'Sep' }, { n: 'October', a: 'Oct' }, { n: 'November', a: 'Nov' }, { n: 'December', a: 'Dev' }];
 
     result.Dates.getMonthName = function (monthIndex) {
-        return _months[monthIndex].n;
+        return _months[monthIndex]?.n;
     }
 
     result.Dates.getMonthAbbreviation = function (monthIndex) {
-        return _months[monthIndex].a;
+        return _months[monthIndex]?.a;
+
     }
     return result;
 }());
@@ -531,6 +597,18 @@ if (!String.prototype.caseInsensitiveEquals) {
     }
 }
 
+String.prototype.trim = function (characters = null) {
+    return Oracle.Strings.trim(this, characters);
+};
+
+String.prototype.trimStart = function (characters = null) {
+    return Oracle.Strings.trimStart(this, characters);
+};
+
+String.prototype.trimEnd = function (characters = null) {
+    return Oracle.Strings.trimEnd(this, characters);
+};
+
 
 if (!String.prototype.toUpperCaseFirstLetter) {
     String.prototype.toUpperCaseFirstLetter = function () {
@@ -543,14 +621,6 @@ if (!String.prototype.toUpperCaseFirstLetter) {
     };
 }
 
-if (!String.prototype.toUpperCaseFirstLetter) {
-    String.prototype.toUpperCaseFirstLetter = function () {
-        if (Oracle.isEmpty(this)) {
-            return this;
-        }
-        else {
-            return this.charAt(0).toUpperCase() + this.slice(1);
-        }
-    };
-}
-
+Date.prototype.isValid = function () {
+    return this.getTime() === this.getTime();
+};

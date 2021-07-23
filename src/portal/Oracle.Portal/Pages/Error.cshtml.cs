@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Oracle.Portal.Pages
 {
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public class ErrorModel : PageModel
     {
@@ -28,4 +29,7 @@ namespace Oracle.Portal.Pages
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
         }
     }
+
 }
+
+

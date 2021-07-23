@@ -1,9 +1,69 @@
 'use strict';
 
+//                      
+Oracle.Tests.registerTest({
+    module: 'Oracle.Strings',
+    category: 'Utilities',
+    name: 'IsEmpty / isEmptyOrWhiteSpaces',
+    test: (assert, logger) => {
+
+        assert.isTrue(Oracle.isEmpty(null), "Null = isEmpty");
+        assert.isTrue(Oracle.isEmpty(undefined), "Undefined = isEmpty");
+        assert.isTrue(Oracle.isEmpty(""), "'' = isEmpty");
+        assert.isTrue(Oracle.isEmpty($('#DoNotExists'), "Empty jQuery = isEmpty"));
+        assert.isFalse(Oracle.isEmpty("\t"), "'\tt' != isEmpty");
+        assert.isFalse(Oracle.isEmpty("     "), "'     ' != isEmpty");
+        assert.isFalse(Oracle.isEmpty("x"), "'x' != isEmpty");
+        assert.isFalse(Oracle.isEmpty([]), "[] != isEmpty");
+        assert.isFalse(Oracle.isEmpty($('<div>')), "$<div> != isEmpty");
+        assert.isTrue(Oracle.isEmptyOrWhiteSpaces("\n                             \n                 "), "'\\n                             \\n                 '= isEmptyOrWhiteSpaces");
+        assert.isTrue(Oracle.isEmptyOrWhiteSpaces(null), "Null = isEmptyOrWhiteSpaces");
+        assert.isTrue(Oracle.isEmptyOrWhiteSpaces(undefined), "Undefined = isEmptyOrWhiteSpaces");
+        assert.isTrue(Oracle.isEmptyOrWhiteSpaces(""), "'' = isEmptyOrWhiteSpaces");
+        assert.isTrue(Oracle.isEmptyOrWhiteSpaces($('#DoNotExists')), "Empty jQuery = isEmptyOrWhiteSpaces");
+        assert.isTrue(Oracle.isEmptyOrWhiteSpaces("     "), "'     ' = isEmptyOrWhiteSpaces");
+        assert.isTrue(Oracle.isEmptyOrWhiteSpaces("\t"), "'\\t' = isEmptyOrWhiteSpaces");
+        assert.isFalse(Oracle.isEmptyOrWhiteSpaces("x"), "'x' != isEmptyOrWhiteSpaces");
+        assert.isFalse(Oracle.isEmptyOrWhiteSpaces([]), "[] != isEmptyOrWhiteSpaces");
+        assert.isFalse(Oracle.isEmptyOrWhiteSpaces($('<div>')), "$<div> != isEmptyOrWhiteSpaces");
+
+    }
+});
+
+Oracle.Tests.registerTest({
+    module: 'Oracle.Strings',
+    category: 'Utilities',
+    name: 'Trim',
+    test: (assert, logger) => {
+        assert.areEqual("", Oracle.Strings.trim("\n                             \n                 "), "trim('\\n                             \\n                 ')");
+        assert.areEqual("", "   ".trim(), "trim('   ')");
+        assert.areEqual("", "  ".trim(), "trim('  ')");
+        assert.areEqual("", " ".trim(), "trim(' ')");
+        assert.areEqual("", "   ".trimStart(), "trimStart('   ')");
+        assert.areEqual("", "  ".trimStart(), "trimStart('  ')");
+        assert.areEqual("", " ".trimStart(), "trimStart(' ')");
+        assert.areEqual("", "   ".trimEnd(), "trimEnd('   ')");
+        assert.areEqual("", "  ".trimEnd(), "trimEnd('  ')");
+        assert.areEqual("", " ".trimEnd(), "trimEnd(' ')");
+        assert.areEqual(" X", " X ".trimEnd());
+        assert.areEqual("X ", " X ".trimStart());
+        assert.areEqual("X", " X ".trim());
+        assert.areEqual("X", Oracle.Strings.trim(" X "));
+        assert.areEqual("X", Oracle.Strings.trim("\r\nX "));
+        assert.areEqual("X", Oracle.Strings.trim(" X "));
+        assert.areEqual("X", Oracle.Strings.trim(" X\t\t"));
+        assert.areEqual("X", Oracle.Strings.trim(" X "));
+        assert.areEqual("X", Oracle.Strings.trim(" - X - ", [' ', '\r', '\n', '-']));
+        assert.areEqual(null, Oracle.Strings.trim(null));
+        assert.areEqual("", Oracle.Strings.trim(""));
+        assert.areEqual(null, Oracle.Strings.trim(undefined));
+    }
+});
+
 Oracle.Tests.registerTest({
     module: 'Oracle',
-    category: 'Compare',
-    name: 'Dates',
+    category: 'Utilities',
+    name: 'Compare Dates',
     test: (assert, logger) => {
         const currentDate = new Date();
         const fromStringDate = new Date(currentDate.toISOString());
@@ -16,9 +76,11 @@ Oracle.Tests.registerTest({
 
 Oracle.Tests.registerTest({
     module: 'Oracle',
-    category: 'Distincts',
-    name: 'Distincts tests (simple types)',
+    category: 'Utilities',
+    name: 'Distinct',
     test: (assert, logger) => {
+
+        // simple types
         const testDistinctNumber = [1, 1, 2, 2, 1, 2, 3, 2, 3, 2, 3, 2, 2, 2];
         const testDistinctStrings = ['a', 'b', 'c', 'a', 'A', 'c', 'b', 'B', 'd'];
         const testDistinctDates = [new Date(), new Date(), new Date(new Date().getDate() + 1)];
@@ -26,36 +88,26 @@ Oracle.Tests.registerTest({
         assert.areEqual(6, testDistinctStrings.distinct().length);
         assert.areEqual(4, testDistinctStrings.distinct((a, b) => a.toUpperCase().localeCompare(b.toUpperCase())).length);
         assert.areEqual(2, testDistinctDates.distinct().length);
-    }
-});
 
-Oracle.Tests.registerTest({
-    module: 'Oracle',
-    category: 'Distincts',
-    name: 'Distincts tests (objects using knowclasses)',
-    test: (assert, logger) => {
-        const MyObject = class { constructor(a, b, c) { this.a = a; this.b = b; this.c = c; } }
-        const objects = [new MyObject('a', 'b', 'c'), new MyObject('x', 'y', 'z'), new MyObject('a', 'b', 'c'), new MyObject('1', '2', '3'), new MyObject('x', 'y', 'z'),];
+        // objects using knowclasses
+        let MyObject = class { constructor(a, b, c) { this.a = a; this.b = b; this.c = c; } }
+        let objects = [new MyObject('a', 'b', 'c'), new MyObject('x', 'y', 'z'), new MyObject('a', 'b', 'c'), new MyObject('1', '2', '3'), new MyObject('x', 'y', 'z'),];
         Oracle.addKnownClass('MyObject', MyObject, (a, b) => Oracle.compare(a.a + a.b + a.c, b.a + b.b + b.c));
         assert.areEqual(3, objects.distinct().length);
-    }
-});
 
-Oracle.Tests.registerTest({
-    module: 'Oracle',
-    category: 'Distincts',
-    name: 'Distincts tests (objects with custom comparer)',
-    test: (assert, logger) => {
-        const MyObject = class { constructor(a, b, c) { this.a = a; this.b = b; this.c = c; } }
-        const objects = [new MyObject('a', 'b', 'c'), new MyObject('x', 'y', 'z'), new MyObject('a', 'b', 'c'), new MyObject('1', '2', '3'), new MyObject('x', 'y', 'z'),];
+        // objects with custom comparer
+        MyObject = class { constructor(a, b, c) { this.a = a; this.b = b; this.c = c; } }
+        objects = [new MyObject('a', 'b', 'c'), new MyObject('x', 'y', 'z'), new MyObject('a', 'b', 'c'), new MyObject('1', '2', '3'), new MyObject('x', 'y', 'z'),];
         assert.areEqual(3, objects.distinct((a, b) => Oracle.compare(a.a + a.b + a.c, b.a + b.b + b.c)).length);
+
     }
 });
 
+
 Oracle.Tests.registerTest({
     module: 'Oracle',
-    category: 'Array extensions',
-    name: 'PushRange',
+    category: 'Utilities',
+    name: 'Array.pushRange',
     test: (assert, logger) => {
         const a = ['X', 'Y', 'Z'];
         const b = ['A', 'B', 'C'];
@@ -70,8 +122,8 @@ Oracle.Tests.registerTest({
 
 Oracle.Tests.registerTest({
     module: 'Oracle',
-    category: 'Array extensions',
-    name: 'Includes',
+    category: 'Utilities',
+    name: 'Array.includes',
     test: (assert, logger) => {
         const a = ['X', 'Y', 'Z'];
         const b = 'Y';

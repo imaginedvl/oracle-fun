@@ -9,8 +9,10 @@ using System.Threading.Tasks;
 
 namespace Oracle.Portal
 {
+
     public class Program
     {
+
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
