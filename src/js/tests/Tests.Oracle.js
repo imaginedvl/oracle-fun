@@ -73,6 +73,18 @@ Oracle.Tests.registerTest({
     }
 });
 
+Oracle.Tests.registerTest({
+    module: 'Oracle',
+    category: 'Utilities',
+    name: 'Check Months Names and Abbreviation',
+    test: (assert, logger) => {
+        const valueDate = new Date('December 25, 1995');
+        const month = valueDate.getMonth() + 1;
+        assert.areEqual('DEV', Oracle.Dates.getMonthAbbreviation(month).toUpperCase());
+        assert.areEqual('12', month);
+        assert.areEqual('DECEMBER', Oracle.Dates.getMonthName(month).toUpperCase());
+    }
+});
 
 Oracle.Tests.registerTest({
     module: 'Oracle',

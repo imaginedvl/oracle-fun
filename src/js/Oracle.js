@@ -550,15 +550,15 @@ var Oracle = (function () {
     // ---------------------------------------------------------------------------------------------------------------- //
     result.Dates = {};
 
-    const _months = [{ n: 'January', a: 'Jan' }, { n: 'February', a: 'Feb' }, { n: 'March', a: 'Mar' }, { n: 'April', a: 'Apr' }, { n: 'May', a: 'May' }, { n: 'June', a: 'Jun' },
-    { n: 'July', a: 'Jul' }, { n: 'August', a: 'Aug' }, { n: 'September', a: 'Sep' }, { n: 'October', a: 'Oct' }, { n: 'November', a: 'Nov' }, { n: 'December', a: 'Dev' }];
+    const _months = [{ i: 1, n: 'January', a: 'Jan' }, { i: 2, n: 'February', a: 'Feb' }, { i: 3, n: 'March', a: 'Mar' }, { i: 4, n: 'April', a: 'Apr' }, { i: 5, n: 'May', a: 'May' }, { i: 6, n: 'June', a: 'Jun' },
+    { i: 7, n: 'July', a: 'Jul' }, { i: 8, n: 'August', a: 'Aug' }, { i: 9, n: 'September', a: 'Sep' }, { i: 10, n: 'October', a: 'Oct' }, { i: 11, n: 'November', a: 'Nov' }, { i: 12, n: 'December', a: 'Dev' }];
 
     result.Dates.getMonthName = function (monthIndex) {
-        return _months[monthIndex]?.n;
+        return _months.filter((month) => month.i === monthIndex)[0]?.n;
     }
 
     result.Dates.getMonthAbbreviation = function (monthIndex) {
-        return _months[monthIndex]?.a;
+        return _months.filter((month) => month.i === monthIndex)[0]?.a;
 
     }
     return result;
