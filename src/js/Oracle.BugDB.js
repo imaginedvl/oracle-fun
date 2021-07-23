@@ -587,7 +587,7 @@ Oracle = (function (parent) {
 
     Oracle.Formating.addFormater('BugDBDate', null, null, (value, settings) => {
         if (value instanceof Date && value.isValid()) {
-            const dateDay = value.getDate(), month = value.getMonth() + 1, year = value.getFullYear();
+            const dateDay = value.getDate(), month = value.getMonth(), year = value.getFullYear();
             return $(`<span class='bugdb-date'><span class='day'>${String(dateDay).padStart(2, '0')}</span><span class='month'>${Oracle.Dates.getMonthAbbreviation(month).toUpperCase()}</span><span class='year'>${year}</span></span>`);
         }
         else {
