@@ -139,7 +139,7 @@ const _fieldMetrics = function (field){
 }
 
 
-// Makes use of the metrics for a given field, then it tries to matc the various values from the expectations
+// Makes use of the metrics for a given field, then it tries to match the various values from the expectations
 // which come from the metrics.
 const _validateMetricsForField = function (assert, metrics, expectations) {
 
@@ -148,7 +148,7 @@ const _validateMetricsForField = function (assert, metrics, expectations) {
         // get value from metrics 
         let currentMetric = metrics.find(function (metric) { return metric.value === key; });        
 
-        // comapre with the expected array
-        assert.areEqual(currentMetric.count, value, "Expecting to find " + value + " for " + key);
+        // compare with the expected array
+        assert.areEqual(currentMetric.count, value);
     }
 }
