@@ -637,3 +637,11 @@ if (!String.prototype.toUpperCaseFirstLetter) {
 Date.prototype.isValid = function () {
     return this.getTime() === this.getTime();
 };
+
+Date.prototype.getMonthAbbreviation = function () {
+    return Oracle.Dates.getMonthAbbreviation(this.getMonth());
+};
+
+Date.prototype.getMonthName = function () {
+    return Oracle.Dates.getMonthName(this.getMonth());
+};
