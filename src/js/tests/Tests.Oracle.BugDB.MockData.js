@@ -51,8 +51,8 @@ Oracle.Tests.registerMockData('Oracle.BugDB.Bugs',
                 status: 11,
                 tags: [Oracle.BugDB.Tag.HCMBRONZE.name, Oracle.BugDB.Tag.P1.name],
                 customer: 'Oracle',
-                fixEta: new Date('10-JUN-2021'),
-                dateReported: new Date('05-JUN-2021'),
+                fixEta: new Date('25-JUN-2021'),
+                dateReported: new Date('15-JUN-2021'),
             }),
         5: new Oracle.BugDB.Bug(
             {
@@ -64,8 +64,8 @@ Oracle.Tests.registerMockData('Oracle.BugDB.Bugs',
                 status: 11,
                 tags: [Oracle.BugDB.Tag.HCMBRONZE.name],
                 customer: null,
-                fixEta: new Date('10-JUN-2021'),
-                dateReported: new Date('05-JUN-2021'),
+                fixEta: new Date('30-JUN-2021'),
+                dateReported: new Date('30-JUN-2021'),
             })            
     }
 );

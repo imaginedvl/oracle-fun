@@ -20,7 +20,7 @@ Oracle.Tests.registerTest({
     category: 'Bug.BugSummary',
     name: 'Metrics (Severity) ',
     test: (assert, logger) => {
-        const severityMetrics = _fieldMetrics(Oracle.BugDB.Fields.Severity);        
+        const severityMetrics = _fieldDistinctMetrics(Oracle.BugDB.Fields.Severity);        
 
         const expectations = {
             "1": 1,
@@ -39,7 +39,7 @@ Oracle.Tests.registerTest({
     category: 'Bug.BugSummary',
     name: 'Metrics (Status) ',
     test: (assert, logger) => {
-        const statusMetrics = _fieldMetrics(Oracle.BugDB.Fields.Status);
+        const statusMetrics = _fieldDistinctMetrics(Oracle.BugDB.Fields.Status);
 
         // We have 5 bugs, 4 at status 11 and 1 at status 80 but since metrics are computed
         // for a lot of status, we only look for the ones we care.     
@@ -57,7 +57,7 @@ Oracle.Tests.registerTest({
     category: 'Bug.BugSummary',
     name: 'Metrics (Tags) ',
     test: (assert, logger) => {
-        const tagMetrics = _fieldMetrics(Oracle.BugDB.Fields.Tags);
+        const tagMetrics = _fieldDistinctMetrics(Oracle.BugDB.Fields.Tags);
 
         // Tags computation is only done for some of the known tags, we will check the following ones:
         const expectations = {
@@ -79,7 +79,7 @@ Oracle.Tests.registerTest({
     category: 'Bug.BugSummary',
     name: 'Metrics (Customer) ',
     test: (assert, logger) => { 
-        const customerMetrics = _fieldMetrics(Oracle.BugDB.Fields.Customer);
+        const customerMetrics = _fieldDistinctMetrics(Oracle.BugDB.Fields.Customer);
 
         let nbrOfCustomers = 0;
         // For this one we only count the customers from the metrics, regardless who they are
@@ -97,7 +97,7 @@ Oracle.Tests.registerTest({
     category: 'Bug.BugSummary',
     name: 'Metrics (Assignee) ',
     test: (assert, logger) => {
-        const assingeeMetrics = _fieldMetrics(Oracle.BugDB.Fields.Assignee);
+        const assingeeMetrics = _fieldDistinctMetrics(Oracle.BugDB.Fields.Assignee);
         
         // 5 bugs distributed among 4 users, verify some counts (since value it's a user class, we don't use "_validateMetricsForField" 
         // but instead do a step further and check for the globalId
@@ -115,7 +115,7 @@ Oracle.Tests.registerTest({
     category: 'Bug.BugSummary',
     name: 'Metrics (Component) ',
     test: (assert, logger) => {
-        const componentMetrics = _fieldMetrics(Oracle.BugDB.Fields.Component);
+        const componentMetrics = _fieldDistinctMetrics(Oracle.BugDB.Fields.Component);
 
         const expectations = {
             HIRING: 3,
@@ -129,15 +129,37 @@ Oracle.Tests.registerTest({
 });
 
 
-// Makes use of the Mock bugs list to build the BugSummary and compute the metrics
-const _fieldMetrics = function (field){
-    const bugs = Oracle.Tests.getMockData('Oracle.BugDB.Bugs');    
-    const bugList = [bugs[1], bugs[2], bugs[3], bugs[4], bugs[5]];
-    const bugSummary = new Oracle.BugDB.BugSummary(bugList);  
+Oracle.Tests.registerTest({
+    module: 'Oracle.BugDB',
+    category: 'Bug.BugSummary',
+    name: 'Metrics (DateReported) ',
+    test: (assert, logger) => {
+        const bugSummary = _bugSummary(Oracle.BugDB.Fields.DateReported);
+        
+        const firstDate = bugSummary.getMinimum(Oracle.BugDB.Fields.DateReported);
+        const lastDate = bugSummary.getMaximum(Oracle.BugDB.Fields.DateReported);
 
+        // We expect bugs to be found between '01-JUN-2021' and '30-JUN-2021'
+        assert.areComparable(firstDate, new Date('01-JUN-2021'));
+        assert.areComparable(lastDate, new Date('30-JUN-2021'));
+    }
+});
+
+
+// Gets the distinct metrics for a given field based on the BugSummary
+const _fieldDistinctMetrics = function (field){
+    const bugSummary = _bugSummary(field);
     return bugSummary.getDistinctMetrics(field);
 }
 
+
+// Makes use of the Mock bugs list to build the BugSummary which computes the metrics
+const _bugSummary = function (field){
+    const bugs = Oracle.Tests.getMockData('Oracle.BugDB.Bugs');    
+    const bugList = [bugs[1], bugs[2], bugs[3], bugs[4], bugs[5]];
+
+    return new Oracle.BugDB.BugSummary(bugList);  
+}
 
 // Makes use of the metrics for a given field, then it tries to match the various values from the expectations
 // which come from the metrics.
