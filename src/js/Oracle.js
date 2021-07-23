@@ -551,7 +551,7 @@ var Oracle = (function () {
     result.Dates = {};
 
     const _months = [{ i: 1, n: 'January', a: 'Jan' }, { i: 2, n: 'February', a: 'Feb' }, { i: 3, n: 'March', a: 'Mar' }, { i: 4, n: 'April', a: 'Apr' }, { i: 5, n: 'May', a: 'May' }, { i: 6, n: 'June', a: 'Jun' },
-    { i: 7, n: 'July', a: 'Jul' }, { i: 8, n: 'August', a: 'Aug' }, { i: 9, n: 'September', a: 'Sep' }, { i: 10, n: 'October', a: 'Oct' }, { i: 11, n: 'November', a: 'Nov' }, { i: 12, n: 'December', a: 'Dev' }];
+    { i: 7, n: 'July', a: 'Jul' }, { i: 8, n: 'August', a: 'Aug' }, { i: 9, n: 'September', a: 'Sep' }, { i: 10, n: 'October', a: 'Oct' }, { i: 11, n: 'November', a: 'Nov' }, { i: 12, n: 'December', a: 'Dec' }];
 
     result.Dates.getMonthName = function (monthIndex) {
         return _months.filter((month) => month.i === monthIndex)[0]?.n;

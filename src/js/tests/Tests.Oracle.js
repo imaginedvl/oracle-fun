@@ -80,7 +80,7 @@ Oracle.Tests.registerTest({
     test: (assert, logger) => {
         const valueDate = new Date('December 25, 1995');
         const month = valueDate.getMonth() + 1;
-        assert.areEqual('DEV', Oracle.Dates.getMonthAbbreviation(month).toUpperCase());
+        assert.areEqual('DEC', Oracle.Dates.getMonthAbbreviation(month).toUpperCase());
         assert.areEqual('12', month);
         assert.areEqual('DECEMBER', Oracle.Dates.getMonthName(month).toUpperCase());
     }
