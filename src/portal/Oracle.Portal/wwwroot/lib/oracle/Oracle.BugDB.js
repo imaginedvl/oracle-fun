@@ -534,9 +534,6 @@ Oracle = (function (parent) {
                     if (date.isValid()) {
                         return date;
                     }
-                    else {
-                        console.log("XXXXXXXX", { text: text });
-                    }
                 }
             }
             return null;
