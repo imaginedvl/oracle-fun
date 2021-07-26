@@ -27,7 +27,8 @@ Oracle = (function (parent) {
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item span.count { padding-left:4px; color: var(--controlTextColorLighten3)}');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item * { pointer-events: none }');
 
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item.selected { border:1px solid green }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item.selected:not(.inverted) { border:2px solid green }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item.selected.inverted { border:2px solid red }');
 
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-search-panel input { width:100%; padding:8px; border: 1px solid var(--controlBorderColor); }');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-search-panel input.searchKeyword {  height: 35px; padding-left: 10px; }');
@@ -191,9 +192,16 @@ Oracle = (function (parent) {
             }
             filterItem.click((e) => {
                 const target = $(e.target);
-                target.toggleClass("selected");
+                if (target.hasClass("selected") && target.hasClass("inverted")) {
+                    target.removeClass("selected inverted");
+                }
+                else if (target.hasClass("selected")) {
+                    target.addClass("inverted");
+                }
+                else {
+                    target.addClass("selected");
+                }
                 this.updateFilters();
-                //this.applyFilter(field, value, filterId);
             });
             return filterItem;
         }
@@ -215,11 +223,21 @@ Oracle = (function (parent) {
                             const filterId = target.attr("data-filter-id");
                             const field = target.attr("data-filter-field");
                             const value = target.data("data-filter-value");
-                            if (Oracle.isEmpty(filterId)) {
-                                result = Oracle.includes(settings.data[field], value);
+                            if (target.hasClass("inverted")) {
+                                if (Oracle.isEmpty(filterId)) {
+                                    result = !Oracle.includes(settings.data[field], value);
+                                }
+                                else {
+                                    result = !_getCustomPanelFilterById(filterId).predicate(settings.data);
+                                }
                             }
                             else {
-                                result = _getCustomPanelFilterById(filterId).predicate(settings.data);
+                                if (Oracle.isEmpty(filterId)) {
+                                    result = Oracle.includes(settings.data[field], value);
+                                }
+                                else {
+                                    result = _getCustomPanelFilterById(filterId).predicate(settings.data);
+                                }
                             }
                         }
                         else {
