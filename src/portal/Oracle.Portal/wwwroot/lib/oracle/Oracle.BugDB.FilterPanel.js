@@ -313,7 +313,7 @@ Oracle = (function (parent) {
             const resetPanel = $("<div class='section-panel section-centered-panel section-reset-panel '>");
             const resetButton = $('<button/>');
             resetButton.text('Clear Filters');
-            resetButton.click((e) => { this.resetFilter(); });
+            resetButton.click((e) => { this.resetFilters(); });
             resetPanel.append(resetButton);
             this.element.append(resetPanel);
         }
