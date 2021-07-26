@@ -37,7 +37,6 @@ var Oracle = (function () {
         }
         if (typeof (value) === 'string') {
             const trimvalue = Oracle.Strings.trim(value);
-            console.log({ value: value, trimvalue: trimvalue });
             return trimvalue === '';
         }
         return false;

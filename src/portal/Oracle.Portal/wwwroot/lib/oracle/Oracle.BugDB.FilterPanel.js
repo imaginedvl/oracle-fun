@@ -27,6 +27,8 @@ Oracle = (function (parent) {
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item span.count { padding-left:4px; color: var(--controlTextColorLighten3)}');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item * { pointer-events: none }');
 
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item.selected { border:1px solid green }');
+
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-search-panel input { width:100%; padding:8px; border: 1px solid var(--controlBorderColor); }');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-search-panel input.searchKeyword {  height: 35px; padding-left: 10px; }');
 
@@ -189,12 +191,44 @@ Oracle = (function (parent) {
             }
             filterItem.click((e) => {
                 const target = $(e.target);
-                const filterId = target.attr("data-filter-id");
-                const field = target.attr("data-filter-field");
-                const value = target.data("data-filter-value");
-                this.applyFilter(field, value, filterId);
+                target.toggleClass("selected");
+                this.updateFilters();
+                //this.applyFilter(field, value, filterId);
             });
             return filterItem;
+        }
+
+        updateFilters() {
+            this.grid.filter((settings) => {
+                let result = true;
+                // First we check if there is keyword filter
+                const keyword = this.element.find(".section-search-panel input").val();
+                if (!Oracle.isEmptyOrWhiteSpaces(keyword)) {
+                    result = settings.data.match(keyword);
+                }
+                // Then we check for each selected filters
+                if (result) {
+                    const allItems = this.element.find('.filter-item.selected');
+                    for (let i = 0; i < allItems.length; i++) {
+                        const target = $(allItems.get(i));
+                        if (result) {
+                            const filterId = target.attr("data-filter-id");
+                            const field = target.attr("data-filter-field");
+                            const value = target.data("data-filter-value");
+                            if (Oracle.isEmpty(filterId)) {
+                                result = Oracle.includes(settings.data[field], value);
+                            }
+                            else {
+                                result = _getCustomPanelFilterById(filterId).predicate(settings.data);
+                            }
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                }
+                return result;
+            });
         }
 
         initializeStandardPanel() {
@@ -250,16 +284,7 @@ Oracle = (function (parent) {
             const searchPanel = $("<div class='section-panel section-search-panel'>");
             const searchInputBox = $("<input type='text' placeholder='Refined search...'>");
             searchInputBox.on("input", (e) => {
-                const keyword = $(e.target).val();
-                if (!Oracle.isEmptyOrWhiteSpaces(keyword)) {
-                    this.grid.filter((settings) => {
-                        let bug = settings.data;
-                        return bug.match(keyword);
-                    });
-                }
-                else {
-                    this.grid.reset();
-                }
+                this.updateFilters();
             });
             searchPanel.append(searchInputBox);
             this.element.append(searchPanel);
@@ -287,19 +312,10 @@ Oracle = (function (parent) {
             this.element.append(panel);
         }
 
-        applyFilter(fieldName, fieldValue, filterId) {
-            if (Oracle.isEmpty(filterId)) {
-                console.log({ name: fieldName, value: fieldValue });
-                this.grid.filter((settings) => Oracle.includes(settings.data[fieldName], fieldValue));
-            }
-            else {
-                this.grid.filter((settings) => _getCustomPanelFilterById(filterId).predicate(settings.data));
-            }
-        }
-
-        resetFilter() {
+        resetFilters() {
             this.element.find(".section-search-panel input").val("");
-            this.grid.reset();
+            this.element.find('.filter-item.selected').removeClass("selected");
+            this.updateFilters();
         }
     }
 
