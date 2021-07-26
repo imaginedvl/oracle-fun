@@ -23,23 +23,23 @@ Makes use of the Grease Monkey browser plugin provide a better user experience w
 // @grant GM_getValue
 // @require      http://code.jquery.com/jquery-2.2.4.min.js
 
-// @require      file://C:\{your_folder_path}\src\js\Oracle.JQuery.js
-// @require      file://C:\{your_folder_path}\src\js\Oracle.js
-// @require      file://C:\{your_folder_path}\src\js\Oracle.Conversion.js
-// @require      file://C:\{your_folder_path}\src\js\Oracle.Storage.js
-// @require      file://C:\{your_folder_path}\src\js\Oracle.Settings.js
-// @require      file://C:\{your_folder_path}\src\js\Oracle.Formating.js
-// @require      file://C:\{your_folder_path}\src\js\Oracle.HTML.js
-// @require      file://C:\{your_folder_path}\src\js\Oracle.Controls.js
-// @require      file://C:\{your_folder_path}\src\js\Oracle.Controls.Themes.js
-// @require      file://C:\{your_folder_path}\src\js\Oracle.Controls.Grids.js
-// @require      file://C:\{your_folder_path}\src\js\Oracle.Users.js
-// @require      file://C:\{your_folder_path}\src\js\Oracle.Users.Data.js
-// @require      file://C:\{your_folder_path}\src\js\Oracle.BugDB.js
-// @require      file://C:\{your_folder_path}\src\js\Oracle.BugDB.BugGrid.js
-// @require      file://C:\{your_folder_path}\src\js\Oracle.BugDB.FilterPanel.js
+// @require      file://C:\{your_folder_path}\src\portal\Oracle.Portal\wwwroot\lib\oracle\Oracle.JQuery.js
+// @require      file://C:\{your_folder_path}\src\portal\Oracle.Portal\wwwroot\lib\oracle\Oracle.js
+// @require      file://C:\{your_folder_path}\src\portal\Oracle.Portal\wwwroot\lib\oracle\Oracle.Conversion.js
+// @require      file://C:\{your_folder_path}\src\portal\Oracle.Portal\wwwroot\lib\oracle\Oracle.Storage.js
+// @require      file://C:\{your_folder_path}\src\portal\Oracle.Portal\wwwroot\lib\oracle\Oracle.Settings.js
+// @require      file://C:\{your_folder_path}\src\portal\Oracle.Portal\wwwroot\lib\oracle\Oracle.Formating.js
+// @require      file://C:\{your_folder_path}\src\portal\Oracle.Portal\wwwroot\lib\oracle\Oracle.HTML.js
+// @require      file://C:\{your_folder_path}\src\portal\Oracle.Portal\wwwroot\lib\oracle\Oracle.Controls.js
+// @require      file://C:\{your_folder_path}\src\portal\Oracle.Portal\wwwroot\lib\oracle\Oracle.Controls.Themes.js
+// @require      file://C:\{your_folder_path}\src\portal\Oracle.Portal\wwwroot\lib\oracle\Oracle.Controls.Grids.js
+// @require      file://C:\{your_folder_path}\src\portal\Oracle.Portal\wwwroot\lib\oracle\Oracle.Users.js
+// @require      file://C:\{your_folder_path}\src\portal\Oracle.Portal\wwwroot\lib\oracle\Oracle.Users.Data.js
+// @require      file://C:\{your_folder_path}\src\portal\Oracle.Portal\wwwroot\lib\oracle\Oracle.BugDB.js
+// @require      file://C:\{your_folder_path}\src\portal\Oracle.Portal\wwwroot\lib\oracle\Oracle.BugDB.BugGrid.js
+// @require      file://C:\{your_folder_path}\src\portal\Oracle.Portal\wwwroot\lib\oracle\Oracle.BugDB.FilterPanel.js
 
-// @require      file://C:\{your_folder_path}\src\js\Oracle.Tampermonkey.js
+// @require      file://C:\{your_folder_path}\src\portal\Oracle.Portal\wwwroot\lib\oracle\Oracle.Tampermonkey.js
 // @require      file://C:\{your_folder_path}\src\tampermonkey\BugDBQueryPage.js
 
 // ==/UserScript== 
