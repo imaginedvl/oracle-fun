@@ -4,7 +4,11 @@ Set of JS modules to enhance bug DB reports
 ## Description
 Makes use of the Grease Monkey browser plugin provide a better user experience while dealing with the bug DB reports by adding extra capabilities like sorting, quick filtering, priority highlights, custom formatting and so on.
 
-## Getting Started
+## Getting Started with Portal
+1) Install Visual Studio 2019 Community Edition (Free, www.visualstudio.com)
+2) Open the "Oralce.Portal.sln"
+
+## Getting Started with TamperMonkey
 1) Install Grease Monkey plugin in your favorite browser
 2) Go to the plugin "Dashboard/Installed Scripts" and click the "+" icon
 3) Paste the below template and adjust the path to folder where you haved downloaded the modules and "File / Save"
