@@ -47,6 +47,7 @@ Oracle = (function (parent) {
     result.CustomFilters =
     {
         IsCustomer: 'isCustomer',
+        IsBackport: 'isBackport',
         IsLate: 'isLate'
     }
 
@@ -77,6 +78,21 @@ Oracle = (function (parent) {
                 let count = 0;
                 for (let i = 0; i < bugs.length; i++) {
                     if (bugs[i].isLate()) {
+                        count++;
+                    }
+                }
+                return count;
+            }
+        },
+        isBackport: {
+            title: 'BackPort Request',
+            predicate: (bug) => {
+                return (bug.isBackport());
+            },
+            count: (bugs) => {
+                let count = 0;
+                for (let i = 0; i < bugs.length; i++) {
+                    if (bugs[i].isBackport()) {
                         count++;
                     }
                 }
@@ -183,7 +199,7 @@ Oracle = (function (parent) {
 
         initializeStandardPanel() {
             for (const [key, properties] of Object.entries(Oracle.BugDB.FieldProperties)) {
-                if(Oracle.includes(this.fields, properties.id)) {
+                if (Oracle.includes(this.fields, properties.id)) {
                     if (properties.filterable === true) {
                         let title;
                         if (Oracle.isEmpty(properties.filterTitle)) {
@@ -204,7 +220,7 @@ Oracle = (function (parent) {
                                 else {
                                     value = Oracle.Formating.formatValue(metrics.value);
                                 }
-                                if(Oracle.compare(metrics.count, 0) === 1 || (properties.lookup && properties.lookup[metrics.value].filterVisible)) {
+                                if (Oracle.compare(metrics.count, 0) === 1 || (properties.lookup && properties.lookup[metrics.value].filterVisible)) {
                                     const item = this.createBaseFilterItem(value, metrics.value, metrics.count, properties.id, null);
                                     panel.append(item);
                                 }

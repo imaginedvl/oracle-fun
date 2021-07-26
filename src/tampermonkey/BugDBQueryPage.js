@@ -50,7 +50,7 @@
                     {
                         type: Oracle.BugDB.PanelTypes.Custom,
                         title: 'Advanced Filters',
-                        filters: [Oracle.BugDB.CustomFilters.IsCustomer, Oracle.BugDB.CustomFilters.IsLate]
+                        filters: [Oracle.BugDB.CustomFilters.IsCustomer, Oracle.BugDB.CustomFilters.IsLate, Oracle.BugDB.CustomFilters.IsBackport]
                     },
                 ]
         });

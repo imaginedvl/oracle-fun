@@ -168,6 +168,14 @@ Oracle = (function (parent) {
             return isLate;
         }
 
+        isBackport() {
+            let isBackport = false;
+            if (Oracle.includes(this.tags, 'CUSTOMER_IMPACT')) {
+                isBackport = true;
+            }
+            return isBackport;
+        }
+
         match(keyword) {
             if (keyword) {
                 keyword = keyword.removeAccentsAndDiacritics().toLowerCase().trim();
