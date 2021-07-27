@@ -19,21 +19,25 @@ Oracle = (function (parent) {
 
         constructor(controlSettings) {
             this.isInitialized = false;
+            this.name = controlSettings.name;
             this.id = Oracle.generateId(25);
             this.type = controlSettings.type;
             if (Oracle.isEmpty(controlSettings.target)) {
-                this.element = $("<" + controlSettings.elementType + " class='" + this.type + " oracle control' data-control-id='" + this.id + "' data-control-type='" + this.type + "'  >");
+                this.element = $("<" + controlSettings.elementType + ">");
             }
             else {
                 this.element = $(controlSettings.target);
-                this.element.addClass("oracle control " + this.type);
-                this.element.attr("data-control-id", this.id);
-                this.element.attr("data-control-type", this.typee);
             }
-            this.element.attr("data-control-is-initialized", "false");
+            this.element.addClass("oracle control " + this.type);
+            this.element.attr("data-control-id", this.id);
+            this.element.attr("data-control-type", this.type);
+            if (!Oracle.isEmptyOrWhiteSpaces(this.name)) {
+                this.element.attr("data-control-name", this.name);
+            }
+            this.element.attr("data-control-initialized", "false");
             this.onInitialize(controlSettings)
             this.isInitialized = true;
-            this.element.attr("data-control-is-initialized", "true");
+            this.element.attr("data-control-initialized", "true");
             Oracle.Logger.logDebug("Control[" + this.type + "] initialized: " + this.id, { grid: this, type: this.type });
         }
 
@@ -44,8 +48,10 @@ Oracle = (function (parent) {
         }
 
         saveUserSettings() {
-            const userSettings = {};
-            this.onBuildUserSettings(userSettings);
+            if (!this.isInitialized) {
+                const userSettings = {};
+                this.onBuildUserSettings(userSettings);
+            }
         }
 
     };
