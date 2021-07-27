@@ -49,6 +49,10 @@ Oracle = (function (parent) {
         return result;
     }
 
+    result.getRootPath = function () {
+        return _rootPath;
+    }
+
     result.normalizePath = _normalizePath;
 
     return parent;
