@@ -189,6 +189,7 @@ Oracle = (function (parent) {
         }
 
         populateRows() {
+            const visibleData = [];
             let lastGroup = null;
             let groupRowCount = 0;
             let index = 0;
@@ -214,10 +215,12 @@ Oracle = (function (parent) {
                 if (lastGroup !== null) {
                     lastGroup.find("span.group-count").text(groupRowCount);
                 }
+                visibleData.push(row.data);
             }
             if (this.tbodyElement.children().length === 0) {
                 this.tbodyElement.append(this.emptyRow);
             }
+            this.visibleData = visibleData;
         }
 
         initializeData(controlSettings, initializationSettings) {
@@ -227,6 +230,7 @@ Oracle = (function (parent) {
             if (Oracle.isEmpty(controlSettings.data)) {
                 this.data = [];
             }
+            this.visibleData = this.data;
             this.rows = [];
             for (let i = 0; i < this.data.length; i++) {
                 initializationSettings.data = this.data[i];
@@ -236,6 +240,8 @@ Oracle = (function (parent) {
             }
             this.element.append(this.tbodyElement);
         }
+
+
 
         reset() {
             this.filter();
