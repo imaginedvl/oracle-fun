@@ -17,7 +17,6 @@ Oracle = (function (parent) {
         return { success: true, value: value };
     }
 
-
     const _tryToBoolean = function (value) {
         if (!Oracle.isEmptyOrWhiteSpaces(value)) {
             if (value == 1) {
@@ -71,7 +70,7 @@ Oracle = (function (parent) {
 
     const _tryToNumber = function (value) {
         if (Oracle.isEmpty(value)) return _failedResult;
-        if (Oracle.isNumber(value)) return value;
+        if (Oracle.isNumber(value)) return _returnSuccess(value);
         if (Oracle.isString(value)) {
             let exit = false;
             let finalValue = "";

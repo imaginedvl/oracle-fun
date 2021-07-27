@@ -6,9 +6,11 @@ Oracle.Tests.registerTest({
     category: 'Numbers',
     name: 'All cases',
     test: (assert, logger) => {
+        assert.areEqual(150, Oracle.Conversion.toNumber(150));
         assert.areEqual(150, Oracle.Conversion.toNumber("150"));
         assert.isFalse(Oracle.Conversion.tryToNumber("tX150SDADS").success);
         assert.areEqual(37, Oracle.Conversion.defaultToNumber("tX150SDADS", 37));
+        assert.areEqual(150, Oracle.Conversion.toNumber({ number: 150 }?.number));
     }
 });
 

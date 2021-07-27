@@ -59,18 +59,21 @@ Oracle = (function (parent) {
             this.emptyRow = $("<tr class='empty-row'><td colspan='" + this.columns.length + "'></td></tr>");
             const emptyRowMessage = Oracle.toDefaultValue(controlSettings.noItemsMessage, "No data matching the criteria");
             this.emptyRow.find("td").text(emptyRowMessage);
-            let sortColumnIndex = Oracle.Conversion.defaultToNumber(userSettings?.sortColumnIndex, -1);
-            let sortAscending = Oracle.Conversion.defaultToBoolean(userSettings?.sortAscending, true);
+            let sortColumnIndex = -1
+            let sortAscending = true;
             const sortColumn = this.columnsById[controlSettings?.sort?.column];
             if (!Oracle.isEmpty(sortColumn)) {
                 this.sortColumnIndex = Oracle.Conversion.defaultToNumber(sortColumn.index, sortColumnIndex);
                 this.sortAscending = Oracle.Conversion.defaultToBoolean(controlSettings?.sort?.descending, sortAscending);
             }
+            console.log({ userSettings: userSettings, sortColumnIndex: sortColumnIndex, sortAscending: sortAscending });
+            sortColumnIndex = Oracle.Conversion.defaultToNumber(userSettings?.sortColumnIndex, sortColumnIndex);
+            sortAscending = Oracle.Conversion.defaultToBoolean(userSettings?.sortAscending, sortAscending);
+            console.log({ userSettings: userSettings, sortColumnIndex: sortColumnIndex, sortAscending: sortAscending });
             this.sortByColumnIndex(sortColumnIndex, sortAscending);
         }
 
-        sortByColumnIndex(index, ascending = true) {
-            console.log({ index: index, ascending: ascending })
+        sortByColumnIndex(index, ascending = null) {
             if (index > -1) {
                 const column = this.columns[index];
                 let ascendingOrder = true;

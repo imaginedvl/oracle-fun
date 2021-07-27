@@ -83,8 +83,12 @@ Oracle = (function (parent) {
             else {
                 this.settingsName = null;
             }
+            let userSettings = null;
+            if (this.settingsName !== null) {
+                userSettings = Oracle.Settings.loadUserSettings(this.settingsName, null);
+            }
             this.element.attr("data-control-initialized", "false");
-            this.onInitialize(controlSettings)
+            this.onInitialize(controlSettings, userSettings)
             this.isInitialized = true;
             this.element.attr("data-control-initialized", "true");
             Oracle.Logger.logDebug("Control[" + this.type + "] initialized: " + this.id, { control: this });
@@ -99,10 +103,10 @@ Oracle = (function (parent) {
         }
 
         saveUserSettings() {
-            if (!this.isInitialized && !Oracle.isEmptyOrWhiteSpaces(this.settingsName)) {
+            if (this.isInitialized && !Oracle.isEmptyOrWhiteSpaces(this.settingsName)) {
                 const userSettings = {};
                 this.onBuildUserSettings(userSettings);
-
+                Oracle.Settings.saveUserSettings(this.settingsName, userSettings);
             }
         }
 
