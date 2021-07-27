@@ -61,7 +61,7 @@
 
     Oracle.HTML.addStyle("table td#main-view { width: 70%; vertical-align:top; } ");
     Oracle.HTML.addStyle("table td#side-view { width: 30%; vertical-align:top } ");
-    const tableElement = $("<table data-settings-path='Test' style='width:100%' border='0'><tbody><tr><td id='main-view'></td><td id='side-view'></td></tr></tbody></table>");
+    const tableElement = $("<table data-control-path='Test' style='width:100%' border='0'><tbody><tr><td id='main-view'></td><td id='side-view'></td></tr></tbody></table>");
     tableElement.find("#main-view").append(table.element);
     tableElement.find("#side-view").append(filterPanel.element);
     $('body').prepend(tableElement);

@@ -6,10 +6,10 @@ Oracle.Tests.registerTest({
     category: 'Utilities',
     name: 'ComputeSettingsPathForElement',
     test: (assert, logger) => {
-        const a = $("<div data-path-settings='A'>")
+        const a = $("<div data-control-path='A'>")
         const b = $("<div>")
-        const c = $("<div data-path-settings='C'>")
-        const d = $("<div data-path-settings='D'>")
+        const c = $("<div data-control-path='C'>")
+        const d = $("<div data-control-path='D'>")
         const e = $("<div>")
         a.append(b);
         b.append(c);

@@ -8,21 +8,26 @@ Oracle = (function (parent) {
     const result = parent.Controls;
 
     const _computeSettingsPathForElement = function (element) {
-        const path = "";
+        let path = "";
         let data = null;
         if (!Oracle.isEmptyOrWhiteSpaces(element)) {
             element = $(element);
-            data = element.attr("data-settings-path")
+            data = element.attr("data-control-path")
             if (!Oracle.isEmptyOrWhiteSpaces(data)) {
                 path = data;
             }
-            element = element.parent('[data-settings-path!=""][data-settings-path]');
+            element = element.closestExcludingSelf('[data-control-path!=""][data-control-path]');
             while (element.length > 0) {
-                data = element.attr("data-settings-path")
+                data = element.attr("data-control-path")
                 if (!Oracle.isEmptyOrWhiteSpaces(data)) {
-                    path = path + "-" + data;
+                    if (path !== '') {
+                        path = data + "-" + path;
+                    }
+                    else {
+                        path = data;
+                    }
                 }
-                element = element.parent('[data-settings-path!=""][data-settings-path]');
+                element = element.closestExcludingSelf('[data-control-path!=""][data-control-path]');
             }
         }
         return path;

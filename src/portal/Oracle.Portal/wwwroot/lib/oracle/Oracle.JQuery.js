@@ -36,3 +36,21 @@ if (!$.prototype.setContent) {
         }
     };
 }
+
+
+if (!$.prototype.closestExcludingSelf) {
+    $.prototype.closestExcludingSelf = function (selector) {
+        const _this = $(this);
+        const parent = _this.parent();
+        if (Oracle.isEmptyOrWhiteSpaces(selector)) {
+            return $();
+        }
+        else if (parent.length > 0) {
+            return parent.closest(selector);
+        }
+        else {
+            return $();
+        }
+    };
+}
+
