@@ -147,18 +147,15 @@ Oracle = (function (parent) {
             this.panels = controlSettings.panels;
             this.summary = new Oracle.BugDB.BugSummary(this.bugs, controlSettings.grid.visibleData);
 
-            this.populatePanels();
-            this.updateFilters();
-        }
-
-        populatePanels() {
-            this.element.children().remove();
-
             // Title
             const title = $("<div class='main-title-panel'>");
             title.text("Bug List Helper");
             this.element.append(title);
 
+            this.populatePanels();
+        }
+
+        populatePanels() {
             if (!Oracle.isEmpty(this.panels)) {
                 for (let i = 0; i < this.panels.length; i++) {
                     const panelSettings = this.panels[i];
