@@ -42,12 +42,12 @@ Oracle = (function (parent) {
 
     result.saveUserSettings = function (name, value) {
         Oracle.Storage.Local.writeValue(_rootPath, name, value);
-        console.log("SAVE", value);
+        console.log("SAVING SETTINGS: " + name, value);
     }
 
     result.loadUserSettings = function (name, defaultValue) {
         const result = Oracle.Storage.Local.readValue(_rootPath, name, defaultValue);
-        console.log("LOAD", result);
+        console.log("LOADING SETTINGS: " + name, result);
         return result;
     }
 

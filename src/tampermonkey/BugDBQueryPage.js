@@ -6,7 +6,7 @@
     if (!Oracle.Conversion.defaultToBoolean(Oracle.Http.getQueryStringValue("showOriginal"))) {
         bugDbPage.hide();
     }
-    Oracle.Settings.setRootPath(bugDbPage.uniquePageId);
+    Oracle.Settings.setRootPath(bugDbPage.settingsPath);
 
     Oracle.HTML.addStyle("table td#main-view { width: 70%; vertical-align:top; } ");
     Oracle.HTML.addStyle("table td#side-view { width: 30%; vertical-align:top } ");
