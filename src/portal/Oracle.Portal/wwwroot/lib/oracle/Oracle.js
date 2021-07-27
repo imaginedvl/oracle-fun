@@ -371,9 +371,7 @@ var Oracle = (function () {
             }
             this.data = data;
             this.name = errorType;
-            if (logError && Oracle.debugMode === true) {
-                Oracle.Logger.logError(message, data);
-            }
+            Oracle.Logger.logError(message, data);
         }
     };
 

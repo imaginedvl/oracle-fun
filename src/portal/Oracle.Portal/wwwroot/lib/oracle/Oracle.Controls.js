@@ -7,7 +7,7 @@ Oracle = (function (parent) {
     if (!parent.hasOwnProperty('Controls')) parent.Controls = {};
     const result = parent.Controls;
 
-    const _computeSettingsPathForElement = function (element) {
+    const _computeSettingsPathForElement = function (element, name) {
         let path = "";
         let data = null;
         if (!Oracle.isEmptyOrWhiteSpaces(element)) {
@@ -30,7 +30,22 @@ Oracle = (function (parent) {
                 element = element.closestExcludingSelf('[data-control-path!=""][data-control-path]');
             }
         }
-        return path;
+        if (Oracle.isEmptyOrWhiteSpaces(name)) {
+            if (path === '') {
+                return null;
+            }
+            else {
+                return Oracle.Settings.normalizePath(path);
+            }
+        }
+        else {
+            if (path === '') {
+                return Oracle.Settings.normalizePath(name);
+            }
+            else {
+                return Oracle.Settings.normalizePath(path + "-" + name);
+            }
+        }
     }
 
     // ---------------------------------------------------------------------------------------------------------------- //
@@ -50,6 +65,10 @@ Oracle = (function (parent) {
             this.type = controlSettings.type;
             if (Oracle.isEmpty(controlSettings.target)) {
                 this.element = $("<" + controlSettings.elementType + ">");
+                if (controlSettings.parent) {
+                    const parent = $(controlSettings.parent);
+                    parent.append(this.element);
+                }
             }
             else {
                 this.element = $(controlSettings.target);
@@ -59,7 +78,7 @@ Oracle = (function (parent) {
             this.element.attr("data-control-type", this.type);
             if (!Oracle.isEmptyOrWhiteSpaces(this.name)) {
                 this.element.attr("data-control-name", this.name);
-                this.settingsName = Oracle.Settings.normalizePath(this.name);
+                this.settingsName = _computeSettingsPathForElement(this.element, Oracle.Settings.normalizePath(this.name));
             }
             else {
                 this.settingsName = null;
@@ -72,15 +91,18 @@ Oracle = (function (parent) {
         }
 
         onInitialize() {
+            // To be overriden 
         }
 
         onBuildUserSettings(userSettings) {
+            // To be overriden 
         }
 
         saveUserSettings() {
             if (!this.isInitialized && !Oracle.isEmptyOrWhiteSpaces(this.settingsName)) {
                 const userSettings = {};
                 this.onBuildUserSettings(userSettings);
+
             }
         }
 

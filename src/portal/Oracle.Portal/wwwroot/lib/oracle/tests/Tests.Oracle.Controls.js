@@ -15,10 +15,10 @@ Oracle.Tests.registerTest({
         b.append(c);
         c.append(d);
         d.append(e);
-        assert.areEqual("A", Oracle.Controls.computeSettingsPathForElement(a));
-        assert.areEqual("A", Oracle.Controls.computeSettingsPathForElement(b));
-        assert.areEqual("A-C", Oracle.Controls.computeSettingsPathForElement(c));
-        assert.areEqual("A-C-D", Oracle.Controls.computeSettingsPathForElement(d));
-        assert.areEqual("A-C-D", Oracle.Controls.computeSettingsPathForElement(e));
+        assert.areEqual("A-TEST", Oracle.Controls.computeSettingsPathForElement(a, "TEST"));
+        assert.areEqual("A-TEST", Oracle.Controls.computeSettingsPathForElement(b, "TEST"));
+        assert.areEqual("A-C-TEST", Oracle.Controls.computeSettingsPathForElement(c, "TEST"));
+        assert.areEqual("A-C-D-TEST", Oracle.Controls.computeSettingsPathForElement(d, "TEST"));
+        assert.areEqual("A-C-D-TEST", Oracle.Controls.computeSettingsPathForElement(e, "TEST"));
     }
 });

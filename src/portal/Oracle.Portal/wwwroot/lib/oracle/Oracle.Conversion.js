@@ -11,37 +11,68 @@ Oracle = (function (parent) {
     // Converters
     // ------------------------------------------------------------------------------------------------
 
-    const _toTimeSpan = function (duration) {
-        let hours = 0;
-        let minutes = 0;
-        let seconds = 0;
-        if (Oracle.Conversion.isNumber(duration)) {
-            hours = Math.floor(duration / (60 * 60));
-            durationInSeconds = duration - (hours * 3600);
-            minutes = Math.floor(duration / 60);
-            durationInSeconds = duration - (minutes * 60);
-            seconds = durationInSeconds;
-        }
-        else if (Oralce.isTimeSpan(duration)) {
-            return duration;
-        }
-        return {
-            minutes: minutes,
-            hours: hours,
-            seconds: seconds
-        };
+    const _failedResult = { success: false };
+
+    const _returnSuccess = function (value) {
+        return { success: true, value: value };
     }
 
-    const _toDate = function (value) {
-        const result = moment(value).toDate();
-        console.log(result);
-        return result;
+
+    const _tryToBoolean = function (value) {
+        if (!Oracle.isEmptyOrWhiteSpaces(value)) {
+            if (value == 1) {
+                return _returnSuccess(true);
+            }
+            else if (value === true) {
+                return _returnSuccess(true);
+            }
+            else if (value === false) {
+                return _returnSuccess(false);
+            }
+            else if (typeof value === 'string' || value instanceof String) {
+                value = value.toLowerCase();
+                if (value == 'true' || value == 'yes' || value == 'enabled' || value == 'enable' || value == 'on') {
+                    return _returnSuccess(true);
+                }
+                else if (value == 'false' || value == 'no' || value == 'disabled' || value == 'disable' || value == 'off') {
+                    return _returnSuccess(false);
+                }
+            }
+        }
+        return _failedResult;
+    }
+
+
+    const _defaultToBoolean = function (value, defaultValue = false) {
+        const result = _tryToBoolean(value);
+        if (result.success) {
+            return result.value;
+        }
+        else {
+            return defaultValue;
+        }
+    }
+
+    const _toBoolean = function (value, throwsException = true) {
+        const result = _tryToBoolean(value);
+        if (result.success) {
+            return result.value;
+        }
+        else {
+            if (throwsException) {
+                throw new Oracle.Errors.ValidationError("Cannot convert value to boolean", { value: value, result: result });
+            }
+            else {
+                return null;
+            }
+
+        }
     };
 
-    const _toNumber = function (value, throwsException = true) {
-        if (Oracle.isEmpty(value)) return null;
-        if (Oracle.Conversion.isNumber(value)) return value;
-        if (Oracle.Conversion.isString(value)) {
+    const _tryToNumber = function (value) {
+        if (Oracle.isEmpty(value)) return _failedResult;
+        if (Oracle.isNumber(value)) return value;
+        if (Oracle.isString(value)) {
             let exit = false;
             let finalValue = "";
             let decimalSeparator = '.';
@@ -73,12 +104,7 @@ Oracle = (function (parent) {
                         break;
                     case ',':
                         if (comaCount === 0 && decimalPointCount > 0) {
-                            if (throwsException) {
-                                throw new Oracle.Exception("Invalid number format: " + value);
-                            }
-                            else {
-                                return null;
-                            }
+                            return _failedResult;
                         }
                         comaCount++;
                         break;
@@ -118,12 +144,7 @@ Oracle = (function (parent) {
                         break;
                     case decimalSeparator:
                         if (decimalSeparatorFound) {
-                            if (throwsException) {
-                                throw new Oracle.Exception("Cannot parse value into float (more than one decimal point or coma found): " + value);
-                            }
-                            else {
-                                return null;
-                            }
+                            return _failedResult;
                         }
                         finalValue += '.';
                         decimalSeparatorFound = true;
@@ -134,57 +155,74 @@ Oracle = (function (parent) {
                 }
                 if (exit) break;
             }
-            return parseFloat(finalValue);
+            if (Oracle.isEmptyOrWhiteSpaces(finalValue)) {
+                return _failedResult;
+            }
+            else {
+                return { success: true, value: parseFloat(finalValue) };
+            }
+        }
+        else {
+            return _failedResult;
+        }
+    }
+
+    const _defaultToNumber = function (value, defaultValue = 0) {
+        const result = _tryToNumber(value);
+        if (result.success) {
+            return result.value;
+        }
+        else {
+            return defaultValue;
+        }
+    }
+
+    const _toNumber = function (value, throwsException = true) {
+        const result = _tryToNumber(value);
+        if (result.success) {
+            return result.value;
+
         }
         else {
             if (throwsException) {
-                throw new Oracle.Exception("Cannot parse value into float: " + value);
+                throw new Oracle.Errors.ValidationError("Cannot convert value to number", { value: value });
+
             }
             else {
                 return null;
             }
+
         }
     };
 
-    const _toBoolean = function (value) {
-        if (Oracle.isEmpty(value)) {
-            return false;
+
+    const _toTimeSpan = function (duration) {
+        let hours = 0;
+        let minutes = 0;
+        let seconds = 0;
+        if (Oracle.isNumber(duration)) {
+            hours = Math.floor(duration / (60 * 60));
+            durationInSeconds = duration - (hours * 3600);
+            minutes = Math.floor(duration / 60);
+            durationInSeconds = duration - (minutes * 60);
+            seconds = durationInSeconds;
         }
-        else {
-            if (value == 1) {
-                return true;
-            }
-            else if (value === true) {
-                return true;
-            }
-            else if (typeof value === 'string' || value instanceof String) {
-                if (value.caseInsensitiveEquals('true')) {
-                    return true;
-                }
-                else if (value.caseInsensitiveEquals('yes')) {
-                    return true;
-                }
-                else if (value.caseInsensitiveEquals('enabled')) {
-                    return true;
-                }
-                else if (value.caseInsensitiveEquals('oui')) {
-                    return true;
-                }
-                else if (value.caseInsensitiveEquals('enable')) {
-                    return true;
-                }
-                else if (value.caseInsensitiveEquals('on')) {
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            }
-            else {
-                return false;
-            }
+        else if (Oralce.isTimeSpan(duration)) {
+            return duration;
         }
+        return {
+            minutes: minutes,
+            hours: hours,
+            seconds: seconds
+        };
     }
+
+    const _toDate = function (value) {
+        const result = moment(value).toDate();
+        console.log(result);
+        return result;
+    };
+
 
     const _removeAccentsAndDiacritics = function (value) {
         if (!Oracle.isString(value)) {
@@ -198,9 +236,15 @@ Oracle = (function (parent) {
     // Namespace assignments
     // ------------------------------------------------------------------------------------------------
 
-    result.toDate = _toDate;
     result.toNumber = _toNumber;
-    result.toBoolean = _toBoolean
+    result.tryToNumber = _tryToNumber;
+    result.defaultToNumber = _defaultToNumber;
+
+    result.toBoolean = _toBoolean;
+    result.tryToBoolean = _tryToBoolean;
+    result.defaultToBoolean = _defaultToBoolean;
+
+    result.toDate = _toDate;
     result.toTimeSpan = _toTimeSpan;
     result.removeAccentsAndDiacritics = _removeAccentsAndDiacritics;
 

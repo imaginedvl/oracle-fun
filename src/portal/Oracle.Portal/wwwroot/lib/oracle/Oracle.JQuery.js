@@ -37,7 +37,6 @@ if (!$.prototype.setContent) {
     };
 }
 
-
 if (!$.prototype.closestExcludingSelf) {
     $.prototype.closestExcludingSelf = function (selector) {
         const _this = $(this);

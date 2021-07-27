@@ -8,10 +8,19 @@
     }
     Oracle.Settings.setRootPath(bugDbPage.uniquePageId);
 
+    Oracle.HTML.addStyle("table td#main-view { width: 70%; vertical-align:top; } ");
+    Oracle.HTML.addStyle("table td#side-view { width: 30%; vertical-align:top } ");
+    const tableElement = $("<table data-control-path='TamperMonkey-BugDbTools-' style='width:100%' border='0'><tbody><tr><td id='main-view'></td><td id='side-view'></td></tr></tbody></table>");
+    $('body').prepend(tableElement);
+    const title = $('<h2>');
+    title.text(bugDbPage.title);
+    $('body').prepend(title);
+
     //Oracle.requires('Oracle', 'Oracle.HTML', '');
 
     const table = new Oracle.BugDB.BugGrid(
         {
+            parent: "#main-view",
             classes: 'groupable sortable groupable-headers',
             fields: bugDbPage.fields,
             bugs: bugDbPage.bugs,
@@ -40,6 +49,7 @@
     //  Oracle.BubDB.BugPanel  ( TODO )
     const filterPanel = new Oracle.BugDB.FilterPanel(
         {
+            parent: "#side-view",
             grid: table,
             data: bugDbPage.bugs,
             fields: bugDbPage.fields,
@@ -58,17 +68,6 @@
                 ]
         });
     // -- /Filter Panel Section -- //
-
-    Oracle.HTML.addStyle("table td#main-view { width: 70%; vertical-align:top; } ");
-    Oracle.HTML.addStyle("table td#side-view { width: 30%; vertical-align:top } ");
-    const tableElement = $("<table data-control-path='Test' style='width:100%' border='0'><tbody><tr><td id='main-view'></td><td id='side-view'></td></tr></tbody></table>");
-    tableElement.find("#main-view").append(table.element);
-    tableElement.find("#side-view").append(filterPanel.element);
-    $('body').prepend(tableElement);
-
-    const title = $('<h2>');
-    title.text(bugDbPage.title);
-    $('body').prepend(title);
 
     Oracle.Controls.Themes.apply();
 

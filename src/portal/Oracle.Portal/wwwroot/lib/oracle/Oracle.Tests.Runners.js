@@ -340,7 +340,7 @@ Oracle = (function (parent) {
     }
 
     const _populateStandaloneRunnerSettingsFromUrl = function (settings) {
-        if (Oracle.Conversion.toBoolean(Oracle.Http.getQueryStringValue("execute"))) {
+        if (Oracle.Conversion.defaultToBoolean(Oracle.Http.getQueryStringValue("execute"))) {
             settings.execute = true;
         }
         settings.modules = [];
@@ -348,7 +348,7 @@ Oracle = (function (parent) {
         if (!Oracle.isEmptyOrWhiteSpaces(module)) {
             settings.modules.push(module);
         }
-        if (Oracle.Conversion.toBoolean(Oracle.Http.getQueryStringValue("collapseAll")) || Oracle.Conversion.toBoolean(Oracle.Http.getQueryStringValue("collapse"))) {
+        if (Oracle.Conversion.defaultToBoolean(Oracle.Http.getQueryStringValue("collapseAll")) || Oracle.Conversion.defaultToBoolean(Oracle.Http.getQueryStringValue("collapse"))) {
             settings.collapseAll = true;
         }
     }
@@ -376,7 +376,7 @@ Oracle = (function (parent) {
             if (Array.isArray(controlSettings.modules)) {
                 includeModules.pushRange(settings.modules);
             }
-            this.initializeTable(includeModules, Oracle.Conversion.toBoolean(controlSettings.collapseAll));
+            this.initializeTable(includeModules, Oracle.Conversion.defaultToBoolean(controlSettings.collapseAll));
             Oracle.Logger.logDebug("UnitTestRunner initialized: " + this.id, { control: this });
             if (controlSettings.execute === true) {
                 this.execute();

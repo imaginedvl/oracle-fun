@@ -51,9 +51,6 @@ Oracle = (function (parent) {
             super(controlSettings);
         }
 
-        onSaveSettings(userSettings) {
-        }
-
         onInitialize(controlSettings, userSettings) {
             const initializationSettings = { grid: this };
             this.initializeColumns(controlSettings, initializationSettings);
@@ -61,17 +58,87 @@ Oracle = (function (parent) {
             this.emptyRow = $("<tr class='empty-row'><td colspan='" + this.columns.length + "'></td></tr>");
             const emptyRowMessage = Oracle.toDefaultValue(controlSettings.noItemsMessage, "No data matching the criteria");
             this.emptyRow.find("td").text(emptyRowMessage);
+            let sortColumnIndex = Oracle.Conversion.defaultToNumber(userSettings?.sortColumnIndex, -1);
+            let sortAscending = Oracle.Conversion.defaultToBoolean(userSettings?.sortAscending, true);
             const sortColumn = this.columnsById[controlSettings?.sort?.column];
             if (!Oracle.isEmpty(sortColumn)) {
-                this.sortByColumnIndex(sortColumn.index, controlSettings?.sort?.descending !== true);
+                this.sortColumnIndex = Oracle.Conversion.defaultToNumber(sortColumn.index, sortColumnIndex);
+                this.sortAscending = Oracle.Conversion.defaultToBoolean(controlSettings?.sort?.descending, sortAscending);
             }
-            else {
-                this.populateRows();
-            }
+            this.sortByColumnIndex(sortColumnIndex, sortAscending);
         }
 
-        onBuildUserSettings() {
+        sortByColumnIndex(index, ascending = true) {
+            console.log({ index: index, ascending: ascending })
+            if (index > -1) {
+                const column = this.columns[index];
+                let ascendingOrder = true;
+                if (ascending !== null) {
+                    ascendingOrder = ascending;
+                }
+                else {
+                    if (column.isSorted()) {
+                        if (column.sortIsAscending()) {
+                            ascendingOrder = false;
+                        }
+                    }
+                }
+                this.sortColumn = column;
+                column.setSort(ascendingOrder);
+                this.rows.forEach(row => {
+                    row.element.find("td.sorted").removeClass("sorted ascending descending");
+                    const cell = row.element.find("td[data-column-index=" + index + "]");
+                    if (ascendingOrder) {
+                        cell.addClass("sorted ascending")
+                    }
+                    else {
+                        cell.addClass("sorted descending")
+                    }
+                });
+                this.rows.sort((a, b) => {
+                    a = Oracle.getMemberValueByPath(a.data, column.path);
+                    b = Oracle.getMemberValueByPath(b.data, column.path);
+                    if (ascendingOrder) {
+                        return Oracle.compare(a, b);
+                    }
+                    else {
+                        return Oracle.compare(b, a);
+                    }
+                });
+                // Then we look for groups, probably a better way to do that and maybe we can do the sort/group detection in one go, but it is late so :)
+                // The grouping looks really cool.
+                let a, b;
+                for (let i = 0; i < this.rows.length; i++) {
+                    const row = this.rows[i];
+                    row.isNewGroup = false;
+                    if (column.groupable === true) {
+                        if (i == 0) {
+                            row.isNewGroup = true;
+                        }
+                        else {
+                            a = Oracle.getMemberValueByPath(this.rows[i - 1].data, column.path);
+                            b = Oracle.getMemberValueByPath(this.rows[i].data, column.path);
+                            if (Oracle.compare(a, b) !== 0) {
+                                row.isNewGroup = true;
+                            }
+                        }
+                    }
+                }
+            }
+            this.populateRows();
+            this.saveUserSettings();
+        }
 
+        onBuildUserSettings(userSettings) {
+            /*if (this.sortColumn !== null) {
+                userSettings.sortColumnIndex = this.sortColumn.index;
+                userSettings.sortAscending = this.sortColumn.sortIsAscending();
+
+            }
+            else {
+                userSettings.sortColumnIndex = -1;
+                userSettings.sortAscending = true;
+            }*/
         }
 
         filter(selectPredicate) {
@@ -116,64 +183,6 @@ Oracle = (function (parent) {
                 _this.sortByColumnIndex($(e.target).attr('data-column-index'));
             });
             this.element.append(this.theadElement);
-        }
-
-        sortByColumnIndex(index, ascending = null) {
-            const column = this.columns[index];
-            let ascendingOrder = true;
-            if (ascending !== null) {
-                ascendingOrder = ascending;
-            }
-            else {
-                if (column.isSorted()) {
-                    if (column.sortIsAscending()) {
-                        ascendingOrder = false;
-                    }
-                }
-            }
-            this.sortColumn = column;
-            column.setSort(ascendingOrder);
-            this.rows.forEach(row => {
-                row.element.find("td.sorted").removeClass("sorted ascending descending");
-                const cell = row.element.find("td[data-column-index=" + index + "]");
-                if (ascendingOrder) {
-                    cell.addClass("sorted ascending")
-                }
-                else {
-                    cell.addClass("sorted descending")
-                }
-            });
-            this.rows.sort((a, b) => {
-                a = Oracle.getMemberValueByPath(a.data, column.path);
-                b = Oracle.getMemberValueByPath(b.data, column.path);
-                if (ascendingOrder) {
-                    return Oracle.compare(a, b);
-                }
-                else {
-                    return Oracle.compare(b, a);
-                }
-            });
-            // Then we look for groups, probably a better way to do that and maybe we can do the sort/group detection in one go, but it is late so :)
-            // The grouping looks really cool.
-            let a, b;
-            for (let i = 0; i < this.rows.length; i++) {
-                const row = this.rows[i];
-                row.isNewGroup = false;
-                if (column.groupable === true) {
-                    if (i == 0) {
-                        row.isNewGroup = true;
-                    }
-                    else {
-                        a = Oracle.getMemberValueByPath(this.rows[i - 1].data, column.path);
-                        b = Oracle.getMemberValueByPath(this.rows[i].data, column.path);
-                        if (Oracle.compare(a, b) !== 0) {
-                            row.isNewGroup = true;
-                        }
-                    }
-                }
-            }
-            this.populateRows();
-            this.saveUserSettings();
         }
 
         populateRows() {
