@@ -27,8 +27,8 @@ Oracle = (function (parent) {
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item span.count { padding-left:4px; color: var(--controlTextColorLighten3)}');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item * { pointer-events: none }');
 
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item.selected:not(.inverted) { border:2px solid green }');
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item.selected.inverted { border:2px solid red }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item.selected:not(.inverted) { border:2px solid var(--includeBorderColor); background-color: var(--includeBackgroundColor); }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item.selected.inverted { border:2px solid var(--excludeBorderColor); background-color: var(--excludeBackgroundColor); }');
 
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-search-panel input { width:100%; padding:8px; border: 1px solid var(--controlBorderColor); }');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-search-panel input.searchKeyword {  height: 35px; padding-left: 10px; }');
@@ -119,6 +119,8 @@ Oracle = (function (parent) {
         };
     }
 
+    let _nextSectionId = 0;
+
     // ---------------------------------------------------------------------------------------------------------------- //
     // Class: FilterPanel
     // ---------------------------------------------------------------------------------------------------------------- //
@@ -175,14 +177,16 @@ Oracle = (function (parent) {
         }
 
         initializeBasePanel(title) {
+            _nextSectionId++;
             const panelTitle = $("<div class='section-panel section-header-panel'>");
             panelTitle.text(title);
             this.element.append(panelTitle);
             const panel = $("<div class='section-panel'>");
+            panel.attr('data-section-id', _nextSectionId);
             return panel;
         }
 
-        createBaseFilterItem(text, value, count, fieldName, customFilterId) {
+        createBaseFilterItem(text, value, count, fieldName, customFilterId, sectionId) {
             const filterItem = $("<span class='filter-item'>");
             filterItem.attr("data-filter-field", fieldName);
             filterItem.attr("data-filter-id", customFilterId);
@@ -222,33 +226,25 @@ Oracle = (function (parent) {
                 }
                 // Then we check for each selected filters
                 if (result) {
-                    const allItems = this.element.find('.filter-item.selected');
-                    for (let i = 0; i < allItems.length; i++) {
-                        const target = $(allItems.get(i));
-                        if (result) {
+                    const filterPanels = this.element.find(".section-panel[data-section-id]");
+                    for (let j = 0; j < filterPanels.length && result; j++) {
+                        let panelResult = false;
+                        const panelItems = $(filterPanels[j]).find(".filter-item.selected");
+                        if (Oracle.isEmpty(panelItems)) panelResult = true;
+                        for (let i = 0; i < panelItems.length && !panelResult; i++) {
+                            const target = $(panelItems.get(i));
                             const filterId = target.attr("data-filter-id");
-                            const field = target.attr("data-filter-field");
-                            const value = target.data("data-filter-value");
-                            if (target.hasClass("inverted")) {
-                                if (Oracle.isEmpty(filterId)) {
-                                    result = !Oracle.includes(settings.data[field], value);
-                                }
-                                else {
-                                    result = !_getCustomPanelFilterById(filterId).predicate(settings.data);
-                                }
+                            if (Oracle.isEmpty(filterId)) {
+                                const field = target.attr("data-filter-field");
+                                const value = target.data("data-filter-value");
+                                panelResult = Oracle.includes(settings.data[field], value);
                             }
                             else {
-                                if (Oracle.isEmpty(filterId)) {
-                                    result = Oracle.includes(settings.data[field], value);
-                                }
-                                else {
-                                    result = _getCustomPanelFilterById(filterId).predicate(settings.data);
-                                }
+                                panelResult = _getCustomPanelFilterById(filterId).predicate(settings.data);
                             }
+                            if (target.hasClass("inverted")) panelResult = !panelResult;
                         }
-                        else {
-                            break;
-                        }
+                        result = panelResult;
                     }
                 }
                 return result;
@@ -338,7 +334,7 @@ Oracle = (function (parent) {
 
         resetFilters() {
             this.element.find(".section-search-panel input").val("");
-            this.element.find('.filter-item.selected').removeClass("selected");
+            this.element.find('.filter-item.selected').removeClass("selected inverted");
             this.updateFilters();
         }
     }
