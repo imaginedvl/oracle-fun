@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31321.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oracle.Core", "Oracle.Core\Oracle.Core.csproj", "{5F43DFC5-5A8F-4D0E-AEA2-9D5E5BFBA0BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oracle.Portal", "Oracle.Portal\Oracle.Portal.csproj", "{585886C1-A603-443C-A58B-9AE0062EA7BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oracle.Portal", "Oracle.Portal\Oracle.Portal.csproj", "{585886C1-A603-443C-A58B-9AE0062EA7BB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
