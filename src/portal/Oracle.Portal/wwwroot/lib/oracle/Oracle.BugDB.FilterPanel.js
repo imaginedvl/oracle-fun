@@ -129,6 +129,13 @@ Oracle = (function (parent) {
             controlSettings.type = 'bugdbFilterPanel';
             controlSettings.elementType = 'div';
             super(controlSettings);
+        }
+
+        onBuildUserSettings(userSettings) {
+
+        }
+
+        onInitialize(controlSettings, userSettings) {
             if (Oracle.isEmpty(controlSettings.grid)) {
                 Oracle.Logger.logWarning("Target grid is not provided...");
             }
@@ -165,7 +172,6 @@ Oracle = (function (parent) {
                     }
                 }
             }
-            Oracle.Logger.logDebug("FilterPanel initialized: " + this.id, { panel: this });
         }
 
         initializeBasePanel(title) {

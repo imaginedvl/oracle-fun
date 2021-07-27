@@ -17,27 +17,35 @@ Oracle = (function (parent) {
     // ---------------------------------------------------------------------------------------------------------------- //
     result.Control = class {
 
-        constructor(settings) {
+        constructor(controlSettings) {
+            this.isInitialized = false;
             this.id = Oracle.generateId(25);
-            if (Oracle.isEmpty(settings.target)) {
-                this.element = $("<" + settings.elementType + " class='" + settings.type + " oracle control' data-control-id='" + this.id + "' data-control-type='" + settings.type + "'  >");
+            this.type = controlSettings.type;
+            if (Oracle.isEmpty(controlSettings.target)) {
+                this.element = $("<" + controlSettings.elementType + " class='" + this.type + " oracle control' data-control-id='" + this.id + "' data-control-type='" + this.type + "'  >");
             }
             else {
-                this.element = $(settings.target);
-                this.element.addClass("oracle control " + settings.type);
+                this.element = $(controlSettings.target);
+                this.element.addClass("oracle control " + this.type);
                 this.element.attr("data-control-id", this.id);
-                this.element.attr("data-control-type", settings.type);
+                this.element.attr("data-control-type", this.typee);
             }
+            this.element.attr("data-control-is-initialized", "false");
+            this.onInitialize(controlSettings)
+            this.isInitialized = true;
+            this.element.attr("data-control-is-initialized", "true");
+            Oracle.Logger.logDebug("Control[" + this.type + "] initialized: " + this.id, { grid: this, type: this.type });
         }
 
-        on(event, callback) {
-            this.element.on(event, callback);
-            Oracle.Logger.logDebug(this.element.attr("data-control-type") + " event " + event + " registered");
+        onInitialize() {
         }
 
-        triggerEvent(event) {
-            Oracle.Logger.logDebug(this.element.attr("data-control-type") + " event " + event + " triggered");
-            this.element.trigger(event);
+        onBuildUserSettings(userSettings) {
+        }
+
+        saveUserSettings() {
+            const userSettings = {};
+            this.onBuildUserSettings(userSettings);
         }
 
     };

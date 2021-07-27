@@ -49,6 +49,12 @@ Oracle = (function (parent) {
             controlSettings.type = 'grid';
             controlSettings.elementType = 'table';
             super(controlSettings);
+        }
+
+        onSaveSettings(userSettings) {
+        }
+
+        onInitialize(controlSettings, userSettings) {
             const initializationSettings = { grid: this };
             this.initializeColumns(controlSettings, initializationSettings);
             this.initializeData(controlSettings, initializationSettings);
@@ -62,7 +68,10 @@ Oracle = (function (parent) {
             else {
                 this.populateRows();
             }
-            Oracle.Logger.logDebug("Grid initialized: " + this.id, { grid: this });
+        }
+
+        onBuildUserSettings() {
+
         }
 
         filter(selectPredicate) {
@@ -164,6 +173,7 @@ Oracle = (function (parent) {
                 }
             }
             this.populateRows();
+            this.saveUserSettings();
         }
 
         populateRows() {
