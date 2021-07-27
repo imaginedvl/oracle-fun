@@ -131,10 +131,16 @@ Oracle = (function (parent) {
             controlSettings.type = 'bugdbFilterPanel';
             controlSettings.elementType = 'div';
             super(controlSettings);
+            this.filterItemSettings = [];
         }
 
         onBuildUserSettings(userSettings) {
-
+            if (!Oracle.isEmptyOrWhiteSpaces(this.filterItemSettings)) {
+                userSettings.filterItemSettings = this.filterItemSettings;
+            }
+            else {
+                userSettings.filterItemSettings = null;
+            }
         }
 
         onInitialize(controlSettings, userSettings) {
@@ -151,10 +157,12 @@ Oracle = (function (parent) {
             title.text("Bug List Helper");
             this.element.append(title);
 
-            this.populatePanels(controlSettings, userSettings);
-        }
+            let filterItemSettings = null;
+            // First from control settings
+            filterItemSettings = controlSettings?.filterItemSettings;
+            // Then from user 
+            filterItemSettings = userSettings?.filterItemSettings ? userSettings?.filterItemSettings : filterItemSettings;
 
-        populatePanels(controlSettings, userSettings) {
             if (!Oracle.isEmpty(controlSettings.panels)) {
                 for (let i = 0; i < controlSettings.panels.length; i++) {
                     const panelSettings = controlSettings.panels[i];
@@ -169,14 +177,15 @@ Oracle = (function (parent) {
                             this.initializeSummaryPanel();
                             break;
                         case result.PanelTypes.Standard:
-                            this.initializeStandardPanel(controlSettings, userSettings);
+                            this.initializeStandardPanel(filterItemSettings);
                             break;
                         case result.PanelTypes.Custom:
-                            this.initializeCustomPanel(panelSettings);
+                            this.initializeCustomPanel(panelSettings, filterItemSettings);
                             break;
                     }
                 }
             }
+            this.updateFilters();
         }
 
         updatePanels() {
@@ -210,8 +219,22 @@ Oracle = (function (parent) {
             return panel;
         }
 
-        createBaseFilterItem(text, value, count, fieldName, customFilterId) {
+        createBaseFilterItem(text, value, count, fieldName, customFilterId, filterItemSettings) {
+            let filterItemName;
+            if (Oracle.isEmpty(customFilterId)) filterItemName = fieldName + "-" + text;
+            else filterItemName = customFilterId;
+            const filterSetting = filterItemSettings.find(obj => {
+                return obj.filterItem === filterItemName
+            });
+
             const filterItem = $("<span class='filter-item'>");
+            if (!Oracle.isEmpty(filterSetting)) {
+                if (filterSetting.value) {
+                    filterItem.addClass("inverted")
+                }
+                filterItem.addClass("selected");
+
+            }
             filterItem.attr("data-filter-field", fieldName);
             filterItem.attr("data-filter-id", customFilterId);
             filterItem.data("data-filter-value", value);
@@ -245,41 +268,53 @@ Oracle = (function (parent) {
         updateFilters() {
             this.grid.filter((settings) => {
                 let result = true;
+                this.filterItemSettings = [];
                 // First we check if there is keyword filter
                 const keyword = this.element.find(".section-search-panel input").val();
                 if (!Oracle.isEmptyOrWhiteSpaces(keyword)) {
                     result = settings.data.match(keyword);
                 }
                 // Then we check for each selected filters
-                if (result) {
-                    const filterPanels = this.element.find(".section-panel[data-section-id]");
-                    for (let j = 0; j < filterPanels.length && result; j++) {
+                const filterPanels = this.element.find(".section-panel[data-section-id]");
+                for (let j = 0; j < filterPanels.length; j++) {
+                    const panelItems = $(filterPanels[j]).find(".filter-item.selected");
+                    if (!Oracle.isEmpty(panelItems)) {
                         let panelResult = false;
-                        const panelItems = $(filterPanels[j]).find(".filter-item.selected");
-                        if (Oracle.isEmpty(panelItems)) panelResult = true;
-                        for (let i = 0; i < panelItems.length && !panelResult; i++) {
+                        for (let i = 0; i < panelItems.length; i++) {
                             const target = $(panelItems.get(i));
                             const filterId = target.attr("data-filter-id");
-                            if (Oracle.isEmpty(filterId)) {
-                                const field = target.attr("data-filter-field");
-                                const value = target.data("data-filter-value");
-                                panelResult = Oracle.includes(settings.data[field], value);
+                            const field = target.attr("data-filter-field");
+                            const value = target.data("data-filter-value");
+                            if (!panelResult) {
+                                if (Oracle.isEmpty(filterId)) panelResult = Oracle.includes(settings.data[field], value);
+                                else panelResult = _getCustomPanelFilterById(filterId).predicate(settings.data);
+                                if (target.hasClass("inverted")) panelResult = !panelResult;
                             }
+                            let filterItemName;
+
+                            if (!Oracle.isEmpty(filterId)) filterItemName = filterId;
                             else {
-                                panelResult = _getCustomPanelFilterById(filterId).predicate(settings.data);
+                                let fieldProperties = Oracle.BugDB.getFieldProperties(field);
+                                if (fieldProperties.lookup && fieldProperties.lookup[value].filterTitle) {
+                                    filterItemName = field + "-" + fieldProperties.lookup[value].filterTitle;
+                                }
+                                else {
+                                    filterItemName = field + "-" + Oracle.Formating.formatValue(value);
+                                }
                             }
-                            if (target.hasClass("inverted")) panelResult = !panelResult;
+                            this.filterItemSettings.push({ filterItem: filterItemName, value: target.hasClass("inverted") });
                         }
-                        result = panelResult;
+                        result = result && panelResult;
                     }
                 }
                 return result;
             });
+            this.saveUserSettings();
             this.summary.buildSummary(this.bugs, this.grid.visibleData);
             this.updatePanels()
         }
 
-        initializeStandardPanel(controlSettings, userSettings) {
+        initializeStandardPanel(filterItemSettings) {
             for (const [key, properties] of Object.entries(Oracle.BugDB.FieldProperties)) {
                 if (Oracle.includes(this.fields, properties.id)) {
                     if (properties.filterable === true) {
@@ -303,7 +338,7 @@ Oracle = (function (parent) {
                                     value = Oracle.Formating.formatValue(metrics.value);
                                 }
                                 if (Oracle.compare(metrics.count, 0) === 1 || (properties.lookup && properties.lookup[metrics.value].filterVisible)) {
-                                    const item = this.createBaseFilterItem(value, metrics.value, metrics.visibleCount, properties.id, null);
+                                    const item = this.createBaseFilterItem(value, metrics.value, metrics.visibleCount, properties.id, null, filterItemSettings);
                                     panel.append(item);
                                 }
                             }
@@ -348,13 +383,13 @@ Oracle = (function (parent) {
             this.element.append(resetPanel);
         }
 
-        initializeCustomPanel(panelSettings) {
+        initializeCustomPanel(panelSettings, filterItemSettings) {
             const panel = this.initializeBasePanel(panelSettings.title);
             for (let i = 0; i < panelSettings.filters.length; i++) {
                 const filterId = panelSettings.filters[i];
                 const properties = _getCustomPanelFilterById(filterId);
                 const count = properties.count(this.bugs);
-                const item = this.createBaseFilterItem(properties.title, null, count, null, filterId);
+                const item = this.createBaseFilterItem(properties.title, null, count, null, filterId, filterItemSettings);
                 panel.append(item);
             }
             this.element.append(panel);
