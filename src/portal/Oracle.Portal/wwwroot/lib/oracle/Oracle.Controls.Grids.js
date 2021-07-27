@@ -55,6 +55,7 @@ Oracle = (function (parent) {
             const initializationSettings = { grid: this };
             this.initializeColumns(controlSettings, initializationSettings);
             this.initializeData(controlSettings, initializationSettings);
+            this.sortColumn = null;
             this.emptyRow = $("<tr class='empty-row'><td colspan='" + this.columns.length + "'></td></tr>");
             const emptyRowMessage = Oracle.toDefaultValue(controlSettings.noItemsMessage, "No data matching the criteria");
             this.emptyRow.find("td").text(emptyRowMessage);
@@ -125,12 +126,15 @@ Oracle = (function (parent) {
                     }
                 }
             }
+            else {
+                this.sortColumn = null;
+            }
             this.populateRows();
             this.saveUserSettings();
         }
 
         onBuildUserSettings(userSettings) {
-            /*if (this.sortColumn !== null) {
+            if (this.sortColumn !== null) {
                 userSettings.sortColumnIndex = this.sortColumn.index;
                 userSettings.sortAscending = this.sortColumn.sortIsAscending();
 
@@ -138,7 +142,7 @@ Oracle = (function (parent) {
             else {
                 userSettings.sortColumnIndex = -1;
                 userSettings.sortAscending = true;
-            }*/
+            }
         }
 
         filter(selectPredicate) {
