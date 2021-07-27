@@ -1,12 +1,13 @@
 (function () {
 
-
-
     const bugDbPage = new Oracle.BugDB.BugTablePage();
     if (!Oracle.Conversion.defaultToBoolean(Oracle.Http.getQueryStringValue("showOriginal"))) {
         bugDbPage.hide();
     }
-    Oracle.Settings.setRootPath(bugDbPage.settingsPath);
+    Oracle.Settings.setRootPath("Oracle-TamperMonkey-" - bugDbPage.settingsPath);
+
+    $('body').prepend("<div style='display:none' data-root-path='" + bugDbPage.settingsPath + "'>");
+
 
     Oracle.HTML.addStyle("table td#main-view { width: 70%; vertical-align:top; } ");
     Oracle.HTML.addStyle("table td#side-view { width: 30%; vertical-align:top } ");

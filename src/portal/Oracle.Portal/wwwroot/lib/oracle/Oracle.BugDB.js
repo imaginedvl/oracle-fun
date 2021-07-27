@@ -618,13 +618,53 @@ Oracle = (function (parent) {
             this.bugs = this.table.bugs;
             this.fields = this.table.fields;
             this.title = this.element.children('h2').text();
-            this.settingsPath = "XYZ"; // LD: To generate, I will use the 'base' url and then generate a hash from the fiueld list. This should be unique enough
+            this.settingsPath = Oracle.BugDB.generateSettingsPathForBugDbReportUrl();
         }
 
         hide() {
             this.element.hide();
         }
     };
+
+    result.generateSettingsPathForBugDbReportUrl = function (url) {
+        if (!Oracle.isString(url)) {
+            url = window.location.href;
+        }
+        let result = "";
+        url = url.toLowerCase();
+        if (url.indexOf('select_stmt') > -1) {
+            result = "BUGDBRPT-S";
+            const selectStatement = Oracle.Http.getQueryStringValue("select_stmt", url);
+            const whereStatement = Oracle.Http.getQueryStringValue("where_stmt", url);
+            const orderStatement = Oracle.Http.getQueryStringValue("order_stmt", url);
+            // LD: then the columns, let's see what to do with that later but I do not think we need to do anything about it:
+            // &tot_cols=11&col_head=Assignee&col_head=Support%20Contact&col_head=Severity&col_head=Status&col_head=Fix%20ETA&col_head=Fixed%20Date&col_head=Subject&col_head=Component&col_head=Date%20Reported&col_head=Tag&col_head=Customer"
+            if (selectStatement !== null) {
+                result += "-S" + selectStatement.getHashCode();
+            }
+            if (whereStatement !== null) {
+                result += "-W" + whereStatement.getHashCode();
+            }
+            if (orderStatement !== null) {
+                result += "-O" + orderStatement.getHashCode();
+            }
+        }
+        else if (url.indexOf('query_type') > -1) {
+            result = "BUGDBRPT-Q-";
+            const fcont_arr = Oracle.Http.getQueryStringValue("fcont_arr", url);
+            if (fcont_arr !== null) {
+                result += "-C" + fcont_arr.getHashCode();
+            }
+        }
+        else {
+            const index = url.indexOf("?");
+            if (index > -1) {
+                url = url.substring(0, index);
+            }
+            result = "BUGDBRPT-C-" + url.getHashCode();
+        }
+        return Oracle.Settings.normalizePath(result);
+    }
 
     // ---------------------------------------------------------------------------------------------------------------- //
     // Formaters
