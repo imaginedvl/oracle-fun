@@ -1,9 +1,12 @@
 (function () {
 
+
+
     const bugDbPage = new Oracle.BugDB.BugTablePage();
     if (!Oracle.Conversion.toBoolean(Oracle.Http.getQueryStringValue("showOriginal"))) {
         bugDbPage.hide();
     }
+    Oracle.Settings.setRootPath(bugDbPage.uniquePageId);
 
     //Oracle.requires('Oracle', 'Oracle.HTML', '');
 
@@ -56,9 +59,9 @@
         });
     // -- /Filter Panel Section -- //
 
-    Oracle.HTML.addStyle("table td#main-view { vertical-align:top; } ");
-    Oracle.HTML.addStyle("table td#side-view { width: 300px; vertical-align:top } ");
-    const tableElement = $("<table style='width:100%' border='0'><tbody><tr><td id='main-view'></td><td id='side-view'></td></tr></tbody></table>");
+    Oracle.HTML.addStyle("table td#main-view { width: 70%; vertical-align:top; } ");
+    Oracle.HTML.addStyle("table td#side-view { width: 30%; vertical-align:top } ");
+    const tableElement = $("<table data-settings-path='Test' style='width:100%' border='0'><tbody><tr><td id='main-view'></td><td id='side-view'></td></tr></tbody></table>");
     tableElement.find("#main-view").append(table.element);
     tableElement.find("#side-view").append(filterPanel.element);
     $('body').prepend(tableElement);

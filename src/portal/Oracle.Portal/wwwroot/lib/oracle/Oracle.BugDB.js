@@ -618,6 +618,7 @@ Oracle = (function (parent) {
             this.bugs = this.table.bugs;
             this.fields = this.table.fields;
             this.title = this.element.children('h2').text();
+            this.uniquePageId = "XYZ"; // LD: To generate, I will use the 'base' url and then generate a hash from the fiueld list. This should be unique enough
         }
 
         hide() {
