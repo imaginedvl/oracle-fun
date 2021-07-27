@@ -69,6 +69,12 @@ Oracle = (function (parent) {
             successBackgroundColor: '#5cb85c',
             successTextColor: 'black',
 
+            //Selection
+            includeBorderColor: '#00CC00',
+            includeBackgroundColor: '#99FF99',
+            excludeBorderColor: '#FF0000',
+            excludeBackgroundColor: '#FF9999',
+
             // Hyperlink
             hyperlinkTextColor: 'blue',
 
