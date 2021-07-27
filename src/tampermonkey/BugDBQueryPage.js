@@ -3,7 +3,7 @@
 
 
     const bugDbPage = new Oracle.BugDB.BugTablePage();
-    if (!Oracle.Conversion.toBoolean(Oracle.Http.getQueryStringValue("showOriginal"))) {
+    if (!Oracle.Conversion.defaultToBoolean(Oracle.Http.getQueryStringValue("showOriginal"))) {
         bugDbPage.hide();
     }
     Oracle.Settings.setRootPath(bugDbPage.uniquePageId);
