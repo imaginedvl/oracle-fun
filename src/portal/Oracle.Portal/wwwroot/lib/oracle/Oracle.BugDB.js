@@ -74,49 +74,113 @@ Oracle = (function (parent) {
     const _fieldProperties = {
         number:
         {
-            id: 'number', columnTitle: 'Number', columnSelector: 'Num', formater: 'BugDBNumber'
+            id: 'number',
+            columnTitle: 'Number',
+            columnSelector: 'Num',
+            formater: 'BugDBNumber'
         },
         assignee:
         {
-            id: 'assignee', columnTitle: 'Assignee', columnSelector: 'Assignee', filterTitle: 'Assignees', groupable: true, filterable: true
+            id: 'assignee',
+            columnTitle: 'Assignee',
+            columnSelector: 'Assignee',
+            filterTitle: 'Assignees',
+            groupable: true,
+            filterable: true
         },
         severity:
         {
-            id: 'severity', columnTitle: 'Severity', columnSelector: 'Sev', lookup: result.Severity, formater: 'BugDBSeverity', filterTitle: 'Severity', groupable: true, filterable: true
+            id: 'severity',
+            columnTitle: 'Severity',
+            columnSelector: 'Sev',
+            lookup: result.Severity,
+            formater: 'BugDBSeverity',
+            filterTitle: 'Severity',
+            groupable: true,
+            filterable: true
         },
         component:
         {
-            id: 'component', columnTitle: 'Component', columnSelector: 'Component', filterTitle: 'Components', groupable: true, filterable: true
+            id: 'component',
+            columnTitle: 'Component',
+            columnSelector: 'Component',
+            filterTitle: 'Components',
+            groupable: true,
+            filterable: true
         },
         status:
         {
-            id: 'status', columnTitle: 'Status',
+            id: 'status',
+            columnTitle: 'Status',
             columnSelector: "$thead tr th:equalsi('Status'), thead tr th:equalsi('St')",
-            filterTitle: 'Status', lookup: result.Statuses, formater: 'BugDBStatus', groupable: true, filterable: true
+            filterTitle: 'Status',
+            lookup: result.Statuses,
+            formater: 'BugDBStatus',
+            groupable: true,
+            filterable: true
         },
         fixEta:
         {
-            id: 'fixEta', columnTitle: 'Fix ETA', columnSelector: 'Fix Eta', formater: 'BugDBDate'
+            id: 'fixEta',
+            columnTitle: 'Fix ETA',
+            columnSelector: 'Fix Eta',
+            formater: 'BugDBDate'
         },
         tags:
         {
-            id: 'tags', columnTitle: 'Tags',
+            id: 'tags',
+            columnTitle: 'Tags',
             columnSelector: "$thead tr th:equalsi('Tags'), thead tr th:equalsi('Tag')",
-            lookup: result.Tag, formater: 'BugDBTag', filterTitle: 'Tags', filterable: true
+            lookup: result.Tag,
+            formater: 'BugDBTags',
+            filterTitle: 'Tags',
+            filterable: true
         },
-        customer: { id: 'customer', columnTitle: 'Customer', columnSelector: 'Customer', filterTitle: 'Customers', formater: 'BugDBCustomer', groupable: true },
+        customer: {
+            id: 'customer',
+            columnTitle: 'Customer',
+            columnSelector: 'Customer',
+            filterTitle: 'Customers',
+            formater: 'BugDBCustomer',
+            groupable: true
+        },
         dateReported:
         {
             id: 'dateReported', columnTitle: 'Creation',
             columnSelector: "$thead tr th:equalsi('Date Reported'), thead tr th:equalsi('Reported Date')",
             formater: 'BugDBDate', groupable: false, filterable: false
         },
-        subject: { id: 'subject', columnTitle: 'Subject', columnSelector: '=subject' },
-        selection: { id: 'selection', columnSelector: '#select_all_option' },
-        lineNumber: { id: 'lineNumber', columnSelector: 'Sl No.' },
-        productNumber: { id: 'productNumber', columnTitle: 'Product', columnSelector: '=Product ID', groupable: true },
-        supportContact: { id: 'supportContact', columnTitle: 'Support Contact', columnSelector: 'Support Contact', groupable: true },
-        testName: { id: 'testName', columnTitle: 'Test Name', columnSelector: 'Test Name/Doc Field', groupable: true }
+        subject: {
+            id: 'subject',
+            columnTitle: 'Subject',
+            columnSelector: '=subject'
+        },
+        selection: {
+            id: 'selection',
+            columnSelector: '#select_all_option'
+        },
+        lineNumber: {
+            id: 'lineNumber',
+            columnSelector: 'Sl No.'
+        },
+        productNumber: {
+            id: 'productNumber',
+            columnTitle: 'Product',
+            columnSelector: '=Product ID',
+            groupable: true
+        },
+        supportContact: {
+            id: 'supportContact',
+            columnTitle: 'Support Contact',
+            columnSelector: 'Support Contact',
+            groupable: true
+        },
+        testName: {
+            id: 'testName',
+            columnTitle: 'Test Name',
+            columnSelector: 'Test Name/Doc Field',
+            groupable: true
+        }
     }
 
     result.FieldProperties = _fieldProperties;
@@ -433,7 +497,6 @@ Oracle = (function (parent) {
                             });
                         }
                     });
-
                     return result;
                 }
             }
