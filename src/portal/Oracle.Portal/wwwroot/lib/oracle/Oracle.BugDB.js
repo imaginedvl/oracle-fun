@@ -227,7 +227,7 @@ Oracle = (function (parent) {
         isLate() {
             let isLate = false;
             if (!Oracle.isEmpty(this.fixEta)) {
-                isLate = Oracle.compare(this.getFixEta, new Date());
+                isLate = this.fixEta < new Date();
             }
             return isLate;
         }

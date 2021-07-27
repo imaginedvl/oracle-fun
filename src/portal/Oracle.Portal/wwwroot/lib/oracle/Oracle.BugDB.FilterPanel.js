@@ -144,7 +144,6 @@ Oracle = (function (parent) {
             this.grid = controlSettings.grid;
             this.bugs = controlSettings.data;
             this.fields = controlSettings.fields;
-            this.panels = controlSettings.panels;
             this.summary = new Oracle.BugDB.BugSummary(this.bugs, controlSettings.grid.visibleData);
 
             // Title
@@ -152,13 +151,13 @@ Oracle = (function (parent) {
             title.text("Bug List Helper");
             this.element.append(title);
 
-            this.populatePanels();
+            this.populatePanels(controlSettings, userSettings);
         }
 
-        populatePanels() {
-            if (!Oracle.isEmpty(this.panels)) {
-                for (let i = 0; i < this.panels.length; i++) {
-                    const panelSettings = this.panels[i];
+        populatePanels(controlSettings, userSettings) {
+            if (!Oracle.isEmpty(controlSettings.panels)) {
+                for (let i = 0; i < controlSettings.panels.length; i++) {
+                    const panelSettings = controlSettings.panels[i];
                     switch (panelSettings.type) {
                         case result.PanelTypes.Reset:
                             this.initializeResetPanel();
@@ -170,7 +169,7 @@ Oracle = (function (parent) {
                             this.initializeSummaryPanel();
                             break;
                         case result.PanelTypes.Standard:
-                            this.initializeStandardPanel();
+                            this.initializeStandardPanel(controlSettings, userSettings);
                             break;
                         case result.PanelTypes.Custom:
                             this.initializeCustomPanel(panelSettings);
@@ -225,16 +224,18 @@ Oracle = (function (parent) {
                 countSpan.text("(" + count + ")­");
                 filterItem.append(countSpan);
             }
+
             filterItem.click((e) => {
                 const target = $(e.target);
-                if (target.hasClass("selected") && target.hasClass("inverted")) {
-                    target.removeClass("selected inverted");
-                }
-                else if (target.hasClass("selected")) {
-                    target.addClass("inverted");
+
+                if (e.ctrlKey) {
+                    if (!target.hasClass("selected")) target.addClass("selected");
+                    if (!target.hasClass("inverted")) target.addClass("inverted");
+                    else target.removeClass("selected inverted");
                 }
                 else {
-                    target.addClass("selected");
+                    if (!target.hasClass("selected")) target.addClass("selected");
+                    else target.removeClass("selected inverted");
                 }
                 this.updateFilters();
             });
@@ -278,7 +279,7 @@ Oracle = (function (parent) {
             this.updatePanels()
         }
 
-        initializeStandardPanel() {
+        initializeStandardPanel(controlSettings, userSettings) {
             for (const [key, properties] of Object.entries(Oracle.BugDB.FieldProperties)) {
                 if (Oracle.includes(this.fields, properties.id)) {
                     if (properties.filterable === true) {
