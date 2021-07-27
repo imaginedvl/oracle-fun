@@ -144,17 +144,24 @@ Oracle = (function (parent) {
             this.grid = controlSettings.grid;
             this.bugs = controlSettings.data;
             this.fields = controlSettings.fields;
-            this.summary = new Oracle.BugDB.BugSummary(this.bugs);
+            this.panels = controlSettings.panels;
+            this.summary = new Oracle.BugDB.BugSummary(this.bugs, controlSettings.grid.visibleData);
+
+            this.populatePanels();
+            this.updateFilters();
+        }
+
+        populatePanels() {
+            this.element.children().remove();
 
             // Title
             const title = $("<div class='main-title-panel'>");
             title.text("Bug List Helper");
             this.element.append(title);
 
-            // Panels
-            if (!Oracle.isEmpty(controlSettings.panels)) {
-                for (let i = 0; i < controlSettings.panels.length; i++) {
-                    const panelSettings = controlSettings.panels[i];
+            if (!Oracle.isEmpty(this.panels)) {
+                for (let i = 0; i < this.panels.length; i++) {
+                    const panelSettings = this.panels[i];
                     switch (panelSettings.type) {
                         case result.PanelTypes.Reset:
                             this.initializeResetPanel();
@@ -176,6 +183,27 @@ Oracle = (function (parent) {
             }
         }
 
+        updatePanels() {
+            const panelItems = this.element.find(".filter-item");
+            for (let i = 0; i < panelItems.length; i++) {
+                const target = $(panelItems.get(i));
+                const filterId = target.attr("data-filter-id");
+                let visibleCount = 0;
+                if (Oracle.isEmpty(filterId)) {
+                    const field = target.attr("data-filter-field");
+                    const value = target.data("data-filter-value");
+                    visibleCount = this.summary.getDistinctMetrics(field).find(obj => {
+                        return obj.value === value
+                    }).visibleCount;
+                }
+                else {
+                    visibleCount = _getCustomPanelFilterById(filterId).count(this.grid.visibleData);
+                }
+                const countSpan = target.find(".count");
+                countSpan.text("(" + visibleCount + ")");
+            }
+        }
+
         initializeBasePanel(title) {
             _nextSectionId++;
             const panelTitle = $("<div class='section-panel section-header-panel'>");
@@ -186,7 +214,7 @@ Oracle = (function (parent) {
             return panel;
         }
 
-        createBaseFilterItem(text, value, count, fieldName, customFilterId, sectionId) {
+        createBaseFilterItem(text, value, count, fieldName, customFilterId) {
             const filterItem = $("<span class='filter-item'>");
             filterItem.attr("data-filter-field", fieldName);
             filterItem.attr("data-filter-id", customFilterId);
@@ -249,6 +277,8 @@ Oracle = (function (parent) {
                 }
                 return result;
             });
+            this.summary.buildSummary(this.bugs, this.grid.visibleData);
+            this.updatePanels()
         }
 
         initializeStandardPanel() {
@@ -275,7 +305,7 @@ Oracle = (function (parent) {
                                     value = Oracle.Formating.formatValue(metrics.value);
                                 }
                                 if (Oracle.compare(metrics.count, 0) === 1 || (properties.lookup && properties.lookup[metrics.value].filterVisible)) {
-                                    const item = this.createBaseFilterItem(value, metrics.value, metrics.count, properties.id, null);
+                                    const item = this.createBaseFilterItem(value, metrics.value, metrics.visibleCount, properties.id, null);
                                     panel.append(item);
                                 }
                             }

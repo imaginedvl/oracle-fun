@@ -266,15 +266,19 @@ Oracle = (function (parent) {
     // ---------------------------------------------------------------------------------------------------------------- //
     result.BugSummary = class {
 
-        constructor(bugs) {
+        constructor(bugs, visiblebugs) {
             this.data = {};
+            this.buildSummary(bugs, visiblebugs);
+        }
+
+        buildSummary(bugs, visiblebugs) {
             // Contruire la liste des champs
             for (const [key, value] of Object.entries(Oracle.BugDB.Fields)) {
-                this.computeFieldSummary(bugs, value);
+                this.computeFieldSummary(bugs, visiblebugs, value);
             }
         }
 
-        computeFieldSummary(bugs, fieldName) {
+        computeFieldSummary(bugs, visiblebugs, fieldName) {
             const result = {
                 minimum: null,
                 maximum: null,
@@ -287,6 +291,13 @@ Oracle = (function (parent) {
                 const value = bugs[i][fieldName];
                 if (!Oracle.isEmpty(value)) {
                     sortedValues.pushRange(value);
+                }
+            }
+            let visibleSortedValues = [];
+            for (let i = 0; i < visiblebugs.length; i++) {
+                const value = visiblebugs[i][fieldName];
+                if (!Oracle.isEmpty(value)) {
+                    visibleSortedValues.pushRange(value);
                 }
             }
 
@@ -306,6 +317,7 @@ Oracle = (function (parent) {
                 result.distinct = sortedValues.distinct();
             }
 
+            //metrics
             for (let i = 0; i < result.distinct.length; i++) {
                 const value = result.distinct[i];
                 let count = 0;
@@ -314,7 +326,13 @@ Oracle = (function (parent) {
                         count++;
                     }
                 }
-                result.metrics.push({ value: value, count: count });
+                let visibleCount = 0;
+                for (let j = 0; j < visibleSortedValues.length; j++) {
+                    if (Oracle.compare(value, visibleSortedValues[j]) === 0) {
+                        visibleCount++;
+                    }
+                }
+                result.metrics.push({ value: value, count: count, visibleCount: visibleCount });
             }
             this.data[fieldName] = result;
         }

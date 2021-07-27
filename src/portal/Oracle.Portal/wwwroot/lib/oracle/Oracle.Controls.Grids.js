@@ -211,11 +211,11 @@ Oracle = (function (parent) {
                     row.update(i);
                     this.tbodyElement.append(row.element);
                     index++;
+                    visibleData.push(row.data);
                 }
                 if (lastGroup !== null) {
                     lastGroup.find("span.group-count").text(groupRowCount);
                 }
-                visibleData.push(row.data);
             }
             if (this.tbodyElement.children().length === 0) {
                 this.tbodyElement.append(this.emptyRow);
