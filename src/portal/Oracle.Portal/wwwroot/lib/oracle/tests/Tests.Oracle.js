@@ -147,3 +147,22 @@ Oracle.Tests.registerTest({
         assert.isFalse(Oracle.includes(b, c));
     }
 });
+
+
+Oracle.Tests.registerTest({
+    module: 'Oracle',
+    category: 'Utilities',
+    name: 'toNeutralString',
+    test: (assert, logger) => {
+        assert.areEqual("150.25", Oracle.toNeutralString(150.25));
+        assert.areEqual("150", Oracle.toNeutralString(150));
+        assert.areEqual("150", Oracle.toNeutralString("150"));
+        assert.areEqual("[object Object]", Oracle.toNeutralString({ a: 1, b: '2' }));
+        const date = new Date();
+        const check = String(date.getUTCFullYear()) + "-" + String(date.getUTCMonth()).padStart(2, '0') + "-" + String(date.getUTCDate()).padStart(2, '0') +
+            "T" + String(date.getUTCHours()).padStart(2, '0') + ":" + + String(date.getUTCMinutes()).padStart(2, '0') + ":" + + String(date.getUTCSeconds()).padStart(2, '0') +
+            "." + + String(date.getUTCMilliseconds()).padStart(3, '0') + "Z";
+        assert.areEqual(check, Oracle.toNeutralString(date));
+    }
+});
+

@@ -85,9 +85,9 @@ var Oracle = (function () {
     {
     }
 
-    const _addKnownClass = function (className, actualClass, compareCallback, generateHashCallback) {
+    const _addKnownClass = function (className, actualClass, compareCallback, toNeutralStringCallback) {
         _knownClasses[className] = className;
-        _knownClassSettings[className] = { className: className, class: actualClass, compareCallback: compareCallback, generateHashCallback: generateHashCallback };
+        _knownClassSettings[className] = { className: className, class: actualClass, compareCallback: compareCallback, toNeutralStringCallback: toNeutralStringCallback };
     }
 
     const _getKnownClassSettings = function (value) {
@@ -205,6 +205,16 @@ var Oracle = (function () {
         }
     }
 
+    result.toNeutralString = function (item) {
+        if (Oracle.isObject(item)) {
+            const settings = _getKnownClassSettings(item);
+            if (settings?.toNeutralStringCallback) {
+                return settings.toNeutralStringCallback(item);
+            }
+        }
+        return String(item);
+    }
+
     result.addKnownClass = _addKnownClass;
     result.getKnownClass = _getKnownClass;
     result.KnownClasses = _knownClasses;
@@ -221,7 +231,12 @@ var Oracle = (function () {
         else {
             return 0;
         }
-    });
+    },
+        (value) => {
+            return String(value.getUTCFullYear()) + "-" + String(value.getUTCMonth()).padStart(2, '0') + "-" + String(value.getUTCDate()).padStart(2, '0') +
+                "T" + String(value.getUTCHours()).padStart(2, '0') + ":" + + String(value.getUTCMinutes()).padStart(2, '0') + ":" + + String(value.getUTCSeconds()).padStart(2, '0') +
+                "." + + String(value.getUTCMilliseconds()).padStart(3, '0') + "Z";
+        });
     _addKnownClass("Array", Array);
 
     // ------------------------------------------------------------------------------------------------

@@ -199,7 +199,7 @@ Oracle = (function (parent) {
         return a.getSortString().localeCompare(b.getSortString());
     }
 
-    Oracle.addKnownClass("User", _userClass, (a, b) => a.getSortString().localeCompare(b.getSortString()), (a) => a.getSortString());
+    Oracle.addKnownClass("User", _userClass, _compareUser, (a) => a.globalId);
 
     const _userFormater = function (value, settings) {
         let result = null;
