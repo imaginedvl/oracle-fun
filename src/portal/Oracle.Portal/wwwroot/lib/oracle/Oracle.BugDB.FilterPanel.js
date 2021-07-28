@@ -20,8 +20,7 @@ Oracle = (function (parent) {
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .date-range-panel .from { color: var(--controlTextColorLighten3); padding-right:4px } ');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .date-range-panel .to  { color: var(--controlTextColorLighten3); padding-left:4px; padding-right:4px } ');
 
-
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item {cursor: pointer;}');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item {cursor: pointer; user-select:none; }');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item:not(:last-child)::after { color: var(--controlTextColorLighten3); content: ", "}');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item span.value { font-weight: 600; white-space: nowrap; }');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item span.count { padding-left:4px; color: var(--controlTextColorLighten3)}');
@@ -141,6 +140,7 @@ Oracle = (function (parent) {
             else {
                 userSettings.filterItemSettings = null;
             }
+            userSettings.keywordSearchValue = this.element.find(".section-search-panel input")?.val();
         }
 
         onInitialize(controlSettings, userSettings) {
@@ -162,6 +162,9 @@ Oracle = (function (parent) {
             filterItemSettings = controlSettings?.filterItemSettings;
             // Then from user 
             filterItemSettings = userSettings?.filterItemSettings ? userSettings?.filterItemSettings : filterItemSettings;
+            if (!Array.isArray(filterItemSettings)) {
+                filterItemSettings = [];
+            }
 
             if (!Oracle.isEmpty(controlSettings.panels)) {
                 for (let i = 0; i < controlSettings.panels.length; i++) {
@@ -171,7 +174,7 @@ Oracle = (function (parent) {
                             this.initializeResetPanel();
                             break;
                         case result.PanelTypes.Search:
-                            this.initializeSearchPanel();
+                            this.initializeSearchPanel(controlSettings, userSettings);
                             break;
                         case result.PanelTypes.Summary:
                             this.initializeSummaryPanel();
@@ -226,7 +229,6 @@ Oracle = (function (parent) {
             const filterSetting = filterItemSettings.find(obj => {
                 return obj.filterItem === filterItemName
             });
-
             const filterItem = $("<span class='filter-item'>");
             if (!Oracle.isEmpty(filterSetting)) {
                 if (filterSetting.value) {
@@ -252,7 +254,7 @@ Oracle = (function (parent) {
                 const target = $(e.target);
 
                 if (e.ctrlKey) {
-                    if (!target.hasClass("selected")) target.addClass("selected");
+                    if (!target.hasClass("selected")) { target.addClass("selected"); }
                     if (!target.hasClass("inverted")) target.addClass("inverted");
                     else target.removeClass("selected inverted");
                 }
@@ -310,7 +312,7 @@ Oracle = (function (parent) {
                 return result;
             });
             this.saveUserSettings();
-            this.summary.buildSummary(this.bugs, this.grid.visibleData);
+            this.summary.build(this.bugs, this.grid.visibleData);
             this.updatePanels()
         }
 
@@ -362,10 +364,11 @@ Oracle = (function (parent) {
             }
         }
 
-        initializeSearchPanel() {
+        initializeSearchPanel(controlSettings, userSettings) {
             // Search Panel
             const searchPanel = $("<div class='section-panel section-search-panel'>");
             const searchInputBox = $("<input type='text' placeholder='Refined search...'>");
+            searchInputBox.val(userSettings?.keywordSearchValue);
             searchInputBox.on("input", (e) => {
                 this.updateFilters();
             });

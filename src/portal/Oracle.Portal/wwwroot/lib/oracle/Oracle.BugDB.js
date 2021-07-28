@@ -268,10 +268,10 @@ Oracle = (function (parent) {
 
         constructor(bugs, visiblebugs) {
             this.data = {};
-            this.buildSummary(bugs, visiblebugs);
+            this.build(bugs, visiblebugs);
         }
 
-        buildSummary(bugs, visiblebugs) {
+        build(bugs, visiblebugs) {
             // Contruire la liste des champs
             for (const [key, value] of Object.entries(Oracle.BugDB.Fields)) {
                 this.computeFieldSummary(bugs, visiblebugs, value);

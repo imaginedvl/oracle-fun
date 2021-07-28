@@ -18,14 +18,12 @@
     <script>
 
 
-        const value = "- TEST -";
-        const trimed = value.trim(['-', ' ']);
-        const trimedEnd = value.trimEnd(['-', ' ']);
-        const trimedStart = value.trimStart(['-', ' ']);
 
+        const myArrayu = undefined;
+        const myArrayn = null;
 
-        console.log({ value: value, trimed: trimed, trimedEnd: trimedEnd, trimedStart: trimedStart })
-
+        console.log({ null: Array.isArray(myArrayn) });
+        console.log({ undefined: Array.isArray(myArrayu) });
 
     </script>
 
