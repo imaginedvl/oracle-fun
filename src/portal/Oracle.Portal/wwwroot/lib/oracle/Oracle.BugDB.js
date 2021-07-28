@@ -286,6 +286,7 @@ Oracle = (function (parent) {
                 metrics: []
             };
 
+            visiblebugs = visiblebugs ? visiblebugs : bugs;
             let sortedValues = [];
             for (let i = 0; i < bugs.length; i++) {
                 const value = bugs[i][fieldName];

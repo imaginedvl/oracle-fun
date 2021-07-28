@@ -180,10 +180,10 @@ Oracle = (function (parent) {
                             this.initializeSummaryPanel();
                             break;
                         case result.PanelTypes.Standard:
-                            this.initializeStandardPanel(filterItemSettings);
+                            this.initializeStandardPanel(controlSettings, userSettings);
                             break;
                         case result.PanelTypes.Custom:
-                            this.initializeCustomPanel(panelSettings, filterItemSettings);
+                            this.initializeCustomPanel(panelSettings, controlSettings, userSettings);
                             break;
                     }
                 }
@@ -222,10 +222,13 @@ Oracle = (function (parent) {
             return panel;
         }
 
-        createBaseFilterItem(text, value, count, fieldName, customFilterId, filterItemSettings) {
-            let filterItemName;
-            if (Oracle.isEmpty(customFilterId)) filterItemName = fieldName + "-" + text;
-            else filterItemName = customFilterId;
+        createBaseFilterItem(text, value, count, fieldName, customFilterId, controlSettings, userSettings) {
+            let filterItemSettings = this.getSettingValue(controlSettings, userSettings, "filterItemSettings");
+            if (!Array.isArray(filterItemSettings)) {
+                filterItemSettings = [];
+            }
+
+            let filterItemName = customFilterId ? customFilterId : fieldName + "-" + Oracle.toNeutralString(value);
             const filterSetting = filterItemSettings.find(obj => {
                 return obj.filterItem === filterItemName
             });
@@ -254,13 +257,23 @@ Oracle = (function (parent) {
                 const target = $(e.target);
 
                 if (e.ctrlKey) {
-                    if (!target.hasClass("selected")) { target.addClass("selected"); }
-                    if (!target.hasClass("inverted")) target.addClass("inverted");
-                    else target.removeClass("selected inverted");
+                    if (!target.hasClass("selected")) {
+                        target.addClass("selected");
+                    }
+                    if (!target.hasClass("inverted")) {
+                        target.addClass("inverted");
+                    }
+                    else {
+                        target.removeClass("selected inverted");
+                    }
                 }
                 else {
-                    if (!target.hasClass("selected")) target.addClass("selected");
-                    else target.removeClass("selected inverted");
+                    if (!target.hasClass("selected")) {
+                        target.addClass("selected");
+                    }
+                    else {
+                        target.removeClass("selected inverted");
+                    }
                 }
                 this.updateFilters();
             });
@@ -288,22 +301,15 @@ Oracle = (function (parent) {
                             const field = target.attr("data-filter-field");
                             const value = target.data("data-filter-value");
                             if (!panelResult) {
-                                if (Oracle.isEmpty(filterId)) panelResult = Oracle.includes(settings.data[field], value);
-                                else panelResult = _getCustomPanelFilterById(filterId).predicate(settings.data);
-                                if (target.hasClass("inverted")) panelResult = !panelResult;
-                            }
-                            let filterItemName;
-
-                            if (!Oracle.isEmpty(filterId)) filterItemName = filterId;
-                            else {
-                                let fieldProperties = Oracle.BugDB.getFieldProperties(field);
-                                if (fieldProperties.lookup && fieldProperties.lookup[value].filterTitle) {
-                                    filterItemName = field + "-" + fieldProperties.lookup[value].filterTitle;
+                                if (Oracle.isEmpty(filterId)) {
+                                    panelResult = Oracle.includes(settings.data[field], value);
                                 }
                                 else {
-                                    filterItemName = field + "-" + Oracle.Formating.formatValue(value);
+                                    panelResult = _getCustomPanelFilterById(filterId).predicate(settings.data);
                                 }
+                                if (target.hasClass("inverted")) panelResult = !panelResult;
                             }
+                            let filterItemName = filterId ? filterId : field + "-" + Oracle.toNeutralString(value);
                             this.filterItemSettings.push({ filterItem: filterItemName, value: target.hasClass("inverted") });
                         }
                         result = result && panelResult;
@@ -316,7 +322,7 @@ Oracle = (function (parent) {
             this.updatePanels()
         }
 
-        initializeStandardPanel(filterItemSettings) {
+        initializeStandardPanel(controlSettings, userSettings) {
             for (const [key, properties] of Object.entries(Oracle.BugDB.FieldProperties)) {
                 if (Oracle.includes(this.fields, properties.id)) {
                     if (properties.filterable === true) {
@@ -340,7 +346,7 @@ Oracle = (function (parent) {
                                     value = Oracle.Formating.formatValue(metrics.value);
                                 }
                                 if (Oracle.compare(metrics.count, 0) === 1 || (properties.lookup && properties.lookup[metrics.value].filterVisible)) {
-                                    const item = this.createBaseFilterItem(value, metrics.value, metrics.visibleCount, properties.id, null, filterItemSettings);
+                                    const item = this.createBaseFilterItem(value, metrics.value, metrics.visibleCount, properties.id, null, controlSettings, userSettings);
                                     panel.append(item);
                                 }
                             }
@@ -368,7 +374,8 @@ Oracle = (function (parent) {
             // Search Panel
             const searchPanel = $("<div class='section-panel section-search-panel'>");
             const searchInputBox = $("<input type='text' placeholder='Refined search...'>");
-            searchInputBox.val(userSettings?.keywordSearchValue);
+            let keywordSearchValue = this.getSettingValue(controlSettings, userSettings, "keywordSearchValue");
+            searchInputBox.val(keywordSearchValue);
             searchInputBox.on("input", (e) => {
                 this.updateFilters();
             });
@@ -386,13 +393,13 @@ Oracle = (function (parent) {
             this.element.append(resetPanel);
         }
 
-        initializeCustomPanel(panelSettings, filterItemSettings) {
+        initializeCustomPanel(panelSettings, controlSettings, userSettings) {
             const panel = this.initializeBasePanel(panelSettings.title);
             for (let i = 0; i < panelSettings.filters.length; i++) {
                 const filterId = panelSettings.filters[i];
                 const properties = _getCustomPanelFilterById(filterId);
                 const count = properties.count(this.bugs);
-                const item = this.createBaseFilterItem(properties.title, null, count, null, filterId, filterItemSettings);
+                const item = this.createBaseFilterItem(properties.title, null, count, null, filterId, controlSettings, userSettings);
                 panel.append(item);
             }
             this.element.append(panel);
@@ -402,6 +409,15 @@ Oracle = (function (parent) {
             this.element.find(".section-search-panel input").val("");
             this.element.find('.filter-item.selected').removeClass("selected inverted");
             this.updateFilters();
+        }
+
+        getSettingValue(controlSettings, userSettings, settingName) {
+            // First from control settings
+            let settingValue = null
+            settingValue = settingValue ? controlSettings[settingName] : null;
+            // Then from user 
+            settingValue = userSettings ? (userSettings[settingName] ? userSettings[settingName] : settingValue) : settingValue;
+            return settingValue;
         }
     }
 
