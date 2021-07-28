@@ -10,21 +10,21 @@ Oracle = (function (parent) {
 
     result.Statuses =
     {
-        11: { name: 'Open', number: 11, filterTitle: 'Open', filterVisible: true },
+        11: { name: 'Open', number: 11, filterTitle: 'Open(11)', filterVisible: true },
         15: { name: 'Enhancement Request', number: 15 },
-        30: { name: 'More Info Requested', number: 30, filterVisible: true },
+        30: { name: 'More Info Requested', number: 30, filterTitle: 'Info Requested(30)', filterVisible: true },
         31: { name: 'Could Not Reproduce', number: 31 },
         32: { name: 'Not a Bug', number: 32 },
         33: { name: 'Suspended', number: 33 },
         36: { name: 'Duplicate Bug', number: 36 },
-        37: { name: 'Merged', number: 37, filterVisible: true },
-        39: { name: 'Waiting For Codeline', number: 39, filterVisible: true },
-        40: { name: 'Waiting', number: 40, filterVisible: true },
+        37: { name: 'Merged', number: 37, filterTitle: 'Merged', filterVisible: true },
+        39: { name: 'Waiting For Codeline', number: 39, filterTitle: 'Waiting Codeline(39)', filterVisible: true },
+        40: { name: 'Waiting', number: 40, filterTitle: 'Base Bug(40)', filterVisible: true },
         41: { name: 'Base Bug fixed', number: 41 },
         71: { name: 'Closed, data fix', number: 71 },
         72: { name: 'Closed, data fix', number: 72 },
         78: { name: 'Closed Environment Issue', number: 78 },
-        80: { name: 'Ready To Validate', number: 80, filterVisible: true },
+        80: { name: 'Ready To Validate', number: 80, filterTitle: 'QA(80)', filterVisible: true },
         84: { name: 'Closed, not feasible to fix', number: 84 },
         90: { name: 'Closed, Verified by Filer', number: 90 },
         91: { name: 'Closed, Could Not Reproduce', number: 91 },
@@ -94,7 +94,7 @@ Oracle = (function (parent) {
             columnTitle: 'Severity',
             columnSelector: 'Sev',
             lookup: result.Severity,
-            formater: 'BugDBSeverity',
+            //formater: 'BugDBSeverity',
             filterTitle: 'Severity',
             groupable: true,
             filterable: true
@@ -154,7 +154,7 @@ Oracle = (function (parent) {
             id: 'subject',
             columnTitle: 'Subject',
             columnSelector: '=subject',
-            formater: 'BugDBSubject'            
+            formater: 'BugDBSubject'
         },
         selection: {
             id: 'selection',
@@ -818,8 +818,8 @@ Oracle = (function (parent) {
             for (let i = 0; i < subjectContent.length; i++) {
                 result.append(" ");
                 if (subjectContent[i].length > 45) {
-                    const longWord = $("<span title='" + subjectContent[i] + "' />");                    
-                    longWord.append("..").append( subjectContent[i].substring(subjectContent[i].length - 35, subjectContent[i].length));
+                    const longWord = $("<span title='" + subjectContent[i] + "' />");
+                    longWord.append("..").append(subjectContent[i].substring(subjectContent[i].length - 35, subjectContent[i].length));
                     result.append(longWord);
                 } else {
                     result.append(subjectContent[i]);
