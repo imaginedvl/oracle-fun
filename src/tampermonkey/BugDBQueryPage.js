@@ -7,8 +7,8 @@
     Oracle.Settings.setRootPath("Oracle-TamperMonkey-" + bugDbPage.settingsPath);
     $('body').prepend("<div style='display:none' data-root-path='" + Oracle.Settings.getRootPath() + "'>");
 
-    Oracle.HTML.addStyle("table td#main-view { width: 70%; vertical-align:top; } ");
-    Oracle.HTML.addStyle("table td#side-view { width: 30%; vertical-align:top } ");
+    Oracle.HTML.addStyle("table td#main-view { vertical-align:top; } ");
+    Oracle.HTML.addStyle("table td#side-view { width: 300px; vertical-align:top } ");
     const tableElement = $("<table data-control-path='TamperMonkey-BugDbTools-' style='width:100%' border='0'><tbody><tr><td id='main-view'></td><td id='side-view'></td></tr></tbody></table>");
     $('body').prepend(tableElement);
     const title = $('<h2>');
