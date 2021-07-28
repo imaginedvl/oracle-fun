@@ -228,7 +228,7 @@ Oracle = (function (parent) {
         isLate() {
             let isLate = false;
             if (!Oracle.isEmpty(this.fixEta)) {
-                isLate = this.fixEta < new Date();
+                isLate = this.fixEta < new Date(new Date().toDateString());
             }
             return isLate;
         }

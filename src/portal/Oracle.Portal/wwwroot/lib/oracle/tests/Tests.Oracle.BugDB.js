@@ -159,6 +159,27 @@ Oracle.Tests.registerTest({
 });
 
 
+
+Oracle.Tests.registerTest({
+    module: 'Oracle.BugDB',
+    category: 'Bug',
+    name: 'Bug.isLate ',
+    test: (assert, logger) => {
+        const bugs = Oracle.Tests.getMockData('Oracle.BugDB.Bugs');
+        let currentDate = new Date();
+        //tomorrow
+        bugs[2].fixEta = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1);
+        assert.isFalse(bugs[2].isLate());
+        //today
+        bugs[2].fixEta = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+        assert.isFalse(bugs[2].isLate());
+        //yesterday
+        bugs[2].fixEta = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 1);
+        assert.isTrue(bugs[2].isLate());
+    }
+});
+
+
 // Gets the distinct metrics for a given field based on the BugSummary
 const _fieldDistinctMetrics = function (field) {
     const bugSummary = _bugSummary(field);
