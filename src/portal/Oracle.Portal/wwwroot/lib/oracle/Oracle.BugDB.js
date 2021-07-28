@@ -153,7 +153,8 @@ Oracle = (function (parent) {
         subject: {
             id: 'subject',
             columnTitle: 'Subject',
-            columnSelector: '=subject'
+            columnSelector: '=subject',
+            formater: 'BugDBSubject'            
         },
         selection: {
             id: 'selection',
@@ -808,6 +809,26 @@ Oracle = (function (parent) {
         }
         return result;
     });
+
+    Oracle.HTML.addFormater('BugDBSubject', null, null, (value, settings) => {
+        const result = $("<div class='bugdb-subject'/>")
+        if (!Oracle.isEmpty(value) && value.length > 0) {
+            var subjectContent = value.split(" ");
+            for (let i = 0; i < subjectContent.length; i++) {
+                result.append(" ");
+                if (subjectContent[i].length > 45) {
+                    const longWord = $("<span title='" + subjectContent[i] + "' />");                    
+                    longWord.append("..").append( subjectContent[i].substring(subjectContent[i].length - 35, subjectContent[i].length));
+                    result.append(longWord);
+                } else {
+                    result.append(subjectContent[i]);
+                }
+            }
+        }
+        return result;
+
+    });
+
 
     return parent;
 }(Oracle));
