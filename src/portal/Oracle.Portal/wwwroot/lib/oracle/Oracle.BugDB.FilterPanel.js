@@ -17,8 +17,12 @@ Oracle = (function (parent) {
 
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-centered-panel { text-align: center }');
 
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .date-range-panel .from { color: var(--controlTextColorLighten3); padding-right:4px } ');
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .date-range-panel .to  { color: var(--controlTextColorLighten3); padding-left:4px; padding-right:4px } ');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-summary-panel .summary-date-range .from { color: var(--controlTextColorLighten3); padding-right:4px } ');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-summary-panel .summary-date-range .to  { color: var(--controlTextColorLighten3); padding-left:4px; padding-right:4px } ');
+
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-summary-panel .summary-totals .selected { font-weight:600; color: var(--controlTextColor); } ');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-summary-panel .summary-totals .total  {  font-weight:600;color: var(--controlTextColor); } ');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-summary-panel .summary-totals { color: var(--controlTextColorLighten3); } ');
 
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item {cursor: pointer; user-select:none; }');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item span.value { font-weight: 600; white-space: nowrap; }');
@@ -363,12 +367,22 @@ Oracle = (function (parent) {
             // Summary
             const minDateReported = this.summary.getMinimum(Oracle.BugDB.Fields.DateReported);
             if (!Oracle.isEmpty(minDateReported)) {
-                const dateRangePanel = $("<div class='section-panel section-centered-panel date-range-panel'>");
-                dateRangePanel.append("<span class='from'>From</span>");
-                dateRangePanel.append(Oracle.HTML.formatValue(minDateReported, { formater: 'BugDBDate' }));
-                dateRangePanel.append("<span class='to'>to</span>");
-                dateRangePanel.append(Oracle.HTML.formatValue(this.summary.getMaximum(Oracle.BugDB.Fields.DateReported), { formater: 'BugDBDate' }));
-                this.element.append(dateRangePanel);
+                // Pour Danny: si tu peux aussi mettre à jour la date pour seuelement les bugs sélectionnés (et si pas de date, enlever la section)
+                const summaryPanel = $("<div class='section-panel section-centered-panel section-summary-panel'>");
+                const totals = $("<div class='summary-totals'>");
+                totals.append("Showing ")
+                totals.append("<span class='selected'>10</span>");
+                totals.append(" out of ");
+                totals.append("<span class='total'>25</span>");
+                totals.append(" bugs");
+                summaryPanel.append(totals);
+                const dateRange = $("<div class='summary-date-range'>");
+                dateRange.append("<span class='from'>From</span>");
+                dateRange.append(Oracle.HTML.formatValue(minDateReported, { formater: 'BugDBDate' }));
+                dateRange.append("<span class='to'>to</span>");
+                dateRange.append(Oracle.HTML.formatValue(this.summary.getMaximum(Oracle.BugDB.Fields.DateReported), { formater: 'BugDBDate' }));
+                summaryPanel.append(dateRange);
+                this.element.append(summaryPanel);
             }
         }
 
