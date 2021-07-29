@@ -205,9 +205,10 @@ Oracle = (function (parent) {
                 if (Oracle.isEmpty(filterId)) {
                     const field = target.attr("data-filter-field");
                     const value = target.data("data-filter-value");
-                    visibleCount = this.summary.getDistinctMetrics(field).find(obj => {
+                    const metric = this.summary.getDistinctMetrics(field).find(obj => {
                         return obj.value === value
-                    }).visibleCount;
+                    });
+                    visibleCount = metric ? metric.visibleCount : 0;
                 }
                 else {
                     visibleCount = _getCustomPanelFilterById(filterId).count(this.grid.visibleData);
