@@ -106,25 +106,6 @@ Oracle = (function (parent) {
                         return Oracle.compare(b, a);
                     }
                 });
-                // Then we look for groups, probably a better way to do that and maybe we can do the sort/group detection in one go, but it is late so :)
-                // The grouping looks really cool.
-                let a, b;
-                for (let i = 0; i < this.rows.length; i++) {
-                    const row = this.rows[i];
-                    row.isNewGroup = false;
-                    if (column.groupable === true) {
-                        if (i == 0) {
-                            row.isNewGroup = true;
-                        }
-                        else {
-                            a = Oracle.getMemberValueByPath(this.rows[i - 1].data, column.path);
-                            b = Oracle.getMemberValueByPath(this.rows[i].data, column.path);
-                            if (Oracle.compare(a, b) !== 0) {
-                                row.isNewGroup = true;
-                            }
-                        }
-                    }
-                }
             }
             else {
                 this.sortColumn = null;
@@ -155,10 +136,6 @@ Oracle = (function (parent) {
                 }
             }
             this.populateRows();
-        }
-
-        getVisibleRowCount() {
-            return 10;
         }
 
         initializeColumns(controlSettings, initializationSettings) {
@@ -192,27 +169,42 @@ Oracle = (function (parent) {
             const visibleData = [];
             let lastGroup = null;
             let groupRowCount = 0;
-            let index = 0;
             this.tbodyElement.children().remove();
-            for (let i = 0; i < this.rows.length; i++) {
-                const row = this.rows[i];
-                if (row.isHidden !== true) {
-                    if (row.isNewGroup && this.sortColumn) {
-                        if (lastGroup !== null) {
-                            lastGroup.find("span.group-count").text(groupRowCount);
-                        }
-                        groupRowCount = 1;
-                        lastGroup = row.createGroupRow(this.sortColumn);
-                        this.tbodyElement.append(lastGroup)
+            const visibleRows = this.rows.filter(obj => {
+                return !obj.isHidden
+            })
+            for (let i = 0; i < visibleRows.length; i++) {
+                const row = visibleRows[i];
+                if (this.sortColumn.groupable === true) {
+                    if (i == 0) {
+                        row.isNewGroup = true;
                     }
                     else {
-                        groupRowCount++;
+                        let a, b;
+                        a = Oracle.getMemberValueByPath(visibleRows[i - 1].data, this.sortColumn.path);
+                        b = Oracle.getMemberValueByPath(visibleRows[i].data, this.sortColumn.path);
+                        if (Oracle.compare(a, b) !== 0) {
+                            row.isNewGroup = true;
+                        }
+                        else {
+                            row.isNewGroup = false;
+                        }
                     }
-                    row.update(i);
-                    this.tbodyElement.append(row.element);
-                    index++;
-                    visibleData.push(row.data);
                 }
+                if (row.isNewGroup && this.sortColumn) {
+                    if (lastGroup !== null) {
+                        lastGroup.find("span.group-count").text(groupRowCount);
+                    }
+                    groupRowCount = 1;
+                    lastGroup = row.createGroupRow(this.sortColumn);
+                    this.tbodyElement.append(lastGroup)
+                }
+                else {
+                    groupRowCount++;
+                }
+                row.update(i);
+                this.tbodyElement.append(row.element);
+                visibleData.push(row.data);
                 if (lastGroup !== null) {
                     lastGroup.find("span.group-count").text(groupRowCount);
                 }
