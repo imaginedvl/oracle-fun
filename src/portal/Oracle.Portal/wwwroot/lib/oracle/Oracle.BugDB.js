@@ -312,7 +312,12 @@ Oracle = (function (parent) {
             const lookup = _fieldProperties[fieldName].lookup;
             if (!Oracle.isEmpty(lookup)) {
                 for (const value in lookup) {
-                    result.distinct.push(value);
+                    let numberBalue = Number(value);
+                    let parsedValue = Number.isNaN(numberBalue) ? value : numberBalue;
+                    let hasValue = Oracle.includes(visibleSortedValues, parsedValue);
+                    if (lookup[value].filterVisible || hasValue) {
+                        result.distinct.push(value);
+                    }
                 }
             }
             else {

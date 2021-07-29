@@ -21,7 +21,6 @@ Oracle = (function (parent) {
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .date-range-panel .to  { color: var(--controlTextColorLighten3); padding-left:4px; padding-right:4px } ');
 
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item {cursor: pointer; user-select:none; }');
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item:not(:last-child)::after { color: var(--controlTextColorLighten3); content: ", "}');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item span.value { font-weight: 600; white-space: nowrap; }');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item span.count { padding-left:4px; color: var(--controlTextColorLighten3)}');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item * { pointer-events: none }');
@@ -348,6 +347,9 @@ Oracle = (function (parent) {
                                 if (Oracle.compare(metrics.count, 0) === 1 || (properties.lookup && properties.lookup[metrics.value].filterVisible)) {
                                     const item = this.createBaseFilterItem(value, metrics.value, metrics.visibleCount, properties.id, null, controlSettings, userSettings);
                                     panel.append(item);
+                                    if (i < distinctMetrics.length - 1) {
+                                        panel.append("<span class='itemSeparator'>, </span>");
+                                    }
                                 }
                             }
                         }
@@ -401,6 +403,9 @@ Oracle = (function (parent) {
                 const count = properties.count(this.bugs);
                 const item = this.createBaseFilterItem(properties.title, null, count, null, filterId, controlSettings, userSettings);
                 panel.append(item);
+                if (i < panelSettings.filters.length - 1) {
+                    panel.append("<span class='itemSeparator'>, </span>");
+                }
             }
             this.element.append(panel);
         }
