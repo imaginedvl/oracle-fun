@@ -179,6 +179,17 @@ Oracle.Tests.registerTest({
     }
 });
 
+Oracle.Tests.registerTest({
+    module: 'Oracle.BugDB',
+    category: 'Bug',
+    name: 'Bug.isBackport ',
+    test: (assert, logger) => {
+        const bugs = Oracle.Tests.getMockData('Oracle.BugDB.Bugs');
+        assert.isTrue(bugs[1].isBackport());
+        assert.isFalse(bugs[2].isBackport());
+    }
+});
+
 
 // Gets the distinct metrics for a given field based on the BugSummary
 const _fieldDistinctMetrics = function (field) {

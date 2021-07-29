@@ -10,7 +10,7 @@ Oracle.Tests.registerMockData('Oracle.BugDB.Bugs',
                 subject: 'Bug #1 subject',
                 severity: 2,
                 status: 11,
-                tags: [Oracle.BugDB.Tag.REGRN.name, Oracle.BugDB.Tag.P1.name],
+                tags: [Oracle.BugDB.Tag.REGRN.name, Oracle.BugDB.Tag.P1.name, Oracle.BugDB.Tag.CUSTOMER_IMPACT.name],
                 customer: 'Zooktel',
                 fixEta: null,
                 dateReported: new Date('01-JUN-2021'),
@@ -66,6 +66,6 @@ Oracle.Tests.registerMockData('Oracle.BugDB.Bugs',
                 customer: null,
                 fixEta: new Date('30-JUN-2021'),
                 dateReported: new Date('30-JUN-2021'),
-            })            
+            })
     }
 );

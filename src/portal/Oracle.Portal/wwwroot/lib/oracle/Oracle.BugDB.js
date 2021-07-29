@@ -50,7 +50,8 @@ Oracle = (function (parent) {
         HCMBRONZE: { name: 'HCMBRONZE', filterTitle: 'HCMBRONZE', filterVisible: true },
         HCMSILVER: { name: 'HCMSILVER', filterTitle: 'HCMSILVER', filterVisible: true },
         'FRCE-SQL-CLEANUP': { name: 'FRCE-SQL-CLEANUP', filterTitle: 'FRCE-SQL-CLEANUP', filterVisible: true },
-        VPAT_MUST: { name: 'VPAT_MUST', filterTitle: 'VPAT_MUST', filterVisible: true }
+        VPAT_MUST: { name: 'VPAT_MUST', filterTitle: 'VPAT_MUST', filterVisible: true },
+        CUSTOMER_IMPACT: { name: 'CUSTOMER_IMPACT', filterTitle: 'CUSTOMER_IMPACT' }
     }
 
     result.Fields = {
@@ -312,9 +313,8 @@ Oracle = (function (parent) {
             const lookup = _fieldProperties[fieldName].lookup;
             if (!Oracle.isEmpty(lookup)) {
                 for (const value in lookup) {
-                    let numberBalue = Number(value);
-                    let parsedValue = Number.isNaN(numberBalue) ? value : numberBalue;
-                    let hasValue = Oracle.includes(visibleSortedValues, parsedValue);
+                    let numberValue = Oracle.Conversion.tryToNumber(value);
+                    let hasValue = Oracle.includes(visibleSortedValues, numberValue.success ? numberValue.value : value);
                     if (lookup[value].filterVisible || hasValue) {
                         result.distinct.push(value);
                     }
