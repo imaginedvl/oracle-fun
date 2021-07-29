@@ -284,7 +284,10 @@ Oracle = (function (parent) {
             const result = {
                 minimum: null,
                 maximum: null,
+                visibleMinimum: null,
+                visibleMaximum: null,
                 distinct: [],
+                visibleDistinct: [],
                 metrics: []
             };
 
@@ -309,6 +312,12 @@ Oracle = (function (parent) {
             });
             result.minimum = sortedValues[0];
             result.maximum = sortedValues[sortedValues.length - 1];
+
+            visibleSortedValues = visibleSortedValues.sort((a, b) => {
+                return Oracle.compare(a, b);
+            });
+            result.visibleMinimum = visibleSortedValues[0];
+            result.visibleMaximum = visibleSortedValues[visibleSortedValues.length - 1];
 
             const lookup = _fieldProperties[fieldName].lookup;
             if (!Oracle.isEmpty(lookup)) {
@@ -347,6 +356,15 @@ Oracle = (function (parent) {
         getFieldSummary(fieldName) {
             return this.data[fieldName];
         }
+
+        getVisibleMinimum(fieldName) {
+            return this.getFieldSummary(fieldName)?.visibleMinimum;
+        }
+
+        getVisibleMaximum(fieldName) {
+            return this.getFieldSummary(fieldName)?.visibleMaximum;
+        }
+
 
         getMinimum(fieldName) {
             return this.getFieldSummary(fieldName)?.minimum;

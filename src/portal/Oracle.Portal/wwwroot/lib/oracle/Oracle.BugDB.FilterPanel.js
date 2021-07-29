@@ -216,11 +216,11 @@ Oracle = (function (parent) {
             }
             // then we update the summary
             const dateRange = this.element.find(".summary-date-range");
-            const minDateReported = this.summary.getMinimum(Oracle.BugDB.Fields.DateReported);
+            const minDateReported = this.summary.getVisibleMinimum(Oracle.BugDB.Fields.DateReported);
             if (!Oracle.isEmpty(minDateReported)) {
                 dateRange.find(".from").html(Oracle.HTML.formatValue(minDateReported, { formater: 'BugDBDate' }));
                 dateRange.show();
-                dateRange.find(".to").html(Oracle.HTML.formatValue(this.summary.getMaximum(Oracle.BugDB.Fields.DateReported), { formater: 'BugDBDate' }));
+                dateRange.find(".to").html(Oracle.HTML.formatValue(this.summary.getVisibleMaximum(Oracle.BugDB.Fields.DateReported), { formater: 'BugDBDate' }));
             }
             else {
                 dateRange.hide();
