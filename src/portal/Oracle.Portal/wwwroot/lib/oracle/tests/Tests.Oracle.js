@@ -114,7 +114,6 @@ Oracle.Tests.registerTest({
     }
 });
 
-
 Oracle.Tests.registerTest({
     module: 'Oracle',
     category: 'Utilities',
@@ -147,7 +146,6 @@ Oracle.Tests.registerTest({
         assert.isFalse(Oracle.includes(b, c));
     }
 });
-
 
 Oracle.Tests.registerTest({
     module: 'Oracle',
