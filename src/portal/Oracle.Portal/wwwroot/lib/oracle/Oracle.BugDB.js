@@ -828,7 +828,7 @@ Oracle = (function (parent) {
         const result = $("<div class='bugdb-tags'/>")
         if (!Oracle.isEmpty(value) && value.length > 0) {
             for (let i = 0; i < value.length; i++) {
-                result.append("<a href='" + Oracle.BugDB.UrlManager.getSearchByTagUrl(value[i], settings.entity) + "'><div class='bugdb-tag bugdb-tag-" + value[i].toLowerCase() + "' >" + value[i] + "</div></a> ");
+                result.append("<a target='_blank' href='" + Oracle.BugDB.UrlManager.getSearchByTagUrl(value[i], settings.entity) + "'><div class='bugdb-tag bugdb-tag-" + value[i].toLowerCase() + "' >" + value[i] + "</div></a> ");
             }
         }
         return result;
