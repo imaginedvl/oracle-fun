@@ -34,6 +34,11 @@ Oracle = (function (parent) {
 
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item:hover { background-color:var(--controlFocusBackgroundColor); color: var(--controlFocusTextColor); border:2px solid var(--controlFocusBorderColor); }');
 
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-expand {cursor: pointer; user-select:none; }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-expand:hover { border:2px solid var(--primaryBackgroundColorLighten2); }');
+
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item.selected:not(.inverted) { background-color: var(--includeBackgroundColor); }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item.selected.inverted { background-color: var(--excludeBackgroundColor); }');
 
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-search-panel input { width:100%; padding:8px; border: 1px solid var(--controlBorderColor); }');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-search-panel input.searchKeyword {  height: 35px; padding-left: 10px; }');
@@ -376,7 +381,7 @@ Oracle = (function (parent) {
                         const hiddenFilter = this.initializeStandardPanelFilterItem(controlSettings, userSettings, panel, properties, expandFilter);
 
                         if (!expandFilter && hiddenFilter) {
-                            const expandItem = $("<span class='filter-item'/>");
+                            const expandItem = $("<span class='filter-expand'/>");
                             expandItem.text("...");
                             expandItem.click((e) => {
                                 const target = $(e.target);
