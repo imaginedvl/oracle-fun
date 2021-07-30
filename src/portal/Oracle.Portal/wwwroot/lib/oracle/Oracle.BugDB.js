@@ -253,8 +253,8 @@ Oracle = (function (parent) {
                     result = this.assignee.match(keyword);
                 }
                 if (!result && this.tags) {
-                    for (let i = 0; i < this.tags.length; i++) {
-                        result = this.tags[i].match(keyword);
+                    for (let i = 0; i < this.tags.length && !result; i++) {
+                        result = this.tags[i].match(keyword) !== null;
                     }
                 }
                 return result;
