@@ -31,6 +31,9 @@ Oracle = (function (parent) {
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item * { pointer-events: none }');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item:hover { border:2px solid var(--primaryBackgroundColorLighten2); }');
 
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-expand {cursor: pointer; user-select:none; }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-expand:hover { border:2px solid var(--primaryBackgroundColorLighten2); }');
+
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item.selected:not(.inverted) { background-color: var(--includeBackgroundColor); }');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item.selected.inverted { background-color: var(--excludeBackgroundColor); }');
 
@@ -375,7 +378,7 @@ Oracle = (function (parent) {
                         const hiddenFilter = this.initializeStandardPanelFilterItem(controlSettings, userSettings, panel, properties, expandFilter);
 
                         if (!expandFilter && hiddenFilter) {
-                            const expandItem = $("<span class='filter-item'/>");
+                            const expandItem = $("<span class='filter-expand'/>");
                             expandItem.text("...");
                             expandItem.click((e) => {
                                 const target = $(e.target);
