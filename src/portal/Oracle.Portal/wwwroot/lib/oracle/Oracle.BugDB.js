@@ -50,7 +50,7 @@ Oracle = (function (parent) {
         HCMBRONZE: { name: 'HCMBRONZE', filterTitle: 'HCMBRONZE', filterVisible: true },
         HCMSILVER: { name: 'HCMSILVER', filterTitle: 'HCMSILVER', filterVisible: true },
         'FRCE-SQL-CLEANUP': { name: 'FRCE-SQL-CLEANUP', filterTitle: 'FRCE-SQL-CLEANUP', filterVisible: true },
-        VPAT_MUST: { name: 'VPAT_MUST', filterTitle: 'VPAT_MUST', filterVisible: true },
+        VPAT_MUST: { name: 'VPAT_MUST', filterTitle: 'VPAT_MUST' },
         CUSTOMER_IMPACT: { name: 'CUSTOMER_IMPACT', filterTitle: 'CUSTOMER_IMPACT' }
     }
 
@@ -319,18 +319,21 @@ Oracle = (function (parent) {
             result.visibleMinimum = visibleSortedValues[0];
             result.visibleMaximum = visibleSortedValues[visibleSortedValues.length - 1];
 
+            result.distinct = sortedValues.distinct();
             const lookup = _fieldProperties[fieldName].lookup;
             if (!Oracle.isEmpty(lookup)) {
                 for (const value in lookup) {
                     let numberValue = Oracle.Conversion.tryToNumber(value);
-                    let hasValue = Oracle.includes(visibleSortedValues, numberValue.success ? numberValue.value : value);
+                    let parsedValue = numberValue.success ? numberValue.value : value
+                    let hasValue = Oracle.includes(visibleSortedValues, parsedValue);
                     if (lookup[value].filterVisible || hasValue) {
-                        result.distinct.push(value);
+                        const index = result.distinct.indexOf(parsedValue)
+                        if (index !== -1) {
+                            result.distinct.splice(index, 1)
+                        }
+                        result.distinct.unshift(parsedValue);
                     }
                 }
-            }
-            else {
-                result.distinct = sortedValues.distinct();
             }
 
             //metrics

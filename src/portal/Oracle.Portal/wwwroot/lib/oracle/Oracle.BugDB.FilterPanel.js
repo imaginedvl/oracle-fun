@@ -185,7 +185,7 @@ Oracle = (function (parent) {
                             this.initializeSummaryPanel();
                             break;
                         case result.PanelTypes.Standard:
-                            this.initializeStandardPanel(controlSettings, userSettings);
+                            this.initializeStandardPanel(controlSettings, userSettings, false);
                             break;
                         case result.PanelTypes.Custom:
                             this.initializeCustomPanel(panelSettings, controlSettings, userSettings);
@@ -360,7 +360,7 @@ Oracle = (function (parent) {
             this.updatePanels()
         }
 
-        initializeStandardPanel(controlSettings, userSettings) {
+        initializeStandardPanel(controlSettings, userSettings, expandFilter) {
             for (const [key, properties] of Object.entries(Oracle.BugDB.FieldProperties)) {
                 if (Oracle.includes(this.fields, properties.id)) {
                     if (properties.filterable === true) {
@@ -372,30 +372,55 @@ Oracle = (function (parent) {
                             title = properties.filterTitle;
                         }
                         const panel = this.initializeBasePanel(title);
-                        const distinctMetrics = this.summary.getDistinctMetrics(properties.id);
-                        if (!Oracle.isEmpty(distinctMetrics)) {
-                            for (let i = 0; i < distinctMetrics.length; i++) {
-                                const metrics = distinctMetrics[i];
-                                let value;
-                                if (properties.lookup && properties.lookup[metrics.value].filterTitle) {
-                                    value = properties.lookup[metrics.value].filterTitle;
-                                }
-                                else {
-                                    value = Oracle.Formating.formatValue(metrics.value);
-                                }
-                                if (Oracle.compare(metrics.count, 0) === 1 || (properties.lookup && properties.lookup[metrics.value].filterVisible)) {
-                                    const item = this.createBaseFilterItem(value, metrics.value, metrics.visibleCount, properties.id, null, controlSettings, userSettings);
-                                    panel.append(item);
-                                    if (i < distinctMetrics.length - 1) {
-                                        panel.append("<span class='itemSeparator'>, </span>");
-                                    }
-                                }
-                            }
+                        const hiddenFilter = this.initializeStandardPanelFilterItem(controlSettings, userSettings, panel, properties, expandFilter);
+
+                        if (!expandFilter && hiddenFilter) {
+                            const expandItem = $("<span class='filter-item'/>");
+                            expandItem.text("...");
+                            expandItem.click((e) => {
+                                const target = $(e.target);
+                                panel.children().remove();
+                                this.initializeStandardPanelFilterItem(controlSettings, userSettings, panel, properties, true);
+                                this.updateFilters();//required to apply user saved filter that wasn't displayed before expand
+                            });
+
+                            panel.append(expandItem);
                         }
                         this.element.append(panel);
                     }
                 }
             }
+        }
+
+        initializeStandardPanelFilterItem(controlSettings, userSettings, panel, properties, expandFilter) {
+            let hiddenFilter = false;
+            const distinctMetrics = this.summary.getDistinctMetrics(properties.id);
+            if (!Oracle.isEmpty(distinctMetrics)) {
+                for (let i = 0; i < distinctMetrics.length; i++) {
+                    const metrics = distinctMetrics[i];
+                    let value;
+                    if (properties.lookup && properties.lookup[metrics.value]?.filterTitle) {
+                        value = properties.lookup[metrics.value].filterTitle;
+                    }
+                    else {
+                        value = Oracle.Formating.formatValue(metrics.value);
+                    }
+                    if (Oracle.compare(metrics.count, 0) === 1 || (properties.lookup && properties.lookup[metrics.value].filterVisible)) {
+                        let displayFilter = expandFilter || !properties.lookup || properties.lookup[metrics.value] !== undefined;
+                        if (displayFilter) {
+                            const item = this.createBaseFilterItem(value, metrics.value, metrics.visibleCount, properties.id, null, controlSettings, userSettings);
+                            panel.append(item);
+                            if (i < distinctMetrics.length - 1) {
+                                panel.append("<span class='itemSeparator'>, </span>");
+                            }
+                        }
+                        else {
+                            hiddenFilter = true;
+                        }
+                    }
+                }
+            }
+            return hiddenFilter;
         }
 
         initializeSearchPanel(controlSettings, userSettings) {

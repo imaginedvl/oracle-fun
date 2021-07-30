@@ -35,12 +35,12 @@ Oracle.Tests.registerTest({
     test: (assert, logger) => {
         const severityMetrics = _fieldDistinctMetrics(Oracle.BugDB.Fields.Severity);
 
-        const expectations = {
-            "1": 1,
-            "2": 1,
-            "3": 0,
-            "4": 3
-        };
+        const expectations = [
+            { value: '1', count: 1, visibleCount: 1 },
+            { value: '2', count: 1, visibleCount: 1 },
+            { value: '3', count: 0, visibleCount: 0 },
+            { value: '4', count: 3, visibleCount: 3 }
+        ];
 
         _validateMetricsForField(assert, severityMetrics, expectations);
     }
@@ -56,10 +56,14 @@ Oracle.Tests.registerTest({
 
         // We have 5 bugs, 4 at status 11 and 1 at status 80 but since metrics are computed
         // for a lot of status, we only look for the ones we care.     
-        const expectations = {
-            "11": 4,
-            "80": 1
-        };
+        const expectations = [
+            { value: '11', count: 4, visibleCount: 4 },
+            { value: '30', count: 0, visibleCount: 0 },
+            { value: '37', count: 0, visibleCount: 0 },
+            { value: '39', count: 0, visibleCount: 0 },
+            { value: '40', count: 0, visibleCount: 0 },
+            { value: '80', count: 1, visibleCount: 1 }
+        ];
 
         _validateMetricsForField(assert, statusMetrics, expectations);
     }
@@ -73,13 +77,16 @@ Oracle.Tests.registerTest({
         const tagMetrics = _fieldDistinctMetrics(Oracle.BugDB.Fields.Tags);
 
         // Tags computation is only done for some of the known tags, we will check the following ones:
-        const expectations = {
-            P1: 3,
-            QABLK: 2,
-            REGRN: 1,
-            HCMSILVER: 1,
-            HCMBRONZE: 3
-        };
+        const expectations = [
+            { value: 'REGRN', count: 1, visibleCount: 1 },
+            { value: 'P1', count: 3, visibleCount: 3 },
+            { value: 'QABLK', count: 2, visibleCount: 2 },
+            { value: 'HCMBRONZE', count: 3, visibleCount: 3 },
+            { value: 'HCMSILVER', count: 1, visibleCount: 1 },
+            { value: 'FRCE-SQL-CLEANUP', count: 0, visibleCount: 0 },
+            { value: 'VPAT_MUST', count: 0, visibleCount: 0 },
+            { value: 'CUSTOMER_IMPACT', count: 1, visibleCount: 1 }
+        ];
 
         _validateMetricsForField(assert, tagMetrics, expectations);
 
@@ -130,11 +137,11 @@ Oracle.Tests.registerTest({
     test: (assert, logger) => {
         const componentMetrics = _fieldDistinctMetrics(Oracle.BugDB.Fields.Component);
 
-        const expectations = {
-            HIRING: 3,
-            LIFECYCLE: 1,
-            OPPTMKT: 1
-        };
+        const expectations = [
+            { value: 'HIRING', count: 3, visibleCount: 3 },
+            { value: 'LIFECYCLE', count: 1, visibleCount: 1 },
+            { value: 'OPPTMKT', count: 1, visibleCount: 1 }
+        ];
 
         _validateMetricsForField(assert, componentMetrics, expectations);
 
@@ -210,12 +217,13 @@ const _bugSummary = function (field) {
 // which come from the metrics.
 const _validateMetricsForField = function (assert, metrics, expectations) {
 
-    for (const [key, value] of Object.entries(expectations)) {
+    /*for (const [key, value] of Object.entries(expectations)) {
 
         // get value from metrics 
         let currentMetric = metrics.find(function (metric) { return metric.value === key; });
 
         // compare with the expected array
         assert.areEqual(currentMetric.count, value);
-    }
+    }*/
+    assert.isTrue(JSON.stringify(metrics) === JSON.stringify(expectations));
 }
