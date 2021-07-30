@@ -25,17 +25,14 @@ Oracle = (function (parent) {
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-summary-panel .summary-totals .total  {  font-weight:600;color: var(--controlTextColor); } ');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-summary-panel .summary-totals { color: var(--controlTextColorLighten3); } ');
 
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item {cursor: pointer; user-select:none; }');
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item span.value { font-weight: 600; white-space: nowrap; }');
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item span.count { padding-left:4px; color: var(--controlTextColorLighten3)}');
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item * { pointer-events: none }');
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item:hover { border:2px solid var(--primaryBackgroundColorLighten2); }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter {cursor: pointer; user-select:none; }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter.item span.value { font-weight: 600; white-space: nowrap; }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter.item span.count { padding-left:4px; color: var(--controlTextColorLighten3)}');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter.item * { pointer-events: none }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter:hover { border:2px solid var(--primaryBackgroundColorLighten2); }');
 
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-expand {cursor: pointer; user-select:none; }');
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-expand:hover { border:2px solid var(--primaryBackgroundColorLighten2); }');
-
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item.selected:not(.inverted) { background-color: var(--includeBackgroundColor); }');
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item.selected.inverted { background-color: var(--excludeBackgroundColor); }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter.item.selected:not(.inverted) { background-color: var(--includeBackgroundColor); }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter.item.selected.inverted { background-color: var(--excludeBackgroundColor); }');
 
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-search-panel input { width:100%; padding:8px; border: 1px solid var(--controlBorderColor); }');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-search-panel input.searchKeyword {  height: 35px; padding-left: 10px; }');
@@ -200,7 +197,7 @@ Oracle = (function (parent) {
         }
 
         updatePanels() {
-            const panelItems = this.element.find(".filter-item");
+            const panelItems = this.element.find(".filter.item");
             for (let i = 0; i < panelItems.length; i++) {
                 const target = $(panelItems.get(i));
                 const filterId = target.attr("data-filter-id");
@@ -273,7 +270,8 @@ Oracle = (function (parent) {
             const filterSetting = filterItemSettings.find(obj => {
                 return obj.filterItem === filterItemName
             });
-            const filterItem = $("<span class='filter-item'>");
+            const filterItem = $("<span class='filter'>");
+            filterItem.addClass("item");
             if (!Oracle.isEmpty(filterSetting)) {
                 if (filterSetting.value) {
                     filterItem.addClass("inverted")
@@ -333,7 +331,7 @@ Oracle = (function (parent) {
                 // Then we check for each selected filters
                 const filterPanels = this.element.find(".section-panel[data-section-id]");
                 for (let j = 0; j < filterPanels.length; j++) {
-                    const panelItems = $(filterPanels[j]).find(".filter-item.selected");
+                    const panelItems = $(filterPanels[j]).find(".filter.selected");
                     if (!Oracle.isEmpty(panelItems)) {
                         let panelResult = false;
                         for (let i = 0; i < panelItems.length; i++) {
@@ -378,16 +376,17 @@ Oracle = (function (parent) {
                         const hiddenFilter = this.initializeStandardPanelFilterItem(controlSettings, userSettings, panel, properties, expandFilter);
 
                         if (!expandFilter && hiddenFilter) {
-                            const expandItem = $("<span class='filter-expand'/>");
-                            expandItem.text("...");
-                            expandItem.click((e) => {
+                            const filterExpand = $("<span class='filter'/>")
+                            filterExpand.addClass("expand");
+                            filterExpand.text("...");
+                            filterExpand.click((e) => {
                                 const target = $(e.target);
                                 panel.children().remove();
                                 this.initializeStandardPanelFilterItem(controlSettings, userSettings, panel, properties, true);
                                 this.updateFilters();//required to apply user saved filter that wasn't displayed before expand
                             });
 
-                            panel.append(expandItem);
+                            panel.append(filterExpand);
                         }
                         this.element.append(panel);
                     }
@@ -466,7 +465,7 @@ Oracle = (function (parent) {
 
         resetFilters() {
             this.element.find(".section-search-panel input").val("");
-            this.element.find('.filter-item.selected').removeClass("selected inverted");
+            this.element.find('.filter.selected').removeClass("selected inverted");
             this.updateFilters();
         }
 
