@@ -28,7 +28,7 @@ Oracle = (function (parent) {
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter { display:inline-block; cursor: pointer; user-select:none; border:2px solid RGBA(0, 0, 0, 0); border-radius:0.2rem; }');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter:hover { background-color:var(--controlFocusBackgroundColor); color: var(--controlFocusTextColor); border:2px solid var(--controlFocusBorderColor); }');
 
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter.item { padding-2px; display:inline-block; cursor: pointer; user-select:none; border:2px solid RGBA(0, 0, 0, 0); border-radius:0.2rem; }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter.item { margin-bottom:1px; padding:2px; display:inline-block; cursor: pointer; user-select:none; border:2px solid RGBA(0, 0, 0, 0); border-radius:0.2rem; }');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter.item span.value { font-weight: 600; white-space: nowrap; }');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter.item span.count { padding-left:3px; color: var(--controlTextColorLighten3)}');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter.item * { pointer-events: none }');
