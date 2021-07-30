@@ -1,5 +1,10 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Oracle.Core;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Linq;
 
 namespace Oracle.Portal
 {
@@ -8,7 +13,7 @@ namespace Oracle.Portal
     {
 
         public static void Main(string[] args)
-        {
+        {            
             CreateHostBuilder(args).Build().Run();
         }
 

@@ -2,8 +2,15 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
+    string myString = "";
+    myString = this.HttpContext.Session.GetString("TOTO");
+    myString += "X";
+    this.HttpContext.Session.SetString("TOTO", myString);
 }
 
-<div >
+<div>
     <h1 >Welcome to Oracle Fun Portal</h1>
 </div>
+
+<a href="/Profile">@myString</a>
+

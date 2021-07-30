@@ -28,6 +28,9 @@ namespace Oracle.Portal
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseHelp();
+            app.UseMemorySession();
+            app.UseBasicAuthorization();
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
