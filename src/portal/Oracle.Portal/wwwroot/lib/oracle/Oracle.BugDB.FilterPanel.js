@@ -25,9 +25,9 @@ Oracle = (function (parent) {
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-summary-panel .summary-totals .total  {  font-weight:600;color: var(--controlTextColor); } ');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel .section-summary-panel .summary-totals { color: var(--controlTextColorLighten3); } ');
 
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item { display:inline-block; cursor: pointer; user-select:none; border:2px solid RGBA(0, 0, 0, 0); border-radius:0.2rem; }');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item { padding-2px; display:inline-block; cursor: pointer; user-select:none; border:2px solid RGBA(0, 0, 0, 0); border-radius:0.2rem; }');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item span.value { font-weight: 600; white-space: nowrap; }');
-    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item span.count { padding-left:4px; color: var(--controlTextColorLighten3)}');
+    Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item span.count { padding-left:3px; color: var(--controlTextColorLighten3)}');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item * { pointer-events: none }');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item.selected:not(.inverted) { border:2px solid var(--successBorderColor); color: var(--successTextColorLighten2);background-color: var(--successBackgroundColorLighten2); }');
     Oracle.Controls.Themes.addStaticCSSRule('div.bugdbFilterPanel span.filter-item.selected.inverted {  border:2px solid var(--errorBorderColor); color: var(--errorTextColorLighten2);background-color: var(--errorBackgroundColorLighten2); }');

@@ -71,7 +71,7 @@ Oracle = (function (parent) {
             successTextColor: 'black',
             successTextColorLighten1: 'black',
             successTextColorLighten2: 'black',
-            successBorderColor: '#7BFF3A',
+            successBorderColor: '#62C42D', //'#7BFF3A',
 
             // Warning
             warningBackgroundColor: '#ffeb3b',
