@@ -22,3 +22,4 @@ Oracle.Users.addUser({ globalId: 'GPICARD', emailAddress: 'guy.picard@oracle.com
 Oracle.Users.addUser({ globalId: 'BRPRASAD', firstName: 'B', lastName: 'Prasad', displayName: 'Prasad', fullName: 'Prasad', emailAddress: 'b.prasad@oracle.com', flags: Oracle.Users.Flags.Internal });
 Oracle.Users.addUser({ globalId: 'SILABARR', emailAddress: 'simon.labarre@oracle.com', flags: Oracle.Users.Flags.Internal });
 Oracle.Users.addUser({ globalId: 'JMUHIMPU', firstName: 'Joel', lastName: 'Muhimpundu', emailAddress: 'joel.muhimpundu@oracle.com', flags: Oracle.Users.Flags.Internal });
+Oracle.Users.addUser({ globalId: 'LUGILLI', firstName: 'Lurick', lastName: 'Gillies', emailAddress: 'lurick.gillies@oracle.com', flags: Oracle.Users.Flags.Internal });

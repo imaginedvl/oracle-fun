@@ -252,8 +252,10 @@ Oracle = (function (parent) {
                 if (!result && this.assignee) {
                     result = this.assignee.match(keyword);
                 }
-                if (!result) {
-                    // here we will add tags search too, etc
+                if (!result && this.tags) {
+                    for (let i = 0; i < this.tags.length; i++) {
+                        result = this.tags[i].match(keyword);
+                    }
                 }
                 return result;
             }
