@@ -36,10 +36,10 @@ Oracle.Tests.registerTest({
         const severityMetrics = _fieldDistinctMetrics(Oracle.BugDB.Fields.Severity);
 
         const expectations = [
-            { value: '1', count: 1, visibleCount: 1 },
-            { value: '2', count: 1, visibleCount: 1 },
-            { value: '3', count: 0, visibleCount: 0 },
-            { value: '4', count: 3, visibleCount: 3 }
+            { value: 1, count: 1, visibleCount: 1 },
+            { value: 2, count: 1, visibleCount: 1 },
+            { value: 3, count: 0, visibleCount: 0 },
+            { value: 4, count: 3, visibleCount: 3 }
         ];
 
         _validateMetricsForField(assert, severityMetrics, expectations);
@@ -57,12 +57,12 @@ Oracle.Tests.registerTest({
         // We have 5 bugs, 4 at status 11 and 1 at status 80 but since metrics are computed
         // for a lot of status, we only look for the ones we care.     
         const expectations = [
-            { value: '11', count: 4, visibleCount: 4 },
-            { value: '30', count: 0, visibleCount: 0 },
-            { value: '37', count: 0, visibleCount: 0 },
-            { value: '39', count: 0, visibleCount: 0 },
-            { value: '40', count: 0, visibleCount: 0 },
-            { value: '80', count: 1, visibleCount: 1 }
+            { value: 11, count: 4, visibleCount: 4 },
+            { value: 30, count: 0, visibleCount: 0 },
+            { value: 37, count: 0, visibleCount: 0 },
+            { value: 39, count: 0, visibleCount: 0 },
+            { value: 40, count: 0, visibleCount: 0 },
+            { value: 80, count: 1, visibleCount: 1 }
         ];
 
         _validateMetricsForField(assert, statusMetrics, expectations);
@@ -84,7 +84,6 @@ Oracle.Tests.registerTest({
             { value: 'HCMBRONZE', count: 3, visibleCount: 3 },
             { value: 'HCMSILVER', count: 1, visibleCount: 1 },
             { value: 'FRCE-SQL-CLEANUP', count: 0, visibleCount: 0 },
-            { value: 'VPAT_MUST', count: 0, visibleCount: 0 },
             { value: 'CUSTOMER_IMPACT', count: 1, visibleCount: 1 }
         ];
 

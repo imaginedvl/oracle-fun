@@ -322,11 +322,13 @@ Oracle = (function (parent) {
             result.distinct = sortedValues.distinct();
             const lookup = _fieldProperties[fieldName].lookup;
             if (!Oracle.isEmpty(lookup)) {
-                for (const value in lookup) {
-                    let numberValue = Oracle.Conversion.tryToNumber(value);
-                    let parsedValue = numberValue.success ? numberValue.value : value
+                for (let keys = Object.keys(lookup), i = keys.length - 1, end = 0; i >= end; i--) {
+                    let key = keys[i], value = lookup[key];
+                    //for (const value in lookup) {
+                    let numberValue = Oracle.Conversion.tryToNumber(key);
+                    let parsedValue = numberValue.success ? numberValue.value : key
                     let hasValue = Oracle.includes(visibleSortedValues, parsedValue);
-                    if (lookup[value].filterVisible || hasValue) {
+                    if (value.filterVisible || hasValue) {
                         const index = result.distinct.indexOf(parsedValue)
                         if (index !== -1) {
                             result.distinct.splice(index, 1)
