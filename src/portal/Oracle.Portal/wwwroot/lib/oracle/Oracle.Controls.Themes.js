@@ -47,15 +47,31 @@ Oracle = (function (parent) {
             // Emphasis should be used for stuff like the sorted column in a grid (not the header but the cell row)
             controlEmphasisBackgroundColor: '#FAFAFA',
             controlEmphasisTextColor: 'black',
+
             // Focus color
             controlFocusBackgroundColor: '#EFEFEF',
             controlFocusTextColor: 'black',
+            controlFocusBorderColor: '#BBB',
 
             // Danger
-            errorBackgroundColor: '#d9534f',
+            errorBackgroundColor: '#FF685A',
+            errorBackgroundColorLighten1: '#FFAAA3',
+            errorBackgroundColorLighten2: '#FFD3D0',
             errorTextColor: 'white',
+            errorTextColorLighten1: 'black',
+            errorTextColorLighten2: 'black',
             errorInvertedBackgroundColor: 'white',
-            errorInvertedTextColor: 'red',
+            errorInvertedTextColor: '#FF685A',
+            errorBorderColor: '#FF4936',
+
+            // Success
+            successBackgroundColor: '#9BFF69',
+            successBackgroundColorLighten1: '#BDFF9D',
+            successBackgroundColorLighten2: '#DAFFC9',
+            successTextColor: 'black',
+            successTextColorLighten1: 'black',
+            successTextColorLighten2: 'black',
+            successBorderColor: '#7BFF3A',
 
             // Warning
             warningBackgroundColor: '#ffeb3b',
@@ -65,9 +81,6 @@ Oracle = (function (parent) {
             infoBackgroundColor: '#3ea6f0',
             infoTextColor: 'white',
 
-            // Success
-            successBackgroundColor: '#5cb85c',
-            successTextColor: 'black',
 
             //Selection
             includeBorderColor: '#00CC00',
