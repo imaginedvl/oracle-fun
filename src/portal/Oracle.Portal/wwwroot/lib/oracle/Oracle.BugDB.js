@@ -835,7 +835,11 @@ Oracle = (function (parent) {
         const result = $("<div class='bugdb-tags'/>")
         if (!Oracle.isEmpty(value) && value.length > 0) {
             for (let i = 0; i < value.length; i++) {
-                result.append("<a target='_blank' href='" + Oracle.BugDB.UrlManager.getSearchByTagUrl(value[i], settings.entity) + "'><div class='bugdb-tag bugdb-tag-" + value[i].toLowerCase() + "' >" + value[i] + "</div></a> ");
+                let tagValue = value[i];                
+                if (value[i].length > 45) {
+                    tagValue = value[i].substring(0, 35) + ".."
+                }
+                result.append("<a target='_blank' title='" + value[i] + "' href='" + Oracle.BugDB.UrlManager.getSearchByTagUrl(value[i], settings.entity) + "'><div class='bugdb-tag bugdb-tag-" + value[i].toLowerCase() + "' >" + tagValue + "</div></a> ");
             }
         }
         return result;
@@ -844,7 +848,7 @@ Oracle = (function (parent) {
     Oracle.HTML.addFormater('BugDBSubject', null, null, (value, settings) => {
         const result = $("<div class='bugdb-subject'/>")
         if (!Oracle.isEmpty(value) && value.length > 0) {
-            var subjectContent = value.split(" ");
+            let subjectContent = value.split(" ");
             for (let i = 0; i < subjectContent.length; i++) {
                 result.append(" ");
                 if (subjectContent[i].length > 45) {
