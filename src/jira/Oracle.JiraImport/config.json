@@ -1,0 +1,8 @@
+﻿{
+  "Environment": "jira-uat.us.oracle.com",
+  //"Environment": "jira.oraclecorp.com",
+  "User": {
+    "Username": "username@oracle.com",
+    "Password": "password"
+  }
+}
