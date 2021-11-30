@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oracle.ImportTool", "Oracle.JiraImport\Oracle.ImportTool.csproj", "{D30E328A-189C-4E35-BC86-AB1E744422F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oracle.Tool", "Oracle.JiraImport\Oracle.Tool.csproj", "{D30E328A-189C-4E35-BC86-AB1E744422F4}"
 	ProjectSection(ProjectDependencies) = postProject
 		{1B58D4BF-FF2F-4884-921E-7385F11C440F} = {1B58D4BF-FF2F-4884-921E-7385F11C440F}
 		{C1FEA9C0-872A-4DF1-B20D-2F2999B1B1D8} = {C1FEA9C0-872A-4DF1-B20D-2F2999B1B1D8}

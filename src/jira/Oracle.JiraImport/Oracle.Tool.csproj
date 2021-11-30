@@ -11,6 +11,12 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Oracle.ExcelModel\Oracle.ExcelModel.csproj" />
+    <ProjectReference Include="..\Oracle.JiraModel\Oracle.JiraModel.csproj" />
   </ItemGroup>
 
 </Project>

@@ -249,3 +249,4 @@ paket-files/
 *.sln.iml
 .vscode/launch.json
 .vscode/tasks.json
+src/jira/Oracle.JiraImport/config.json
