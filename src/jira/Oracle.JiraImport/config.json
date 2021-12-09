@@ -2,7 +2,7 @@
   "Environment": "jira-uat.us.oracle.com",
   //"Environment": "jira.oraclecorp.com",
   "User": {
-    "Username": "username@oracle.com",
-    "Password": "password"
+    "Username": "frce-jira-default-assignee_ww@oracle.com",
+    "Password": "Rsft789p"
   }
 }

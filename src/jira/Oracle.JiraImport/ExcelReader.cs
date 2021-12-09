@@ -19,63 +19,63 @@ namespace JiraImport
             {
                 fileContent = ReadIdentification(package.Workbook.Worksheets["Identification"]);
                 fileContent.Stories = ReadStories(package.Workbook.Worksheets["Issues"]);
-                //ReadSubTasks(metas, package, devLead, assignee, affectsVersion, project);
+                fileContent.SubTasks = ReadSubTasks(package.Workbook.Worksheets["Sub-Tasks"]);
             }
 
             return fileContent;
         }
 
-        private void ReadSubTasks(List<CreateMetaFields> metas, ExcelPackage package, string devLead, string assignee, string affectsVersion, string project)
+        private List<JiraImportSubTask> ReadSubTasks(ExcelWorksheet sheet)
         {
-            /*
-            var subTasksSheet = package.Workbook.Worksheets["Sub-Tasks"];
-            int nbRowsSub = subTasksSheet.Dimension.End.Row;
-            for (int r = 4; r < nbRowsSub; r++)
+            List<JiraImportSubTask> subtasks = new List<JiraImportSubTask>();
+
+            int i = 1;
+            int nbRows = sheet.Dimension.End.Row;
+            for (int r = 4; r < nbRows; r++)
             {
-                var issueType = subTasksSheet.Cells[r, 3].Text;
+                var issueType = sheet.Cells[r, 3].Text;
                 if (string.IsNullOrEmpty(issueType))
                 {
                     break;
                 }
 
-                var parent = subTasksSheet.Cells[r, 4].Text;
-                var summary = subTasksSheet.Cells[r, 5].Text;
-                var description = subTasksSheet.Cells[r, 6].Text;
+                var parent = Convert.ToInt32(sheet.Cells[r, 4].Value);
+                var summary = sheet.Cells[r, 5].Text;
+                var description = sheet.Cells[r, 6].Text;
 
-                if (IssueType.SubTask.Name.Equals(issueType))
+                if (IssueType.SubTask.Name.Equals(issueType) == true)
                 {
-                    metas.Add(new CreateMetaFields
+                    Console.WriteLine("Sub-task {0}: {1}", i, summary);
+
+                    subtasks.Add(new JiraImportSubTask
                     {
+                        Parent = parent,
                         Summary = summary,
-                        IssueType = new IssueType { Id = IssueType.SubTask.Id },
-                        Assignee = new User { Name = assignee },
-                        Project = new Project { Key = project },
-                        AffectsVersions = new List<Model.Version> { new Model.Version { Name = affectsVersion } },
-                        Parent = new Issue { Key = parent },
-                        DevLead = new User { Name = devLead },
+                        IssueType = issueType,
                         Description = description
                     });
                 }
+                i++;
             }
-            */
+            return subtasks;
         }
 
-        private List<JiraImportStory> ReadStories(ExcelWorksheet issuesSheet)
+        private List<JiraImportStory> ReadStories(ExcelWorksheet sheet)
         {
             List<JiraImportStory> stories = new List<JiraImportStory>();
 
             int i = 1;
-            int nbRows = issuesSheet.Dimension.End.Row;
+            int nbRows = sheet.Dimension.End.Row;
             for (int r = 4; r < nbRows; r++)
             {
-                var issueType = issuesSheet.Cells[r, 3].Text;
+                var issueType = sheet.Cells[r, 3].Text;
                 if (string.IsNullOrEmpty(issueType))
                 {
                     break;
                 }
 
-                var summary = issuesSheet.Cells[r, 4].Text;
-                var description = issuesSheet.Cells[r, 5].Text;
+                var summary = sheet.Cells[r, 4].Text;
+                var description = sheet.Cells[r, 5].Text;
 
                 if (IssueType.SubTask.Name.Equals(issueType) == false)
                 {
@@ -94,15 +94,15 @@ namespace JiraImport
             return stories;
         }
 
-        private JiraImportExcelFile ReadIdentification(ExcelWorksheet identificationSheet)
+        private JiraImportExcelFile ReadIdentification(ExcelWorksheet sheet)
         {
             JiraImportExcelFile file = new JiraImportExcelFile();
-            file.EpicLink = identificationSheet.Cells["C2"].Text;
-            file.DevLead = identificationSheet.Cells["C3"].Text;
-            file.Assignee = identificationSheet.Cells["C4"].Text;
-            file.AffectsVersion = identificationSheet.Cells["C5"].Text;
-            file.Project = identificationSheet.Cells["C6"].Text;
-            
+            file.EpicLink = sheet.Cells["C2"].Text;
+            file.DevLead = sheet.Cells["C3"].Text;
+            file.Assignee = sheet.Cells["C4"].Text;
+            file.AffectsVersion = sheet.Cells["C5"].Text;
+            file.Project = sheet.Cells["C6"].Text;
+
             Console.WriteLine("Main Epic will be {0}", file.EpicLink);
             return file;
         }

@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace JiraImport
 {
@@ -65,6 +66,35 @@ namespace JiraImport
 
             var stringTask = await client.GetStringAsync(restCall);
             return JsonConvert.DeserializeObject<Issue>(stringTask);
+        }
+
+        public async Task<List<Issue>> SearchIssuesAsync(string jql, string[] fields)
+        {
+            HttpClient client = CreateClient();
+            string SEARCH_ISSUE = string.Format(URL, _host) + "/search?jql={0}&fields={1}";
+
+            string restCall = string.Format(SEARCH_ISSUE, HttpUtility.UrlEncode(jql), string.Join(",", fields));
+            Console.WriteLine("[GET]\t" + restCall);
+
+            var stringTask = await client.GetStringAsync(restCall);
+            SearchResults results = JsonConvert.DeserializeObject<SearchResults>(stringTask);
+            if (results.Total <= results.MaxResults)
+            {
+                Console.WriteLine("Find {0} results", results.Total);
+            }
+            else
+            {
+                Console.WriteLine("Getting {0} first results out of {1} (maximum reached)", results.MaxResults, results.Total);
+            }
+
+            return results.Issues;
+        }
+        public class SearchResults
+        {
+            public int StartAt { get; set; }
+            public int MaxResults { get; set; }
+            public int Total { get; set; }
+            public List<Issue> Issues { get; set; }
         }
 
         public class BulkCreate
