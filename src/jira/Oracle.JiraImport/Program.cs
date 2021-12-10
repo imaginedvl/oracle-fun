@@ -39,6 +39,13 @@ namespace JiraImport
                 var metas = builder.BuildStoriesMeta(excelFile);
                 if (metas.Count > 0)
                 {
+                    Console.WriteLine("Do you want to import {0} stories? (y/n)", metas.Count);
+                    var answer = Console.ReadKey().Key;
+                    if (answer != ConsoleKey.Y)
+                    {
+                        return;
+                    }
+
                     List<BaseJiraItem> issues = await jiraClient.CreateIssuesAsync(metas);
                     foreach (BaseJiraItem bulkissue in issues)
                     {
@@ -59,10 +66,15 @@ namespace JiraImport
                 metas = builder.BuildSubTasksMeta(excelFile, stories);
                 if (metas.Count > 0)
                 {
-                    List<BaseJiraItem> issues = await jiraClient.CreateIssuesAsync(metas);
-                    foreach (BaseJiraItem bulkissue in issues)
+                    Console.WriteLine("Do you want to import {0} sub-tasks? (y/n)", metas.Count);
+                    var answer = Console.ReadKey().Key;
+                    if (answer == ConsoleKey.Y)
                     {
-                        Console.WriteLine(bulkissue.Self);
+                        List<BaseJiraItem> issues = await jiraClient.CreateIssuesAsync(metas);
+                        foreach (BaseJiraItem bulkissue in issues)
+                        {
+                            Console.WriteLine(bulkissue.Self);
+                        }
                     }
                 }
                 else
@@ -70,7 +82,8 @@ namespace JiraImport
                     Console.WriteLine("Skipped");
                 }
 
-                Console.WriteLine("Done!");
+                Console.WriteLine("Done! Press a key to quit.");
+                Console.ReadKey();
             }
             catch (Exception ex)
             {

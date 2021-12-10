@@ -27,7 +27,7 @@ namespace JiraImport
         public JiraClient(IConfigurationRoot configuration)
         {
             _host = configuration.GetSection("Environment").Value;
-            Console.Write("[Using Environment]: {0}", _host);
+            Console.WriteLine("[Using Environment]: {0}", _host);
             _username = configuration.GetSection("User").GetSection("Username").Value;
             _password = configuration.GetSection("User").GetSection("Password").Value;
 
