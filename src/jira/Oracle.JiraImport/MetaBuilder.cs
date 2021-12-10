@@ -40,6 +40,10 @@ namespace Model.Excel
                 var storyKey = (from Issue i in stories
                                 where i.Fields.Summary == s.Summary
                                 select i.Key).FirstOrDefault();
+                if (string.IsNullOrEmpty(storyKey))
+                {
+                    throw new Exception(string.Format("Cannot find parent {0} ({1}) for {2}", subTask.Parent, s.Summary, subTask.Summary));
+                }
 
                 metas.Add(new CreateMetaFields()
                 {

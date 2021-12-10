@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -26,6 +27,7 @@ namespace JiraImport
         public JiraClient(IConfigurationRoot configuration)
         {
             _host = configuration.GetSection("Environment").Value;
+            Console.Write("[Using Environment]: {0}", _host);
             _username = configuration.GetSection("User").GetSection("Username").Value;
             _password = configuration.GetSection("User").GetSection("Password").Value;
 
@@ -130,9 +132,13 @@ namespace JiraImport
                 ContractResolver = new LowercaseContractResolver()
             });
 
+            // backing up request body...
+            Guid id = Guid.NewGuid();
+            File.WriteAllText(id + ".json", str);
+
             var content = new StringContent(str);
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            Console.WriteLine("[POST]\t" + CREATE_ISSUE);
+            Console.WriteLine("[POST]\t" + CREATE_ISSUE + " using request body in " + id.ToString() + ".json");
             var response = await client.PostAsync(CREATE_ISSUE, content);
             response.EnsureSuccessStatusCode();
             BulkResult result = JsonConvert.DeserializeObject<BulkResult>(await response.Content.ReadAsStringAsync());
