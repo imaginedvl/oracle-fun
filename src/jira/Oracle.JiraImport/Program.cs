@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace JiraImport
@@ -43,6 +44,9 @@ namespace JiraImport
                     {
                         Console.WriteLine(bulkissue.Self);
                     }
+
+                    // apparently, need a small pause here to have the resources loaded in Jira
+                    Thread.Sleep(5000);
                     string jql = string.Format("id in ({0})", string.Join(",", issues.Select(x => x.Id).ToArray()));
                     stories = await jiraClient.SearchIssuesAsync(jql, new string[] { "key", "summary" });
                 }
