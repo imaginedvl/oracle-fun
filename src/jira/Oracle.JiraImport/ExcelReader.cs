@@ -18,8 +18,14 @@ namespace JiraImport
             using (var package = new ExcelPackage(new FileInfo(path)))
             {
                 fileContent = ReadIdentification(package.Workbook.Worksheets["Identification"]);
-                fileContent.Stories = ReadStories(package.Workbook.Worksheets["Issues"]);
-                fileContent.SubTasks = ReadSubTasks(package.Workbook.Worksheets["Sub-Tasks"]);
+                if (fileContent.ImportStories)
+                {
+                    fileContent.Stories = ReadStories(package.Workbook.Worksheets["Stories"]);
+                }
+                if (fileContent.ImportSubTasks)
+                {
+                    fileContent.SubTasks = ReadSubTasks(package.Workbook.Worksheets["Sub-Tasks"]);
+                }
             }
 
             return fileContent;
@@ -39,13 +45,14 @@ namespace JiraImport
                     break;
                 }
 
+                // TODO: cover if parent is actually a story key (FRCE-1111)
                 var parent = Convert.ToInt32(sheet.Cells[r, 4].Value);
                 var summary = sheet.Cells[r, 5].Text;
                 var description = sheet.Cells[r, 6].Text;
 
                 if (IssueType.SubTask.Name.Equals(issueType) == true)
                 {
-                    Console.WriteLine("Sub-task {0}: {1}", i, summary);
+                    Console.WriteLine("Sub-task {0}: {1} child of {2}", i, summary, parent);
 
                     subtasks.Add(new JiraImportSubTask
                     {
@@ -57,6 +64,7 @@ namespace JiraImport
                 }
                 i++;
             }
+
             return subtasks;
         }
 
@@ -102,6 +110,8 @@ namespace JiraImport
             file.Assignee = sheet.Cells["C4"].Text;
             file.AffectsVersion = sheet.Cells["C5"].Text;
             file.Project = sheet.Cells["C6"].Text;
+            file.ImportStories = sheet.Cells["C7"].Text == "Yes";
+            file.ImportSubTasks = sheet.Cells["C8"].Text == "Yes";
 
             Console.WriteLine("Main Epic will be {0}", file.EpicLink);
             return file;
