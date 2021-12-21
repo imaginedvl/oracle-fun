@@ -36,9 +36,10 @@ namespace JiraImport
 
         private HttpClient CreateClient()
         {
-            HttpClient client = new HttpClient();
-
-            client.Timeout = TimeSpan.FromSeconds(120);
+            HttpClient client = new()
+            {
+                Timeout = TimeSpan.FromSeconds(120)
+            };
             client.DefaultRequestHeaders.Accept.Clear();
 
             string encodedCredentials = Convert.ToBase64String(Encoding.UTF8.GetBytes(string.Format("{0}:{1}", _username, _password)));
@@ -63,7 +64,7 @@ namespace JiraImport
             HttpClient client = CreateClient();
             string GET_ISSUE = string.Format(URL, _host) + "/issue/{0}";
 
-            string restCall = string.Format(GET_ISSUE, "FRCE-78363");
+            string restCall = string.Format(GET_ISSUE, id);
             Console.WriteLine("[GET]\t" + restCall);
 
             var stringTask = await client.GetStringAsync(restCall);
@@ -99,25 +100,11 @@ namespace JiraImport
             public List<Issue> Issues { get; set; }
         }
 
-        public class BulkCreate
-        {
-            public List<BulkIssue> IssueUpdates { get; set; } = new List<BulkIssue>();
-        }
-        public class BulkIssue
-        {
-            public CreateMetaFields Fields { get; set; }
-        }
-        public class BulkResult
-        {
-            public List<BaseJiraItem> Issues { get; set; }
-            public List<string> Errors { get; set; }
-        }
-
         public async Task<List<BaseJiraItem>> CreateIssuesAsync(List<CreateMetaFields> metaFields)
         {
             HttpClient client = CreateClient();
             string CREATE_ISSUE = string.Format(URL, _host) + "/issue/bulk";
-            BulkCreate meta = new BulkCreate();
+            BulkCreate meta = new();
             foreach(var metaField in metaFields)
             {
                 meta.IssueUpdates.Add(new BulkIssue
@@ -128,8 +115,7 @@ namespace JiraImport
 
             string str = JsonConvert.SerializeObject(meta, Formatting.None, new JsonSerializerSettings
             {
-                NullValueHandling = NullValueHandling.Ignore,
-                ContractResolver = new LowercaseContractResolver()
+                NullValueHandling = NullValueHandling.Ignore
             });
 
             // backing up request body...
@@ -152,8 +138,7 @@ namespace JiraImport
 
             string str = JsonConvert.SerializeObject(meta, Formatting.None, new JsonSerializerSettings
             {
-                NullValueHandling = NullValueHandling.Ignore,
-                ContractResolver = new LowercaseContractResolver()
+                NullValueHandling = NullValueHandling.Ignore
             });
 
             var content = new StringContent(str);
@@ -163,15 +148,23 @@ namespace JiraImport
             response.EnsureSuccessStatusCode();
             return JsonConvert.DeserializeObject<BaseJiraItem>(await response.Content.ReadAsStringAsync());
         }
-    }
 
-    public class LowercaseContractResolver : DefaultContractResolver
-    {
-        protected override string ResolvePropertyName(string propertyName)
+        private class BulkCreate
         {
-            if (propertyName == "IssueUpdates")
-                return "issueUpdates";
-            return propertyName.ToLower();
+            [JsonProperty("issueUpdates")]
+            public List<BulkIssue> IssueUpdates { get; set; } = new List<BulkIssue>();
+        }
+
+        private class BulkIssue
+        {
+            [JsonProperty("fields")]
+            public CreateMetaFields Fields { get; set; }
+        }
+
+        private class BulkResult
+        {
+            public List<BaseJiraItem> Issues { get; set; }
+            public List<string> Errors { get; set; }
         }
     }
 }

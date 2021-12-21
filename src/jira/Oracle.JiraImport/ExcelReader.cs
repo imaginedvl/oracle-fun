@@ -7,9 +7,9 @@ using System.IO;
 
 namespace JiraImport
 {
-    public class ExcelReader
+    public static class ExcelReader
     {
-        public JiraImportExcelFile ReadExcelFile(string path)
+        public static JiraImportExcelFile ReadExcelFile(string path)
         {
             var fileContent = new JiraImportExcelFile();
 
@@ -31,9 +31,9 @@ namespace JiraImport
             return fileContent;
         }
 
-        private List<JiraImportSubTask> ReadSubTasks(ExcelWorksheet sheet)
+        private static List<JiraImportSubTask> ReadSubTasks(ExcelWorksheet sheet)
         {
-            List<JiraImportSubTask> subtasks = new List<JiraImportSubTask>();
+            List<JiraImportSubTask> subtasks = new();
 
             int i = 1;
             int nbRows = sheet.Dimension.End.Row;
@@ -68,9 +68,9 @@ namespace JiraImport
             return subtasks;
         }
 
-        private List<JiraImportStory> ReadStories(ExcelWorksheet sheet)
+        private static List<JiraImportStory> ReadStories(ExcelWorksheet sheet)
         {
-            List<JiraImportStory> stories = new List<JiraImportStory>();
+            List<JiraImportStory> stories = new();
 
             int i = 1;
             int nbRows = sheet.Dimension.End.Row;
@@ -102,16 +102,18 @@ namespace JiraImport
             return stories;
         }
 
-        private JiraImportExcelFile ReadIdentification(ExcelWorksheet sheet)
+        private static JiraImportExcelFile ReadIdentification(ExcelWorksheet sheet)
         {
-            JiraImportExcelFile file = new JiraImportExcelFile();
-            file.EpicLink = sheet.Cells["C2"].Text;
-            file.DevLead = sheet.Cells["C3"].Text;
-            file.Assignee = sheet.Cells["C4"].Text;
-            file.AffectsVersion = sheet.Cells["C5"].Text;
-            file.Project = sheet.Cells["C6"].Text;
-            file.ImportStories = sheet.Cells["C7"].Text == "Yes";
-            file.ImportSubTasks = sheet.Cells["C8"].Text == "Yes";
+            JiraImportExcelFile file = new()
+            {
+                EpicLink = sheet.Cells["C2"].Text,
+                DevLead = sheet.Cells["C3"].Text,
+                Assignee = sheet.Cells["C4"].Text,
+                AffectsVersion = sheet.Cells["C5"].Text,
+                Project = sheet.Cells["C6"].Text,
+                ImportStories = sheet.Cells["C7"].Text == "Yes",
+                ImportSubTasks = sheet.Cells["C8"].Text == "Yes"
+            };
 
             Console.WriteLine("Main Epic will be {0}", file.EpicLink);
             return file;

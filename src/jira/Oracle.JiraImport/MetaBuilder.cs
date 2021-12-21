@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace Model.Excel
 {
-    public class MetaBuilder
+    public static class MetaBuilder
     {
-        public List<CreateMetaFields> BuildStoriesMeta(JiraImportExcelFile excelFile)
+        public static List<CreateMetaFields> BuildStoriesMeta(JiraImportExcelFile excelFile)
         {
             var metas = new List<CreateMetaFields>();
 
@@ -30,7 +30,7 @@ namespace Model.Excel
             return metas;
         }
 
-        public List<CreateMetaFields> BuildSubTasksMeta(JiraImportExcelFile excelFile, List<Issue> stories)
+        public static List<CreateMetaFields> BuildSubTasksMeta(JiraImportExcelFile excelFile, List<Issue> stories)
         {
             var metas = new List<CreateMetaFields>();
 

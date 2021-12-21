@@ -28,19 +28,18 @@ namespace JiraImport
             try
             {
                 Console.WriteLine("Initialization...");
-                JiraClient jiraClient = new JiraClient(configuration);
+                JiraClient jiraClient = new(configuration);
                 List<Issue> stories = new();
 
-                var excelReader = new ExcelReader();
-                var builder = new MetaBuilder();
-                JiraImportExcelFile excelFile = excelReader.ReadExcelFile(args[0]);
+                JiraImportExcelFile excelFile = ExcelReader.ReadExcelFile(args[0]);
                 
                 Console.WriteLine("Create parent issues...");
-                var metas = builder.BuildStoriesMeta(excelFile);
+                var metas = MetaBuilder.BuildStoriesMeta(excelFile);
                 if (metas.Count > 0)
                 {
-                    Console.WriteLine("Do you want to import {0} stories? (y/n)", metas.Count);
+                    Console.Write("Do you want to import {0} stories? (y/n) ", metas.Count);
                     var answer = Console.ReadKey().Key;
+                    Console.WriteLine();
                     if (answer != ConsoleKey.Y)
                     {
                         return;
@@ -53,9 +52,14 @@ namespace JiraImport
                     }
 
                     // apparently, need a small pause here to have the resources loaded in Jira
-                    Thread.Sleep(5000);
+                    Thread.Sleep(10000);
                     string jql = string.Format("id in ({0})", string.Join(",", issues.Select(x => x.Id).ToArray()));
                     stories = await jiraClient.SearchIssuesAsync(jql, new string[] { "key", "summary" });
+                    if (stories.Count > 0)
+                    {
+                        Issue i = await jiraClient.GetIssueAsync(stories[0].Id);
+                        Console.WriteLine(i.Fields.Summary);
+                    }
                 }
                 else
                 {
@@ -63,11 +67,12 @@ namespace JiraImport
                 }
 
                 Console.WriteLine("Create children issues...");
-                metas = builder.BuildSubTasksMeta(excelFile, stories);
+                metas = MetaBuilder.BuildSubTasksMeta(excelFile, stories);
                 if (metas.Count > 0)
                 {
-                    Console.WriteLine("Do you want to import {0} sub-tasks? (y/n)", metas.Count);
+                    Console.Write("Do you want to import {0} sub-tasks? (y/n) ", metas.Count);
                     var answer = Console.ReadKey().Key;
+                    Console.WriteLine();
                     if (answer == ConsoleKey.Y)
                     {
                         List<BaseJiraItem> issues = await jiraClient.CreateIssuesAsync(metas);
