@@ -181,6 +181,7 @@ Oracle = (function (parent) {
             id: 'testName',
             columnTitle: 'Test Name',
             columnSelector: 'Test Name/Doc Field',
+            formater: 'testName',
             groupable: true
         }
     }
@@ -558,17 +559,19 @@ Oracle = (function (parent) {
             if (cell) {
                 let value = cell.text();
                 value = Oracle.Strings.trim(value);
-                if (!Oracle.isEmptyOrWhiteSpaces(value)) {
-                    const result = { name: null, jiraId: null };
-                    if (value.startsWith("FRCE")) {
-                        const tokens = value.split('-', 2);
-                        result.jiraId = tokens[0];
-                        if (tokens.length > 0) {
-                            result.name = tokens[1];
-                        }
-                    }
-                    return result;
-                }
+                return value;
+                //TODO could be split as below but need to add a compare for the sort
+                //if (!Oracle.isEmptyOrWhiteSpaces(value)) {
+                //    const result = { name: null, jiraId: null };
+                //    if (value.startsWith("FRCE")) {
+                //        const tokens = value.split('-', 2);
+                //        result.jiraId = tokens[0];
+                //        if (tokens.length > 0) {
+                //            result.name = tokens[1];
+                //        }
+                //    }
+                //    return result;
+                //}
             }
             return null;
         }
@@ -767,6 +770,29 @@ Oracle = (function (parent) {
             if (value) {
                 const result = $("<span class='bugdb-customer'>" + value + "</span>");
                 return result;
+            }
+            else {
+                return null;
+            }
+        }
+    });
+
+    Oracle.HTML.addFormater("testName", null, null, (value, settings) => {
+        if (settings.isHeader) {
+            if (Oracle.isEmpty(value)) {
+                return "Jira Epic"
+            }
+            else {
+                return value;
+            }
+        }
+        else {
+            if (value) {
+                const result = $("<span style='display: flex; justify-content:left; align-items: center; '>");
+                
+                result.append("<a class='testname' href='https://jira.oraclecorp.com/jira/browse/" + value + "' target='_view_" + value + "'>" + value + "</a>");
+                return result;
+
             }
             else {
                 return null;
