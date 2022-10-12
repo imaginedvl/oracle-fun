@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Model.Jira
 {
@@ -9,7 +9,7 @@ namespace Model.Jira
         public static readonly IssueType Story = new() { Id = "7", Name = "Story" };
         public static readonly IssueType Test = new() { Id = "27", Name = "Test" };
 
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
     }
 }

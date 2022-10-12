@@ -1,17 +1,17 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Model;
 using Model.Jira;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Web;
+using System.Xml;
 
 namespace JiraImport
 {
@@ -55,8 +55,8 @@ namespace JiraImport
             string url = string.Format("https://{0}/jira/status", _host);
             Console.Write("[Checking Environment Status]: ");
             var stringTask = await client.GetStringAsync(url);
-            JObject o = JObject.Parse(stringTask);
-            Console.WriteLine(o["state"]);
+            JsonNode o = JsonNode.Parse(stringTask);
+            Console.WriteLine(o!["state"]);
         }
 
         public async Task<Issue> GetIssueAsync(string id)
@@ -68,7 +68,10 @@ namespace JiraImport
             Console.WriteLine("[GET]\t" + restCall);
 
             var stringTask = await client.GetStringAsync(restCall);
-            return JsonConvert.DeserializeObject<Issue>(stringTask);
+            return JsonSerializer.Deserialize<Issue>(stringTask, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
         }
 
         public async Task<List<Issue>> SearchIssuesAsync(string jql, string[] fields)
@@ -80,7 +83,11 @@ namespace JiraImport
             Console.WriteLine("[GET]\t" + restCall);
 
             var stringTask = await client.GetStringAsync(restCall);
-            SearchResults results = JsonConvert.DeserializeObject<SearchResults>(stringTask);
+
+            SearchResults results = JsonSerializer.Deserialize<SearchResults>(stringTask, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
             if (results.Total <= results.MaxResults)
             {
                 Console.WriteLine("Find {0} results", results.Total);
@@ -113,10 +120,12 @@ namespace JiraImport
                 });
             };
 
-            string str = JsonConvert.SerializeObject(meta, Formatting.None, new JsonSerializerSettings
+            var options = new JsonSerializerOptions
             {
-                NullValueHandling = NullValueHandling.Ignore
-            });
+                WriteIndented = false,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+            };
+            string str = JsonSerializer.Serialize(meta, options);
 
             // backing up request body...
             Guid id = Guid.NewGuid();
@@ -127,7 +136,7 @@ namespace JiraImport
             Console.WriteLine("[POST]\t" + CREATE_ISSUE + " using request body in " + id.ToString() + ".json");
             var response = await client.PostAsync(CREATE_ISSUE, content);
             response.EnsureSuccessStatusCode();
-            BulkResult result = JsonConvert.DeserializeObject<BulkResult>(await response.Content.ReadAsStringAsync());
+            BulkResult result = JsonSerializer.Deserialize<BulkResult>(await response.Content.ReadAsStringAsync());
             return result.Issues;
         }
 
@@ -136,34 +145,39 @@ namespace JiraImport
             HttpClient client = CreateClient();
             string CREATE_ISSUE = string.Format(URL, _host) + "/issue";
 
-            string str = JsonConvert.SerializeObject(meta, Formatting.None, new JsonSerializerSettings
+            var options = new JsonSerializerOptions
             {
-                NullValueHandling = NullValueHandling.Ignore
-            });
+                WriteIndented = false,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+            };
+            string str = JsonSerializer.Serialize(meta, options);
 
             var content = new StringContent(str);
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             Console.WriteLine("[POST]\t" + CREATE_ISSUE);
             var response = await client.PostAsync(CREATE_ISSUE, content);
             response.EnsureSuccessStatusCode();
-            return JsonConvert.DeserializeObject<BaseJiraItem>(await response.Content.ReadAsStringAsync());
+            return JsonSerializer.Deserialize<BaseJiraItem>(await response.Content.ReadAsStringAsync());
         }
 
         private class BulkCreate
         {
-            [JsonProperty("issueUpdates")]
+            [JsonPropertyName("issueUpdates")]
             public List<BulkIssue> IssueUpdates { get; set; } = new List<BulkIssue>();
         }
 
         private class BulkIssue
         {
-            [JsonProperty("fields")]
+            [JsonPropertyName("fields")]
             public CreateMetaFields Fields { get; set; }
         }
 
         private class BulkResult
         {
+            [JsonPropertyName("issues")]
             public List<BaseJiraItem> Issues { get; set; }
+
+            [JsonPropertyName("errors")]
             public List<string> Errors { get; set; }
         }
     }

@@ -3,15 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oracle.Tool", "Oracle.JiraImport\Oracle.Tool.csproj", "{D30E328A-189C-4E35-BC86-AB1E744422F4}"
-	ProjectSection(ProjectDependencies) = postProject
-		{1B58D4BF-FF2F-4884-921E-7385F11C440F} = {1B58D4BF-FF2F-4884-921E-7385F11C440F}
-		{C1FEA9C0-872A-4DF1-B20D-2F2999B1B1D8} = {C1FEA9C0-872A-4DF1-B20D-2F2999B1B1D8}
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oracle.ImportTool", "Oracle.JiraImport\Oracle.ImportTool.csproj", "{D30E328A-189C-4E35-BC86-AB1E744422F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oracle.JiraModel", "Oracle.JiraModel\Oracle.JiraModel.csproj", "{C1FEA9C0-872A-4DF1-B20D-2F2999B1B1D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oracle.Core.ExcelModel", "Oracle.Core.ExcelModel\Oracle.Core.ExcelModel.csproj", "{8E89BEF9-DA50-471B-850F-5512E200479F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oracle.ExcelModel", "Oracle.ExcelModel\Oracle.ExcelModel.csproj", "{1B58D4BF-FF2F-4884-921E-7385F11C440F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oracle.Core.JiraModel", "Oracle.Core.JiraModel\Oracle.Core.JiraModel.csproj", "{A3D71971-1015-442C-9BA4-56033209ED42}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,14 +19,14 @@ Global
 		{D30E328A-189C-4E35-BC86-AB1E744422F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D30E328A-189C-4E35-BC86-AB1E744422F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D30E328A-189C-4E35-BC86-AB1E744422F4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C1FEA9C0-872A-4DF1-B20D-2F2999B1B1D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C1FEA9C0-872A-4DF1-B20D-2F2999B1B1D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C1FEA9C0-872A-4DF1-B20D-2F2999B1B1D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C1FEA9C0-872A-4DF1-B20D-2F2999B1B1D8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1B58D4BF-FF2F-4884-921E-7385F11C440F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1B58D4BF-FF2F-4884-921E-7385F11C440F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1B58D4BF-FF2F-4884-921E-7385F11C440F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1B58D4BF-FF2F-4884-921E-7385F11C440F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E89BEF9-DA50-471B-850F-5512E200479F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E89BEF9-DA50-471B-850F-5512E200479F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E89BEF9-DA50-471B-850F-5512E200479F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E89BEF9-DA50-471B-850F-5512E200479F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3D71971-1015-442C-9BA4-56033209ED42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3D71971-1015-442C-9BA4-56033209ED42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3D71971-1015-442C-9BA4-56033209ED42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3D71971-1015-442C-9BA4-56033209ED42}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
