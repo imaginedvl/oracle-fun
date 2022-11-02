@@ -1,7 +1,0 @@
-﻿{
-  "Environment": "jira-host-name",
-  "User": {
-    "Username": "username@oracle.com",
-    "Password": "password"
-  }
-}
